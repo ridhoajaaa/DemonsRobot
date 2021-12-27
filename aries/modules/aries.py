@@ -96,14 +96,7 @@ def odo(update: Update, context: CallbackContext):
     reply_photo = (
         message.reply_to_message.reply_photo
         if message.reply_to_message
-        else message.reply_photo,
-        reply_markup=InlineKeyboardMarkup(
-             [
-                [
-                    InlineKeyboardButton("Support", url="https://t.me/demonszxx"),
-                ],
-            ]
-        ),
+        else message.reply_photo
     )
     reply_photo(random.choice(aries_strings.ARIES_IMG))
 
