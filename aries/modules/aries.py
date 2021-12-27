@@ -96,7 +96,7 @@ def odo(update: Update, context: CallbackContext):
     reply_photo = (
         message.reply_to_message.reply_photo
         if message.reply_to_message
-        else message.reply_photo
+        else message.reply_photo,
         caption=f"""<i>Powered by: Demons Robot</i> 🔥""",
         parse_mode=ParseMode.HTML,
         reply_markup=InlineKeyboardMarkup(
