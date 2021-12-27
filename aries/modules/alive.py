@@ -15,7 +15,7 @@ async def awake(event):
     ARIES += " ☬ ⌊ **Pyrogram :** __1.2.9__ ⌉\n\n"
     ARIES += " ☬ ⌊ **MongoDB :** __2.5.1__ ⌉\n\n"
     ARIES += " ☬ ⌊ **Platform :** __linux__ ⌉\n\n"
-    ARIES += " ☬ ⌊ **My Lord** : [d̶d̶o̶x̶ ⸸ ƒ α ᴄ к [🇯🇵]](https://t.me/ddodxy) ☠⌉\n\n"
+    ARIES += " ☬ ⌊ **My Lord** : [d̶d̶o̶](https://t.me/ddodxy) ☠⌉\n\n"
     ARIES += " ☬ ⌊ **TELETHON : 6.6.6 Latest** ⌉\n\n"
     ARIES += " |||| || ||| |||| || |||||| ||||| || || ||"
     BUTTON = [
