@@ -90,13 +90,22 @@ AD_STRINGS = (
 )
 
 
-def aries(update: Update, context: CallbackContext):
+def odo(update: Update, context: CallbackContext):
     message = update.effective_message
     message.reply_to_message.from_user.first_name if message.reply_to_message else message.from_user.first_name
     reply_photo = (
         message.reply_to_message.reply_photo
         if message.reply_to_message
         else message.reply_photo
+        caption=f"""<i>Powered by: Demons Robot</i> 🔥""",
+        parse_mode=ParseMode.HTML,
+        reply_markup=InlineKeyboardMarkup(
+             [
+                [
+                    InlineKeyboardButton("Support", url="https://t.me/demonszxx"),
+                ],
+            ]
+        ),
     )
     reply_photo(random.choice(aries_strings.ARIES_IMG))
 
@@ -154,7 +163,7 @@ def diaryadodo(update: Update, context: CallbackContext):
 
 
 __help__ = """
- ❍ `/aries`*:* gives random aries media.
+ ❍ `/odo`*:* gives random demons media.
  ❍ `/asupan`*:* gives random asupan medi.
  ❍ `/chika`*:* gives random chika media.
  ❍ `/wibu`*:* gives random wibu media.
@@ -171,15 +180,15 @@ __help__ = """
 """
 
 
-ARIES_HANDLER = DisableAbleCommandHandler("aries", aries, run_async=True)
-dispatcher.add_handler(ARIES_HANDLER)
+ODO_HANDLER = DisableAbleCommandHandler("odo", odo, run_async=True)
+dispatcher.add_handler(ODO_HANDLER)
 LAWAK_HANDLER = DisableAbleCommandHandler("lawak", lawak, run_async=True)
 dispatcher.add_handler(LAWAK_HANDLER)
 DIARYDODO_HANDLER = DisableAbleCommandHandler("diarydodo", diaryadodo, run_async=True)
 dispatcher.add_handler(DIARYDODO_HANDLER)
 
-__mod_name__ = "Aries Extras"
+__mod_name__ = "Demons Extras"
 
 
-__command_list__ = ["aries", "diarydodo", "lawak"]
+__command_list__ = ["odo", "diarydodo", "lawak"]
 __handlers__ = [ARIES_HANDLER, DIARYDODO_HANDLER, LAWAK_HANDLER]
