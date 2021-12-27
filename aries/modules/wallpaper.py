@@ -5,7 +5,7 @@ from aries import SUPPORT_CHAT, WALL_API, dispatcher
 from aries.modules.disable import DisableAbleCommandHandler
 from telegram import Update
 from aries import telethn as tbot
-from aries.events import CallbackContext, register
+from aries.events import register
 from aries import ubot
 
 # Wallpapers module by @TheRealPhoenix using wall.alphacoders.com
