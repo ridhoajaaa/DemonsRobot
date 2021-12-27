@@ -118,4 +118,10 @@ ARIES_IMG = (
     "https://i.imgur.com/coPzKo0.jpg",
     "https://i.imgur.com/lDj7b29.jpg",
     "https://i.imgur.com/sYl6tBB.jpg",
+    "https://telegra.ph/file/daec4efbb7a585fdb314a.jpg",
+    "https://telegra.ph/file/5690552eb8380ed643ca2.jpg",
+    "https://telegra.ph/file/6ef5f5611fe7d83412562.jpg",
+    "https://telegra.ph/file/8998cabfcf1fb1bfdc81e.jpg",
+    "https://telegra.ph/file/a3f727cbf9d0f12a475ea.jpg",
+    "https://telegra.ph/file/5690552eb8380ed643ca2.jpg",
 )
