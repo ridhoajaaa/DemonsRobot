@@ -182,4 +182,4 @@ __mod_name__ = "Demons Extras"
 
 
 __command_list__ = ["odo", "diarydodo", "lawak"]
-__handlers__ = [ARIES_HANDLER, DIARYDODO_HANDLER, LAWAK_HANDLER]
+__handlers__ = [ODO_HANDLER, DIARYDODO_HANDLER, LAWAK_HANDLER]
