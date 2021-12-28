@@ -487,8 +487,8 @@ def stats(update, context):
             status
             + "\n*Bot statistics*:\n"
             + "\n".join([mod.__stats__() for mod in STATS])
-            + f"\n\n[🔥 Support](https://t.me/IDZEROIDSUPPORT) | [🔥 Movie Channel](https://t.me/artezid)\n\n"
-            + "╘══「 by [Aryza](https://t.me/IdzXartez) 」\n",
+            + f"\n\n[🔥 Support](https://t.me/demonszxx) | [🔥 Channel Ena2](https://t.me/nigabutajasii)\n\n"
+            + "╘══「 by [Dodoks](https://t.me/ddodxy) 」\n",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
@@ -500,9 +500,9 @@ def stats(update, context):
                         "\n*Bot statistics*:\n"
                         + "\n".join(mod.__stats__() for mod in STATS)
                     )
-                    + f"\n\n🔥 [Support](https://t.me/IDZEROIDSUPPORT) | 🔥 [Movie Channel](https://t.me/artezid)\n\n"
+                    + f"\n\n🔥 [Support](https://t.me/demonszxx) | 🔥 [Channel Ena2](https://t.me/nigabutajasii)\n\n"
                 )
-                + "╘══「 by [Aryza](https://t.me/IdzXartez) 」\n"
+                + "╘══「 by [Dodoks](https://t.me/ddodxy) 」\n"
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
