@@ -18,7 +18,7 @@
 
 ## A Powerful and Modular
 
-DemonsRobor is a Characther powerful in saints saiya anime and modular telegram group management bot built using python3 and sqlalchemy. Literally she can do anything to help you make your group a better place like any other bot and she's painted with anime theme for weeb lover's.
+Demons is a Characther powerful in saints saiya anime and modular telegram group management bot built using python3 and sqlalchemy. Literally she can do anything to help you make your group a better place like any other bot and she's painted with anime theme for weeb lover's.
 
 ### Deploy To Heroku 📡</h4>
 
