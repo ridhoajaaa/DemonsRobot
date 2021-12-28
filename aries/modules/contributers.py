@@ -17,7 +17,7 @@ async def give_repo(c, m):
     g = github.Github()
     list_of_users = ""
     count = 0
-    repo = g.get_repo("ridhoajaaa/DemonsRobot")
+    repo = g.get_repo("idzero23/SaintAries")
     for i in repo.get_contributors():
         count += 1
         list_of_users += f"•{count}. [{i.login}](https://github.com/{i.login})\n"
