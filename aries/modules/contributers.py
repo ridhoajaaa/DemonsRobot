@@ -9,7 +9,7 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram import filters
 
 
-IDZ = "https://telegra.ph/file/08f41dc969408c08b8c68.jpg"
+IDZ = "https://telegra.ph/file/7b7cfac2df97dd2b566cd.jpg"
 
 
 @app.on_message(filters.command("repo") & ~filters.edited)
@@ -17,14 +17,14 @@ async def give_repo(c, m):
     g = github.Github()
     list_of_users = ""
     count = 0
-    repo = g.get_repo("idzero23/SaintAries")
+    repo = g.get_repo("ridhoajaaa/DemonsRobot")
     for i in repo.get_contributors():
         count += 1
         list_of_users += f"•{count}. [{i.login}](https://github.com/{i.login})\n"
     await m.reply_photo(
         photo=IDZ,
-        caption=f"""**Hey I'm Aries Robot** 
-**Owner repo : [Aryza](https://t.me/idzxartez)**
+        caption=f"""**Hey I'm DemonsRobot** 
+**Owner repo : [Ddodxy](https://t.me/ddodxy)**
 **Python Version :** `{y()}`
 **Library Version :** `{o}`
 **Telethon Version :** `{s}`
@@ -40,11 +40,11 @@ async def give_repo(c, m):
             [
                 [
                     InlineKeyboardButton(
-                        "Repo", url="https://github.com/idzero23/SaintAries"
+                        "Repo", url="https://github.com/ridhoajaaa/DemonsRobot"
                     ),
                 ],
                 [
-                    InlineKeyboardButton("Support", url="https://t.me/idzeroidsupport"),
+                    InlineKeyboardButton("Support", url="https://t.me/demonszxx"),
                     InlineKeyboardButton("Update", url="https://t.me/idzeroid"),
                 ],
             ]
