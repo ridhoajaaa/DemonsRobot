@@ -95,7 +95,7 @@ def pingall(update: Update, context: CallbackContext):
     reply_msg = "⏱Ping results are:\n"
     reply_msg += "\n".join(pinged_list)
     reply_msg += "\n<b>Service uptime:</b> <code>{}</code>".format(uptime)
-    reply_msg += "\n<b>Powered by:</b> <i>@IdzXartez ⚡️ </i>"
+    reply_msg += "\n<b>Powered by:</b> <i>@ddodxy ⚡️ </i>"
 
     update.effective_message.reply_text(
         reply_msg,
