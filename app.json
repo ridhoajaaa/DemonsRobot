@@ -74,14 +74,34 @@
          "value": "",
          "required": true
       },
+      "CUSTOM_CMD": {
+         "description": "CMD Costum",
+         "required": true,
+         "value": "? !"
+      },
       "MONGO_PORT": {
          "description": "Dont change",
          "value": "27017",
          "required": false
       },
+      "HEROKU_API_KEY": {
+         "description": "Your HEROKU APi KEY",
+         "value": "f79f5eac-32f7-4ea3-b5c2-6c2a824f7e8d",
+         "required": false
+      },
       "MONGO_DB": {
          "description": "Don't change.",
          "value": "aries",
+         "required": false
+      },
+      "OPEN_WEATHER_MAP_APPID": {
+         "description": "API MAP OPENWEATHER.",
+         "value": "ae68f75fa2af23af8c4531076788cae4",
+         "required": false
+      },
+      "API_OPENWEATHER": {
+         "description": "API OPENWEATHER.",
+         "value": "ae68f75fa2af23af8c4531076788cae4",
          "required": false
       },
       "JOIN_LOGGER": {
