@@ -35,6 +35,6 @@ async def arq_stats(_, message):
 🔘 **Users:** `{users}`
 🔘 **Bot:** {bot}
 🔘 **Address:** {ARQ_API_URL}
-**Powered By:** __@IdzXartez__🔥
+**Powered By:** __@ddodxy__🔥
 """
     await message.reply_text(statistics, disable_web_page_preview=True)
