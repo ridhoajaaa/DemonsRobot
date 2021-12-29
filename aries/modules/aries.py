@@ -95,7 +95,6 @@ def odo(update: Update, context: CallbackContext):
     message.reply_to_message.from_user.first_name if message.reply_to_message else message.from_user.first_name
     reply_photo = (
         random.choice(aries_strings.ARIES_IMG),
-        caption=f"""<i>Powered by: Demons Robot</i> 🔥""",
         parse_mode=ParseMode.HTML,
         reply_markup=InlineKeyboardMarkup(
             [
