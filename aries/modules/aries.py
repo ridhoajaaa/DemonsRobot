@@ -94,17 +94,12 @@ def odo(update: Update, context: CallbackContext):
     message = update.effective_message
     message.reply_to_message.from_user.first_name if message.reply_to_message else message.from_user.first_name
     reply_photo = (
-        random.choice(aries_strings.ARIES_IMG),
-        parse_mode=ParseMode.HTML,
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("Support", url="https://t.me/demonszxx"),
-                ],
-            ]
-        ),
+        message.reply_to_message.reply_photo
+        if message.reply_to_message
+        else message.reply_photo
     )
-
+    reply_photo(random.choice(aries_strings.ARIES_IMG))
+    
 
 LAWAK_STRINGS = (
     "https://telegra.ph/file/abdae436beade5626f568.mp4",
