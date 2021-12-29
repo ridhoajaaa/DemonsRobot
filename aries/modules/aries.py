@@ -100,6 +100,17 @@ def odo(update: Update, context: CallbackContext):
     )
     reply_photo(random.choice(aries_strings.ARIES_IMG))
     
+    
+def jj(update: Update, context: CallbackContext):
+    message = update.effective_message
+    message.reply_to_message.from_user.first_name if message.reply_to_message else message.from_user.first_name
+    reply_photo = (
+        message.reply_to_message.reply_photo
+        if message.reply_to_message
+        else message.reply_photo
+    )
+    reply_photo(random.choice(JJ_STRING))
+    
 
 LAWAK_STRINGS = (
     "https://telegra.ph/file/abdae436beade5626f568.mp4",
@@ -129,6 +140,15 @@ LAWAK_STRINGS = (
 )
 
 
+JJ_STRING = (
+    "https://telegra.ph/file/edfd2cc412bd9526c67d8.jpg",
+    "https://telegra.ph/file/c0a849aa2ddae4d579bc3.jpg",
+    "https://telegra.ph/file/dcb4aae17500bb1a9105e.jpg",
+    "https://telegra.ph/file/451f1575dcbb45a0c936a.jpg",
+    
+)
+    
+
 def lawak(update, context):
     msg = update.effective_message
     msg.reply_video(
@@ -155,6 +175,7 @@ def diaryadodo(update: Update, context: CallbackContext):
 
 __help__ = """
  ❍ `/odo`*:* gives random demons media.
+ ❍ `/jj`*:* gives random poto nya jj
  ❍ `/asupan`*:* gives random asupan medi.
  ❍ `/chika`*:* gives random chika media.
  ❍ `/wibu`*:* gives random wibu media.
@@ -173,6 +194,8 @@ __help__ = """
 
 ODO_HANDLER = DisableAbleCommandHandler("odo", odo, run_async=True)
 dispatcher.add_handler(ODO_HANDLER)
+JJ_HANDRLER = DisableAbleCommandHandler("jj", jj, run_async=True)
+dispatcher.add_handler(JJ_HANDLER)
 LAWAK_HANDLER = DisableAbleCommandHandler("lawak", lawak, run_async=True)
 dispatcher.add_handler(LAWAK_HANDLER)
 DIARYDODO_HANDLER = DisableAbleCommandHandler("diarydodo", diaryadodo, run_async=True)
@@ -181,5 +204,5 @@ dispatcher.add_handler(DIARYDODO_HANDLER)
 __mod_name__ = "Demons Extras"
 
 
-__command_list__ = ["odo", "diarydodo", "lawak"]
-__handlers__ = [ODO_HANDLER, DIARYDODO_HANDLER, LAWAK_HANDLER]
+__command_list__ = ["odo", "jj", "diarydodo", "lawak"]
+__handlers__ = [ODO_HANDLER, JJ_HANDLER, DIARYDODO_HANDLER, LAWAK_HANDLER]
