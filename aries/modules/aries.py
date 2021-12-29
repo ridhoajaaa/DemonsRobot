@@ -101,7 +101,7 @@ def odo(update: Update, context: CallbackContext):
     reply_photo(random.choice(aries_strings.ARIES_IMG))
     
     
-def jj(update: Update, context: CallbackContext):
+def ipe(update: Update, context: CallbackContext):
     message = update.effective_message
     message.reply_to_message.from_user.first_name if message.reply_to_message else message.from_user.first_name
     reply_photo = (
@@ -141,10 +141,11 @@ LAWAK_STRINGS = (
 
 
 JJ_STRING = (
-    "https://telegra.ph/file/edfd2cc412bd9526c67d8.jpg",
-    "https://telegra.ph/file/c0a849aa2ddae4d579bc3.jpg",
-    "https://telegra.ph/file/dcb4aae17500bb1a9105e.jpg",
-    "https://telegra.ph/file/451f1575dcbb45a0c936a.jpg",
+    "https://telegra.ph/file/e188e5744b039cc30dca2.jpg",
+    "https://telegra.ph/file/5088c032502d6bac26a57.jpg",
+    "https://telegra.ph/file/2035a4c23545acc82a6dc.jpg",
+    "https://telegra.ph/file/70369c2d06ff2879b6569.jpg",
+    "https://telegra.ph/file/d017e355464bea37efe33.jpg",
     
 )
     
@@ -175,7 +176,7 @@ def diaryadodo(update: Update, context: CallbackContext):
 
 __help__ = """
  ❍ `/odo`*:* gives random demons media.
- ❍ `/jj`*:* gives random poto nya jj
+ ❍ `/ipe`*:* gives random poto nya ipe
  ❍ `/asupan`*:* gives random asupan medi.
  ❍ `/chika`*:* gives random chika media.
  ❍ `/wibu`*:* gives random wibu media.
@@ -194,8 +195,8 @@ __help__ = """
 
 ODO_HANDLER = DisableAbleCommandHandler("odo", odo, run_async=True)
 dispatcher.add_handler(ODO_HANDLER)
-JJ_HANDLER = DisableAbleCommandHandler("jj", jj, run_async=True)
-dispatcher.add_handler(JJ_HANDLER)
+IPE_HANDLER = DisableAbleCommandHandler("ipe", ipe, run_async=True)
+dispatcher.add_handler(IPE_HANDLER)
 LAWAK_HANDLER = DisableAbleCommandHandler("lawak", lawak, run_async=True)
 dispatcher.add_handler(LAWAK_HANDLER)
 DIARYDODO_HANDLER = DisableAbleCommandHandler("diarydodo", diaryadodo, run_async=True)
@@ -204,5 +205,5 @@ dispatcher.add_handler(DIARYDODO_HANDLER)
 __mod_name__ = "Demons Extras"
 
 
-__command_list__ = ["odo", "jj", "diarydodo", "lawak"]
-__handlers__ = [ODO_HANDLER, JJ_HANDLER, DIARYDODO_HANDLER, LAWAK_HANDLER]
+__command_list__ = ["odo", "ipe", "diarydodo", "lawak"]
+__handlers__ = [ODO_HANDLER, IPE_HANDLER, DIARYDODO_HANDLER, LAWAK_HANDLER]
