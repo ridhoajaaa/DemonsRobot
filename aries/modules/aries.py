@@ -194,7 +194,7 @@ __help__ = """
 
 ODO_HANDLER = DisableAbleCommandHandler("odo", odo, run_async=True)
 dispatcher.add_handler(ODO_HANDLER)
-JJ_HANDRLER = DisableAbleCommandHandler("jj", jj, run_async=True)
+JJ_HANDLER = DisableAbleCommandHandler("jj", jj, run_async=True)
 dispatcher.add_handler(JJ_HANDLER)
 LAWAK_HANDLER = DisableAbleCommandHandler("lawak", lawak, run_async=True)
 dispatcher.add_handler(LAWAK_HANDLER)
