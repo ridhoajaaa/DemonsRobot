@@ -9,6 +9,9 @@ gtts
 pyYAML>=5.1.2
 beautifulsoup4
 gitpython
+telethon
+cryptg
+asyncio
 requests
 httpx
 python-telegram-bot==13.9
