@@ -94,11 +94,17 @@ def odo(update: Update, context: CallbackContext):
     message = update.effective_message
     message.reply_to_message.from_user.first_name if message.reply_to_message else message.from_user.first_name
     reply_photo = (
-        message.reply_to_message.reply_photo
-        if message.reply_to_message
-        else message.reply_photo
+        random.choice(aries_strings.ARIES_IMG),
+        caption=f"""<i>Powered by: Demons Robot</i> 🔥""",
+        parse_mode=ParseMode.HTML,
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton("Support", url="https://t.me/demonszxx"),
+                ],
+            ]
+        ),
     )
-    reply_photo(random.choice(aries_strings.ARIES_IMG))
 
 
 LAWAK_STRINGS = (
