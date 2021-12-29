@@ -1,13 +1,10 @@
 # @ImJanindu <https://t.me/Infinity_BOTs>
 # Mizuki Tagall
 
-import os, logging, asyncio
-from telethon import Button
-from telethon import TelegramClient, events
-from telethon.tl.types import ChannelParticipantAdmin
-from telethon.tl.types import ChannelParticipantCreator
-from telethon.tl.functions.channels import GetParticipantRequest
-from telethon.errors import UserNotParticipantError
+import asyncio
+
+from telethon import events
+from telethon.tl.types import ChannelParticipantsAdmins
 
 from aries import telethn as bot
 
