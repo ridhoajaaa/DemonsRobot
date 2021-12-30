@@ -8,7 +8,13 @@ from time import sleep
 from telegram.ext.callbackqueryhandler import CallbackQueryHandler
 from aries import DEV_USERS, dispatcher, telethn, OWNER_ID
 from aries.modules.helper_funcs.chat_status import dev_plus
-from telegram import TelegramError, Update, ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import (
+    TelegramError,
+    Update,
+    ParseMode,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
 from telegram.ext import CallbackContext, CommandHandler
 import asyncio
 from statistics import mean
@@ -32,10 +38,20 @@ def leave(update: Update, context: CallbackContext):
     else:
         chat = update.effective_chat
         # user = update.effective_user
-        kb = [[
-            InlineKeyboardButton(text="I am sure of this action.", callback_data="leavechat_cb_({})".format(chat.id))
-        ]]
-        update.effective_message.reply_text("I'm going to leave {}, press the button below to confirm".format(chat.title), reply_markup=InlineKeyboardMarkup(kb))
+        kb = [
+            [
+                InlineKeyboardButton(
+                    text="I am sure of this action.",
+                    callback_data="leavechat_cb_({})".format(chat.id),
+                )
+            ]
+        ]
+        update.effective_message.reply_text(
+            "I'm going to leave {}, press the button below to confirm".format(
+                chat.title
+            ),
+            reply_markup=InlineKeyboardMarkup(kb),
+        )
 
 
 def leave_cb(update: Update, context: CallbackContext):
@@ -44,11 +60,12 @@ def leave_cb(update: Update, context: CallbackContext):
     if callback.from_user.id not in DEV_USERS:
         callback.answer(text="This isn't for you", show_alert=True)
         return
-    
+
     match = re.match(r"leavechat_cb_\((.+?)\)", callback.data)
     chat = int(match.group(1))
     bot.leave_chat(chat_id=chat)
     callback.answer(text="Left chat")
+
 
 @dev_plus
 def gitpull(update: Update, context: CallbackContext):
@@ -121,7 +138,7 @@ telethn.add_event_handler(callback_queries, events.CallbackQuery())
 async def getstats(event):
     await event.reply(
         f"**__KIGYO EVENT STATISTICS__**\n**Average messages:** {messages.average()}/s\n**Average Callback Queries:** {callback_queries.average()}/s\n**Average Inline Queries:** {inline_queries.average()}/s",
-        parse_mode='md'
+        parse_mode="md",
     )
 
 
@@ -133,9 +150,12 @@ def pip_install(update: Update, context: CallbackContext):
         message.reply_text("Enter a package name.")
         return
     if len(args) >= 1:
-        cmd = "py -m pip install {}".format(' '.join(args))
+        cmd = "py -m pip install {}".format(" ".join(args))
         process = subprocess.Popen(
-            cmd.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
+            cmd.split(" "),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
         )
         stdout, stderr = process.communicate()
         reply = ""
@@ -147,9 +167,9 @@ def pip_install(update: Update, context: CallbackContext):
             reply += f"*Stderr*\n`{stderr}`\n"
 
         message.reply_text(text=reply, parse_mode=ParseMode.MARKDOWN)
-        
 
-@dev_plus      
+
+@dev_plus
 def get_chat_by_id(update: Update, context: CallbackContext):
     msg = update.effective_message
     args = context.args
@@ -165,16 +185,16 @@ def get_chat_by_id(update: Update, context: CallbackContext):
             m += "<i>{}</i>\n\n".format(html.escape(data.description))
         if data.linked_chat_id:
             m += "<b>Linked chat</b>: {}\n".format(data.linked_chat_id)
-        
+
         m += "<b>Type</b>: {}\n".format(data.type)
         if data.username:
             m += "<b>Username</b>: {}\n".format(html.escape(data.username))
         m += "<b>ID</b>: {}\n".format(data.id)
         m += "\n<b>Permissions</b>:\n <code>{}</code>\n".format(data.permissions)
-        
+
         if data.invite_link:
             m += "\n<b>Invitelink</b>: {}".format(data.invite_link)
-        
+
         msg.reply_text(text=m, parse_mode=ParseMode.HTML)
 
 
@@ -195,4 +215,11 @@ dispatcher.add_handler(GET_CHAT_HANDLER)
 dispatcher.add_handler(LEAVE_CALLBACK)
 
 __mod_name__ = "Dev"
-__handlers__ = [LEAVE_HANDLER, GITPULL_HANDLER, REBOOT_HANDLER, PIP_INSTALL_HANDLER, GET_CHAT_HANDLER, LEAVE_CALLBACK]
+__handlers__ = [
+    LEAVE_HANDLER,
+    GITPULL_HANDLER,
+    REBOOT_HANDLER,
+    PIP_INSTALL_HANDLER,
+    GET_CHAT_HANDLER,
+    LEAVE_CALLBACK,
+]
