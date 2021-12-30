@@ -136,6 +136,20 @@ LAWAK_STRINGS = (
     "https://telegra.ph/file/58a4e245bbc2b35492024.mp4",
     "https://telegra.ph/file/48b3daa3a20559d900129.mp4",
     "https://telegra.ph/file/64027fb4b791a27f6b5cb.mp4",
+    "https://telegra.ph/file/620140f79810d23641fc6.mp4",
+    "https://telegra.ph/file/7bfb94c861f82c18cb433.mp4",
+    "https://telegra.ph/file/923ac2158b93ba9fc17dd.mp4",
+    "https://telegra.ph/file/3048d569911fe1cdd187b.mp4",
+    "https://telegra.ph/file/c7c5c80ce21909f75580b.mp4",
+    "https://telegra.ph/file/9c138d8201462b1f81447.mp4",
+    "https://telegra.ph/file/018625bf11eb48adb810e.mp4",
+    "https://telegra.ph/file/97f2b6789d706ae4ea030.mp4",
+    "https://telegra.ph/file/6a5e42335998ea38f9e22.mp4",
+    "https://telegra.ph/file/e957da8844f7b26549b0c.mp4",
+    "https://telegra.ph/file/e145546bb0bc2fbeec647.mp4",
+    "https://telegra.ph/file/432963b28bd1a1436c36d.mp4",
+    "https://telegra.ph/file/21e4e12a83ce00b937e33.mp4",
+    "https://telegra.ph/file/af0d778e512f98d769d3b.mp4",
     
 )
 
