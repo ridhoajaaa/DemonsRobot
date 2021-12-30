@@ -1,15 +1,14 @@
 import threading
 
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.sql.sqltypes import BigInteger
+from sqlalchemy import Column, String, Integer
 
-from aries.modules.sql import BASE, SESSION
+from SaitamaRobot.modules.sql import BASE, SESSION
 
 
 class Approvals(BASE):
     __tablename__ = "approval"
     chat_id = Column(String(14), primary_key=True)
-    user_id = Column(BigInteger, primary_key=True)
+    user_id = Column(Integer, primary_key=True)
 
     def __init__(self, chat_id, user_id):
         self.chat_id = str(chat_id)  # ensure string
