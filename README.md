@@ -1,8 +1,8 @@
 <center>
   <h1> 
-    Demons Robot <a href="https://www.codefactor.io/repository/github/idzero23/saintaries"><img src="https://www.codefactor.io/repository/github/idzero23/saintaries/badge?s=745e055fa302e5a4447c78cc7209bfcac5798841" alt="CodeFactor" /></a>
+    Demons Robot
   </h1>
-</center>
+</center
 
 ![Demons Robot](https://telegra.ph/file/0d2f622c1ec5bd2c07cf1.jpg)
 
