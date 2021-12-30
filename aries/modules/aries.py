@@ -160,6 +160,9 @@ JJ_STRING = (
     "https://telegra.ph/file/2035a4c23545acc82a6dc.jpg",
     "https://telegra.ph/file/70369c2d06ff2879b6569.jpg",
     "https://telegra.ph/file/d017e355464bea37efe33.jpg",
+    "https://telegra.ph/file/f8b5376041a2c34228183.jpg",
+    "https://telegra.ph/file/e5a6416a77e7d5f79ce36.jpg",
+    "https://telegra.ph/file/aec00301c8f709f658bd6.jpg",
     
 )
     
