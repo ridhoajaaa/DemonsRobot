@@ -70,12 +70,13 @@ def gitpull(update: Update, context: CallbackContext):
 
 
 @dev_plus
-def reboot(update: Update, context: CallbackContext):
+def restart(update: Update, context: CallbackContext):
     update.effective_message.reply_text(
         "Starting a new instance and shutting down this one"
     )
 
-   os.system(f"kill -9 {os.getpid()} && python3 -m aries")
+    os.system("restart.bat")
+    os.execv("start.bat", sys.argv)
 
 
 class Store:
