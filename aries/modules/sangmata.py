@@ -5,7 +5,7 @@ from aries import ubot
 from asyncio.exceptions import TimeoutError
 
 
-@register(outgoing=True, pattern="^/sg ?(.*)")
+@register(pattern="^/sg ?(.*)")
 async def lastname(steal):
     if steal.fwd_from:
         return
