@@ -14,7 +14,7 @@ cryptg
 asyncio
 requests
 httpx
-python-telegram-bot==13.9
+python-telegram-bot==13.10
 SQLAlchemy==1.4.28
 youtube_dl
 python-dotenv==0.19.2
