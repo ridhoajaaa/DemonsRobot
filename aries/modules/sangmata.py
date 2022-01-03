@@ -4,7 +4,7 @@ from telethon.errors.rpcerrorlist import YouBlockedUserError
 from telethon.tl.functions.account import UpdateNotifySettingsRequest
 from aries.events import register
 
-@borg.on(pattern="^/sg ?(.*)")
+@register(pattern="^/sg ?(.*)")
 async def _(event):
     if event.fwd_from:
         return 
@@ -21,7 +21,7 @@ async def _(event):
        await event.edit("```Reply to actual users message.```")
        return
     await event.edit("```Processing```")
-    async with borg.conversation(chat) as conv:
+    async with register.conversation(chat) as conv:
           try:     
               response = conv.wait_event(events.NewMessage(incoming=True,from_users=461843263))
               await borg.forward_messages(chat, reply_message)
