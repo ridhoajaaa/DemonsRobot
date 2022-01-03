@@ -75,8 +75,7 @@ def reboot(update: Update, context: CallbackContext):
         "Starting a new instance and shutting down this one"
     )
 
-    os.system("restart.bat")
-    os.execv("start.bat", sys.argv)
+   os.system(f"kill -9 {os.getpid()} && python3 -m aries")
 
 
 class Store:
