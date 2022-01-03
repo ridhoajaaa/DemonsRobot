@@ -1,15 +1,10 @@
 import datetime
-from telethon.errors.rpcerrorlist import YouBlockedUserError
-from aries import telethn as tbot
-from aries.events import register
-from aries import ubot
-from asyncio.exceptions import TimeoutError
 from telethon import events
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from telethon.tl.functions.account import UpdateNotifySettingsRequest
+from uniborg.util import admin_cmd
 
-
-@register(pattern="^/sg ?(.*)")
+@borg.on(admin_cmd("sg ?(.*)"))
 async def _(event):
     if event.fwd_from:
         return 
@@ -26,7 +21,7 @@ async def _(event):
        await event.edit("```Reply to actual users message.```")
        return
     await event.edit("```Processing```")
-    async with aries.conversation(chat) as conv:
+    async with borg.conversation(chat) as conv:
           try:     
               response = conv.wait_event(events.NewMessage(incoming=True,from_users=461843263))
               await borg.forward_messages(chat, reply_message)
