@@ -70,7 +70,7 @@ def gitpull(update: Update, context: CallbackContext):
 
 
 @dev_plus
-def restart(update: Update, context: CallbackContext):
+def reboot(update: Update, context: CallbackContext):
     update.effective_message.reply_text(
         "Starting a new instance and shutting down this one"
     )
