@@ -10,8 +10,8 @@ from pyrogram.types import (
     Message,
 )
 
-from SiestaRobot import pbot as Client
-from SiestaRobot import (
+from aries import pbot as Client
+from aries import (
     OWNER_ID as owner,
     SUPPORT_CHAT as log,
 )
