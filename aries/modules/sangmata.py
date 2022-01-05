@@ -1,7 +1,7 @@
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from aries import telethn as tbot
 from aries.events import register
-from aries import ubot2 as ubot
+from aries import as ubot
 from asyncio.exceptions import TimeoutError
 
 
