@@ -59,13 +59,13 @@ async def bug(_, msg: Message):
 
     
     if msg.chat.type == "private":
-        await msg.reply_text("❎ <b>This command only works in groups.</b>")
+        await msg.reply_text("❎ <b>Command ini hanya berlaku di group.</b>")
         return
 
     if user_id == owner:
         if bugs:
             await msg.reply_text(
-                f"❎ <b>How can be owner bot reporting bug idiot??</b>",
+                f"❎ <b>Owner kk report bug, tll??</b>",
             )
             return
         else:
@@ -76,7 +76,7 @@ async def bug(_, msg: Message):
         if bugs:
             await msg.reply_text(
                 f"<b>Bug Report : {bugs}</b>\n\n"
-                "✅ <b>The bug was successfully reported to the support group!</b>",
+                "✅ <b>bug berhasil terkirim ke support group!</b>",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
@@ -105,7 +105,7 @@ async def bug(_, msg: Message):
             )
         else:
             await msg.reply_text(
-                f"❎ <b>No bug to Report!</b>",
+                f"❎ <b>tidak ada bug, yang di laporkan!</b>",
             )
         
     
