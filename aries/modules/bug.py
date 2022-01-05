@@ -15,7 +15,7 @@ from aries import (
     OWNER_ID as owner,
     SUPPORT_CHAT as log,
 )
-from SiestaRobot.utils.errors import capture_err
+from aries.utils.errors import capture_err
 
 
 def content(msg: Message) -> [None, str]:
