@@ -83,7 +83,7 @@ def gitpull(update: Update, context: CallbackContext):
     sent_msg.edit_text("Restarted.")
 
     os.system("restart.bat")
-    os.execv("start.bat", sys.argv)
+    os.execv("python3 -m aries")
 
 
 @dev_plus
