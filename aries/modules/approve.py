@@ -19,7 +19,6 @@ from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
 from pyrogram.types import CallbackQuery, ChatPermissions, Message
 
-from aries import LOGGER, SUPPORT_GROUP
 from aries.bot_class import aries
 from aries.database.approve_db import Approve
 from aries.utils.custom_filters import admin_filter, command, owner_filter
