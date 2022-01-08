@@ -69,7 +69,7 @@ from aries.modules.sql import users_sql as sql
 HELP_MSG = "Click The Button Below To Get Help Menu In Your Private Message."
 HELP_IMG = "https://telegra.ph/file/ac893610cae84f302b2da.jpg"
 GROUP_START_IMG = (
-    "CAACAgUAAx0CXGNFKwABBhWWYcIkJZpgrdqjoaYbUl1dmWdcJG0AAkoAA8sM3Dr7Yoy6y1H2LiME"
+    "CAACAgUAAx0CXGNFKwABBw4MYdnaWB0YmeADjGVWMJLyYD49khQAAhAAA8sM3Drz1F-6TuIknyME"
 )
 
 PM_START_TEXT = """
