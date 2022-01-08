@@ -1,228 +1,251 @@
-import html
-from aries.modules.disable import DisableAbleCommandHandler
-from aries import dispatcher, DRAGONS
-from aries.modules.helper_funcs.extraction import extract_user
-from telegram.ext import CallbackContext, run_async, CallbackQueryHandler
-import aries.modules.sql.approve_sql as sql
-from aries.modules.helper_funcs.chat_status import user_admin
-from aries.modules.log_channel import loggable
-from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton, Update
-from telegram.utils.helpers import mention_html
-from telegram.error import BadRequest
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from pyrogram import filters
+from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
+from pyrogram.types import CallbackQuery, ChatPermissions, Message
+
+from aries import LOGGER, SUPPORT_GROUP
+from aries.bot_class import aries
+from aries.database.approve_db import Approve
+from aries.utils.custom_filters import admin_filter, command, owner_filter
+from aries.utils.extract_user import extract_user
+from aries.utils.kbhelpers import ikb
+from aries.utils.parser import mention_html
 
 
-@loggable
-@user_admin
-@run_async
-def approve(update, context):
-    message = update.effective_message
-    chat_title = message.chat.title
-    chat = update.effective_chat
-    args = context.args
-    user = update.effective_user
-    user_id = extract_user(message, args)
-    if not user_id:
-        message.reply_text(
-            "I don't know who you're talking about, you're going to need to specify a user!",
-        )
-        return ""
+@aries.on_message(command("approve") & admin_filter)
+async def approve_user(c: Alita, m: Message):
+    db = Approve(m.chat.id)
+
+    chat_title = m.chat.title
+
     try:
-        member = chat.get_member(user_id)
-    except BadRequest:
-        return ""
-    if member.status == "administrator" or member.status == "creator":
-        message.reply_text(
-            "User is already admin - locks, blocklists, and antiflood already don't apply to them.",
-        )
-        return ""
-    if sql.is_approved(message.chat_id, user_id):
-        message.reply_text(
-            f"[{member.user['first_name']}](tg://user?id={member.user['id']}) is already approved in {chat_title}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        return ""
-    sql.approve(message.chat_id, user_id)
-    message.reply_text(
-        f"[{member.user['first_name']}](tg://user?id={member.user['id']}) has been approved in {chat_title}! They will now be ignored by automated admin actions like locks, blocklists, and antiflood.",
-        parse_mode=ParseMode.MARKDOWN,
-    )
-    log_message = (
-        f"<b>{html.escape(chat.title)}:</b>\n"
-        f"#APPROVED\n"
-        f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
-        f"<b>User:</b> {mention_html(member.user.id, member.user.first_name)}"
-    )
+        user_id, user_first_name, _ = await extract_user(c, m)
+    except Exception:
+        return
 
-    return log_message
-
-
-@loggable
-@user_admin
-@run_async
-def disapprove(update, context):
-    message = update.effective_message
-    chat_title = message.chat.title
-    chat = update.effective_chat
-    args = context.args
-    user = update.effective_user
-    user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text(
+        await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
         )
-        return ""
+        return
     try:
-        member = chat.get_member(user_id)
-    except BadRequest:
-        return ""
-    if member.status == "administrator" or member.status == "creator":
-        message.reply_text("This user is an admin, they can't be unapproved.")
-        return ""
-    if not sql.is_approved(message.chat_id, user_id):
-        message.reply_text(f"{member.user['first_name']} isn't approved yet!")
-        return ""
-    sql.disapprove(message.chat_id, user_id)
-    message.reply_text(
-        f"{member.user['first_name']} is no longer approved in {chat_title}.",
+        member = await m.chat.get_member(user_id)
+    except UserNotParticipant:
+        await m.reply_text("This user is not in this chat!")
+        return
+
+    except RPCError as ef:
+        await m.reply_text(
+            f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
+        )
+        return
+    if member.status in ("administrator", "creator"):
+        await m.reply_text(
+            "User is already admin - blacklists and locks already don't apply to them.",
+        )
+        return
+    already_approved = db.check_approve(user_id)
+    if already_approved:
+        await m.reply_text(
+            f"{(await mention_html(user_first_name, user_id))} is already approved in {chat_title}",
+        )
+        return
+    db.add_approve(user_id, user_first_name)
+    LOGGER.info(f"{user_id} approved by {m.from_user.id} in {m.chat.id}")
+
+    # Allow all permissions
+    try:
+        await m.chat.unban_member(user_id=user_id)
+    except RPCError as g:
+        await m.reply_text(f"Error: {g}")
+        return
+    await m.reply_text(
+        (
+            f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}!\n"
+            "They will now be ignored by blacklists, locks and antiflood!"
+        ),
     )
-    log_message = (
-        f"<b>{html.escape(chat.title)}:</b>\n"
-        f"#UNAPPROVED\n"
-        f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
-        f"<b>User:</b> {mention_html(member.user.id, member.user.first_name)}"
-    )
-
-    return log_message
+    return
 
 
-@user_admin
-@run_async
-def approved(update, context):
-    message = update.effective_message
-    chat_title = message.chat.title
-    chat = update.effective_chat
-    msg = "The following users are approved.\n"
-    approved_users = sql.list_approved(message.chat_id)
-    for i in approved_users:
-        member = chat.get_member(int(i.user_id))
-        msg += f"- `{i.user_id}`: {member.user['first_name']}\n"
-    if msg.endswith("approved.\n"):
-        message.reply_text(f"No users are approved in {chat_title}.")
-        return ""
-    else:
-        message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
+@aries.on_message(
+    command(["disapprove", "unapprove"]) & admin_filter,
+)
+async def disapprove_user(c: Alita, m: Message):
+    db = Approve(m.chat.id)
 
-
-@user_admin
-@run_async
-def approval(update, context):
-    message = update.effective_message
-    chat = update.effective_chat
-    args = context.args
-    user_id = extract_user(message, args)
-    member = chat.get_member(int(user_id))
+    chat_title = m.chat.title
+    try:
+        user_id, user_first_name, _ = await extract_user(c, m)
+    except Exception:
+        return
+    already_approved = db.check_approve(user_id)
     if not user_id:
-        message.reply_text(
+        await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
         )
-        return ""
-    if sql.is_approved(message.chat_id, user_id):
-        message.reply_text(
-            f"{member.user['first_name']} is an approved user. Locks, antiflood, and blocklists won't apply to them.",
+        return
+    try:
+        member = await m.chat.get_member(user_id)
+    except UserNotParticipant:
+        if already_approved:  # If user is approved and not in chat, unapprove them.
+            db.remove_approve(user_id)
+            LOGGER.info(f"{user_id} disapproved in {m.chat.id} as UserNotParticipant")
+        await m.reply_text("This user is not in this chat, unapproved them.")
+        return
+    except RPCError as ef:
+        await m.reply_text(
+            f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
+        )
+        return
+
+    if member.status in ("administrator", "creator"):
+        await m.reply_text("This user is an admin, they can't be disapproved.")
+        return
+
+    if not already_approved:
+        await m.reply_text(
+            f"{(await mention_html(user_first_name, user_id))} isn't approved yet!",
+        )
+        return
+
+    db.remove_approve(user_id)
+    LOGGER.info(f"{user_id} disapproved by {m.from_user.id} in {m.chat.id}")
+
+    # Set permission same as of current user by fetching them from chat!
+    await m.chat.restrict_member(
+        user_id=user_id,
+        permissions=m.chat.permissions,
+    )
+
+    await m.reply_text(
+        f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}.",
+    )
+    return
+
+
+@aries.on_message(command("approved") & admin_filter)
+async def check_approved(_, m: Message):
+    db = Approve(m.chat.id)
+
+    chat = m.chat
+    chat_title = chat.title
+    msg = "The following users are approved:\n"
+    approved_people = db.list_approved()
+
+    if not approved_people:
+        await m.reply_text(f"No users are approved in {chat_title}.")
+        return
+
+    for user_id, user_name in approved_people.items():
+        try:
+            await chat.get_member(user_id)  # Check if user is in chat or not
+        except UserNotParticipant:
+            db.remove_approve(user_id)
+            continue
+        except PeerIdInvalid:
+            pass
+        msg += f"- `{user_id}`: {user_name}\n"
+    await m.reply_text(msg)
+    LOGGER.info(f"{m.from_user.id} checking approved users in {m.chat.id}")
+    return
+
+
+@aries.on_message(command("approval") & filters.group)
+async def check_approval(c: Alita, m: Message):
+    db = Approve(m.chat.id)
+
+    try:
+        user_id, user_first_name, _ = await extract_user(c, m)
+    except Exception:
+        return
+    check_approve = db.check_approve(user_id)
+    LOGGER.info(f"{m.from_user.id} checking approval of {user_id} in {m.chat.id}")
+
+    if not user_id:
+        await m.reply_text(
+            "I don't know who you're talking about, you're going to need to specify a user!",
+        )
+        return
+    if check_approve:
+        await m.reply_text(
+            f"{(await mention_html(user_first_name, user_id))} is an approved user. Locks, antiflood, and blacklists won't apply to them.",
         )
     else:
-        message.reply_text(
-            f"{member.user['first_name']} is not an approved user. They are affected by normal commands.",
+        await m.reply_text(
+            f"{(await mention_html(user_first_name, user_id))} is not an approved user. They are affected by normal commands.",
         )
+    return
 
 
-@run_async
-def unapproveall(update: Update, context: CallbackContext):
-    chat = update.effective_chat
-    user = update.effective_user
-    member = chat.get_member(user.id)
-    if member.status != "creator" and user.id not in DRAGONS:
-        update.effective_message.reply_text(
-            "Only the chat owner can unapprove all users at once.",
+@aries.on_message(
+    command("unapproveall") & filters.group & owner_filter,
+)
+async def unapproveall_users(_, m: Message):
+    db = Approve(m.chat.id)
+
+    all_approved = db.list_approved()
+    if not all_approved:
+        await m.reply_text("No one is approved in this chat.")
+        return
+
+    await m.reply_text(
+        "Are you sure you want to remove everyone who is approved in this chat?",
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "unapprove_all"), ("❌ Cancel", "close_admin")]],
+        ),
+    )
+    return
+
+
+@aries.on_callback_query(filters.regex("^unapprove_all$"))
+async def unapproveall_callback(_, q: CallbackQuery):
+    user_id = q.from_user.id
+    db = Approve(q.message.chat.id)
+    approved_people = db.list_approved()
+    user_status = (await q.message.chat.get_member(user_id)).status
+    if user_status not in {"creator", "administrator"}:
+        await q.answer(
+            "You're not even an admin, don't try this explosive shit!",
+            show_alert=True,
         )
-    else:
-        buttons = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="Unapprove all users", callback_data="unapproveall_user",
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="Cancel", callback_data="unapproveall_cancel",
-                    ),
-                ],
-            ],
+        return
+    if user_status != "creator":
+        await q.answer(
+            "You're just an admin, not owner\nStay in your limits!",
+            show_alert=True,
         )
-        update.effective_message.reply_text(
-            f"Are you sure you would like to unapprove ALL users in {chat.title}? This action cannot be undone.",
-            reply_markup=buttons,
-            parse_mode=ParseMode.MARKDOWN,
+        return
+    db.unapprove_all()
+    for i in approved_people:
+        await q.message.chat.restrict_member(
+            user_id=i[0],
+            permissions=q.message.chat.permissions,
         )
+    await q.message.delete()
+    LOGGER.info(f"{user_id} disapproved all users in {q.message.chat.id}")
+    await q.answer("Disapproved all users!", show_alert=True)
+    return
 
 
-@run_async
-def unapproveall_btn(update: Update, context: CallbackContext):
-    query = update.callback_query
-    chat = update.effective_chat
-    message = update.effective_message
-    member = chat.get_member(query.from_user.id)
-    if query.data == "unapproveall_user":
-        if member.status == "creator" or query.from_user.id in DRAGONS:
-            approved_users = sql.list_approved(chat.id)
-            users = [int(i.user_id) for i in approved_users]
-            for user_id in users:
-                sql.disapprove(chat.id, user_id)      
-            message.edit_text("Successfully Unapproved all user in this Chat.")
-            return
+__PLUGIN__ = "approve"
 
-        if member.status == "administrator":
-            query.answer("Only owner of the chat can do this.")
+_DISABLE_CMDS_ = ["approval"]
 
-        if member.status == "member":
-            query.answer("You need to be admin to do this.")
-    elif query.data == "unapproveall_cancel":
-        if member.status == "creator" or query.from_user.id in DRAGONS:
-            message.edit_text("Removing of all approved users has been cancelled.")
-            return ""
-        if member.status == "administrator":
-            query.answer("Only owner of the chat can do this.")
-        if member.status == "member":
-            query.answer("You need to be admin to do this.")
-
-
-__help__ = """
-Sometimes, you might trust a user not to send unwanted content.
-Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-That's what approvals are for - approve of trustworthy users to allow them to send
-*Admin commands:*
-- `/approval`*:* Check a user's approval status in this chat.
-- `/approve`*:* Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-- `/unapprove`*:* Unapprove of a user. They will now be subject to locks, blacklists, and antiflood again.
-- `/approved`*:* List all approved users.
-- `/unapproveall`*:* Unapprove *ALL* users in a chat. This cannot be undone.
-"""
-
-APPROVE = DisableAbleCommandHandler("approve", approve)
-DISAPPROVE = DisableAbleCommandHandler("unapprove", disapprove)
-APPROVED = DisableAbleCommandHandler("approved", approved)
-APPROVAL = DisableAbleCommandHandler("approval", approval)
-UNAPPROVEALL = DisableAbleCommandHandler("unapproveall", unapproveall)
-UNAPPROVEALL_BTN = CallbackQueryHandler(unapproveall_btn, pattern=r"unapproveall_.*")
-
-dispatcher.add_handler(APPROVE)
-dispatcher.add_handler(DISAPPROVE)
-dispatcher.add_handler(APPROVED)
-dispatcher.add_handler(APPROVAL)
-dispatcher.add_handler(UNAPPROVEALL)
-dispatcher.add_handler(UNAPPROVEALL_BTN)
-
-__mod_name__ = "Approvals"
-__command_list__ = ["approve", "unapprove", "approved", "approval"]
-__handlers__ = [APPROVE, DISAPPROVE, APPROVED, APPROVAL]
+__alt_name__ = ["approved"]

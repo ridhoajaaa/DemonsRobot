@@ -271,7 +271,7 @@ def kick(update: Update, context: CallbackContext) -> str:
         # bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
         bot.sendMessage(
             chat.id,
-            f"Devil's Kiss {mention_html(member.user.id, html.escape(member.user.first_name))}.",
+            f"Babayyy bang, nais to mit yu {mention_html(member.user.id, html.escape(member.user.first_name))}.",
             parse_mode=ParseMode.HTML,
         )
         log = (
