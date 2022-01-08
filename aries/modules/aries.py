@@ -99,8 +99,8 @@ def odo(update: Update, context: CallbackContext):
         else message.reply_photo
     )
     reply_photo(random.choice(aries_strings.ARIES_IMG))
-    
-    
+
+
 def ipe(update: Update, context: CallbackContext):
     message = update.effective_message
     message.reply_to_message.from_user.first_name if message.reply_to_message else message.from_user.first_name
@@ -110,7 +110,7 @@ def ipe(update: Update, context: CallbackContext):
         else message.reply_photo
     )
     reply_photo(random.choice(JJ_STRING))
-    
+
 
 LAWAK_STRINGS = (
     "https://telegra.ph/file/abdae436beade5626f568.mp4",
@@ -150,7 +150,6 @@ LAWAK_STRINGS = (
     "https://telegra.ph/file/432963b28bd1a1436c36d.mp4",
     "https://telegra.ph/file/21e4e12a83ce00b937e33.mp4",
     "https://telegra.ph/file/af0d778e512f98d769d3b.mp4",
-    
 )
 
 
@@ -163,9 +162,8 @@ JJ_STRING = (
     "https://telegra.ph/file/f8b5376041a2c34228183.jpg",
     "https://telegra.ph/file/e5a6416a77e7d5f79ce36.jpg",
     "https://telegra.ph/file/aec00301c8f709f658bd6.jpg",
-    
 )
-    
+
 
 def lawak(update, context):
     msg = update.effective_message

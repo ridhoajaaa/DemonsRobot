@@ -36,19 +36,20 @@ def content(msg: Message) -> [None, str]:
 @capture_err
 async def bug(_, msg: Message):
     if msg.chat.username:
-        chat_username = (f"@{msg.chat.username}")
+        chat_username = f"@{msg.chat.username}"
     else:
-        chat_username = ("Private Group")
-
+        chat_username = "Private Group"
 
     bugs = content(msg)
     user_id = msg.from_user.id
-    mention = "["+msg.from_user.first_name+"](tg://user?id="+str(msg.from_user.id)+")"
+    mention = (
+        "[" + msg.from_user.first_name + "](tg://user?id=" + str(msg.from_user.id) + ")"
+    )
     datetimes_fmt = "%d-%m-%Y"
     datetimes = datetime.utcnow().strftime(datetimes_fmt)
 
     thumb = "https://telegra.ph/file/893538a747b7ad3219a84.jpg"
-    
+
     bug_report = f"""
 **#BUG**
 **From User : ** **{mention}**
@@ -57,7 +58,6 @@ async def bug(_, msg: Message):
 **Bug Report : ** **{bugs}**
 **Event Stamp : ** **{datetimes}**"""
 
-    
     if msg.chat.type == "private":
         await msg.reply_text("❎ <b>Command ini hanya berlaku di group.</b>")
         return
@@ -78,13 +78,8 @@ async def bug(_, msg: Message):
                 f"<b>Bug Report : {bugs}</b>\n\n"
                 "✅ <b>bug berhasil terkirim ke support group!</b>",
                 reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "Close", callback_data=f"close_reply")
-                        ]
-                    ]
-                )
+                    [[InlineKeyboardButton("Close", callback_data=f"close_reply")]]
+                ),
             )
             await Client.send_photo(
                 log,
@@ -92,27 +87,25 @@ async def bug(_, msg: Message):
                 caption=f"{bug_report}",
                 reply_markup=InlineKeyboardMarkup(
                     [
+                        [InlineKeyboardButton("➡ View Bug", url=f"{msg.link}")],
                         [
                             InlineKeyboardButton(
-                                "➡ View Bug", url=f"{msg.link}")
+                                "❌ Close", callback_data=f"close_send_photo"
+                            )
                         ],
-                        [
-                            InlineKeyboardButton(
-                                "❌ Close", callback_data=f"close_send_photo")
-                        ]
                     ]
-                )
+                ),
             )
         else:
             await msg.reply_text(
                 f"❎ <b>tidak ada bug, yang di laporkan!</b>",
             )
-        
-    
+
 
 @Client.on_callback_query(filters.regex("close_reply"))
 async def close_reply(msg, CallbackQuery):
     await CallbackQuery.message.delete()
+
 
 @Client.on_callback_query(filters.regex("close_send_photo"))
 async def close_send_photo(Client, CallbackQuery):
