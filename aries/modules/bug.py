@@ -10,12 +10,12 @@ from pyrogram.types import (
     Message,
 )
 
-from PrimeMega import pbot as Client
-from PrimeMega import (
+from aries import pbot as Client
+from aries import (
     OWNER_ID as owner,
     SUPPORT_CHAT as log,
 )
-from PrimeMega.utils.errors import capture_err
+from aries.utils.errors import capture_err
 
 
 def content(msg: Message) -> [None, str]:
