@@ -107,12 +107,14 @@ def ban(update: Update, context: CallbackContext) -> str:
             message.delete()
             return log
 
-         # context.bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
+        # context.bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
         context.bot.sendMessage(
             chat.id,
             "{} mampus, ban oleh {} di <b>{}</b>\n<b>Alasan</b>: <code>{}</code>".format(
-                mention_html(member.user.id, member.user.first_name), mention_html(user.id, user.first_name),
-                message.chat.title, reason
+                mention_html(member.user.id, member.user.first_name),
+                mention_html(user.id, user.first_name),
+                message.chat.title,
+                reason,
             ),
             parse_mode=ParseMode.HTML,
         )
