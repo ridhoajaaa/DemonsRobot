@@ -1,178 +1,147 @@
-import pyowm
+# ZeldrisRobot
+# Copyright (C) 2017-2019, Paul Larsen
+# Copyright (c) 2021, IDNCoderX Team, <https://github.com/IDN-C-X/ZeldrisRobot>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
 import json
+import time
+
 import requests
+from pytz import country_names as cname
+from telegram import ParseMode
+from telegram.error import BadRequest
 
-from pyowm import timeutils, exceptions
-from telegram import Message, Chat, Update, Bot, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import run_async
-
-from aries import dispatcher, updater, API_WEATHER, API_ACCUWEATHER, spamcheck
+from aries import dispatcher, API_WEATHER as APPID
 from aries.modules.disable import DisableAbleCommandHandler
+from aries.modules.helper_funcs.alternate import typing_action
 
-from aries.modules.languages import tl
-from aries.modules.helper_funcs.alternate import send_message
 
-@run_async
-@spamcheck
-def cuaca(update, context):
+@typing_action
+def weather(update, context):
     args = context.args
-    location = " ".join(args)
-    if location.lower() == context.bot.first_name.lower():
-        send_message(update.effective_message, tl(update.effective_message, "Saya akan terus mengawasi di saat senang maupun sedih!"))
-        context.bot.send_sticker(update.effective_chat.id, BAN_STICKER)
+    if len(args) == 0:
+        reply = "Write a location to check the weather."
+        del_msg = update.effective_message.reply_text(
+            "{}".format(reply),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+        time.sleep(5)
+        try:
+            del_msg.delete()
+            update.effective_message.delete()
+        except BadRequest as err:
+            if err.message in (
+                "Message to delete not found",
+                "Message can't be deleted",
+            ):
+                return
+
+        return
+
+    CITY = " ".join(args)
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={APPID}"
+    request = requests.get(url)
+    result = json.loads(request.text)
+    if request.status_code != 200:
+        reply = "Location not valid."
+        del_msg = update.effective_message.reply_text(
+            "{}".format(reply),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+        time.sleep(5)
+        try:
+            del_msg.delete()
+            update.effective_message.delete()
+        except BadRequest as err:
+            if err.message in (
+                "Message to delete not found",
+                "Message can't be deleted",
+            ):
+                return
         return
 
     try:
-        owm = pyowm.OWM(API_WEATHER, language='id')
-        observation = owm.weather_at_place(location)
-        cuacanya = observation.get_weather()
-        obs = owm.weather_at_place(location)
-        lokasi = obs.get_location()
-        lokasinya = lokasi.get_name()
-        temperatur = cuacanya.get_temperature(unit='celsius')['temp']
-        fc = owm.three_hours_forecast(location)
-
-        # Simbol cuaca
-        statusnya = ""
-        cuacaskrg = cuacanya.get_weather_code()
-        if cuacaskrg < 232: # Hujan badai
-            statusnya += "⛈️ "
-        elif cuacaskrg < 321: # Gerimis
-            statusnya += "🌧️ "
-        elif cuacaskrg < 504: # Hujan terang
-            statusnya += "🌦️ "
-        elif cuacaskrg < 531: # Hujan berawan
-            statusnya += "⛈️ "
-        elif cuacaskrg < 622: # Bersalju
-            statusnya += "🌨️ "
-        elif cuacaskrg < 781: # Atmosfer
-            statusnya += "🌪️ "
-        elif cuacaskrg < 800: # Cerah
-            statusnya += "🌤️ "
-        elif cuacaskrg < 801: # Sedikit berawan
-            statusnya += "⛅️ "
-        elif cuacaskrg < 804: # Berawan
-            statusnya += "☁️ "
-        statusnya += cuacanya._detailed_status
-                    
-
-        cuacabsk = besok.get_weather_code()
-
-        send_message(update.effective_message, tl(update.effective_message, "{} hari ini sedang {}, sekitar {}°C.\n").format(lokasinya,
-                statusnya, temperatur))
-
-    except pyowm.exceptions.api_call_error.APICallError:
-        send_message(update.effective_message, tl(update.effective_message, "Tulis lokasi untuk mengecek cuacanya"))
-    except pyowm.exceptions.api_response_error.NotFoundError:
-        send_message(update.effective_message, tl(update.effective_message, "Maaf, lokasi tidak ditemukan 😞"))
-    else:
+        cityname = result["name"]
+        curtemp = result["main"]["temp"]
+        feels_like = result["main"]["feels_like"]
+        humidity = result["main"]["humidity"]
+        wind = result["wind"]["speed"]
+        weath = result["weather"][0]
+        icon = weath["id"]
+        condmain = weath["main"]
+        conddet = weath["description"]
+        country_name = cname[f"{result['sys']['country']}"]
+    except KeyError:
+        update.effective_message.reply_text("Invalid Location!")
         return
 
-@run_async
-@spamcheck
-def accuweather(update, context):
-    chat_id = update.effective_chat.id
-    message = update.effective_message
-    args = context.args
-    if not args:
-        return send_message(update.effective_message, tl(update.effective_message, "Masukan nama lokasinya untuk mengecek cuacanya!"))
-    location = " ".join(args)
-    if location.lower() == context.bot.first_name.lower():
-        send_message(update.effective_message, tl(update.effective_message, "Saya akan terus mengawasi di saat senang maupun sedih!"))
-        context.bot.send_sticker(update.effective_chat.id, BAN_STICKER)
-        return
+    if icon <= 232:  # Rain storm
+        icon = "⛈"
+    elif icon <= 321:  # Drizzle
+        icon = "🌧"
+    elif icon <= 504:  # Light rain
+        icon = "🌦"
+    elif icon <= 531:  # Cloudy rain
+        icon = "⛈"
+    elif icon <= 622:  # Snow
+        icon = "❄️"
+    elif icon <= 781:  # Atmosphere
+        icon = "🌪"
+    elif icon <= 800:  # Bright
+        icon = "☀️"
+    elif icon <= 801:  # A little cloudy
+        icon = "⛅️"
+    elif icon <= 804:  # Cloudy
+        icon = "☁️"
+    kmph = str(wind * 3.6).split(".")
 
-    if True:
-        url = "http://api.accuweather.com/locations/v1/cities/search.json?q={}&apikey={}".format(location, API_ACCUWEATHER)
-        headers = {'Content-type': 'application/json'}
-        r = requests.get(url, headers=headers)
-        try:
-            data = r.json()[0]
-        except:
-            return send_message(update.effective_message, tl(update.effective_message, "Maaf, lokasi tidak ditemukan 😞"))
-        locid = data.get('Key')
-        weatherlang = tl(update.effective_message, "weather_lang")
-        urls = "http://api.accuweather.com/currentconditions/v1/{}.json?apikey={}&language={}&details=true&getphotos=true".format(locid, API_ACCUWEATHER, weatherlang)
-        rs = requests.get(urls, headers=headers)
-        datas = rs.json()[0]
+    def celsius(c):
+        k = 273.15
+        c = k if (c > (k - 1)) and (c < k) else c
+        return str(round((c - k)))
 
-        if datas.get('WeatherIcon') <= 44:
-            icweather = "☁"
-        elif datas.get('WeatherIcon') <= 42:
-            icweather = "⛈"
-        elif datas.get('WeatherIcon') <= 40:
-            icweather = "🌧"
-        elif datas.get('WeatherIcon') <= 38:
-            icweather = "☁"
-        elif datas.get('WeatherIcon') <= 36:
-            icweather = "⛅"
-        elif datas.get('WeatherIcon') <= 33:
-            icweather = "🌑"
-        elif datas.get('WeatherIcon') <= 32:
-            icweather = "🌬"
-        elif datas.get('WeatherIcon') <= 31:
-            icweather = "⛄"
-        elif datas.get('WeatherIcon') <= 30:
-            icweather = "🌡"
-        elif datas.get('WeatherIcon') <= 29:
-            icweather = "☃"
-        elif datas.get('WeatherIcon') <= 24:
-            icweather = "❄"
-        elif datas.get('WeatherIcon') <= 23:
-            icweather = "🌥"
-        elif datas.get('WeatherIcon') <= 19:
-            icweather = "☁"
-        elif datas.get('WeatherIcon') <= 18:
-            icweather = "🌨"
-        elif datas.get('WeatherIcon') <= 17:
-            icweather = "🌦"
-        elif datas.get('WeatherIcon') <= 15:
-            icweather = "⛈"
-        elif datas.get('WeatherIcon') <= 14:
-            icweather = "🌦"
-        elif datas.get('WeatherIcon') <= 12:
-            icweather = "🌧"
-        elif datas.get('WeatherIcon') <= 11:
-            icweather = "🌫"
-        elif datas.get('WeatherIcon') <= 8:
-            icweather = "⛅️"
-        elif datas.get('WeatherIcon') <= 5:
-            icweather = "☀️"
-        else:
-            icweather = ""
+    def fahr(c):
+        c1 = 9 / 5
+        c2 = 459.67
+        tF = c * c1 - c2
+        if tF < 0 and tF > -1:
+            tF = 0
+        return str(round(tF))
 
-        cuaca = "*{} {}*\n".format(icweather, datas.get('WeatherText'))
-        cuaca += tl(update.effective_message, "*Suhu:* `{}°C`/`{}°F`\n").format(datas.get('Temperature').get('Metric').get('Value'), datas.get('Temperature').get('Imperial').get('Value'))
-        cuaca += tl(update.effective_message, "*Kelembapan:* `{}`\n").format(datas.get('RelativeHumidity'))
-        direct = "{}".format(datas.get('Wind').get('Direction').get('English'))
-        direct = direct.replace("N", "↑").replace("E", "→").replace("S", "↓").replace("W", "←")
-        cuaca += tl(update.effective_message, "*Angin:* `{} {} km/h` | `{} mi/h`\n").format(direct, datas.get('Wind').get('Speed').get('Metric').get('Value'), datas.get('Wind').get('Speed').get('Imperial').get('Value'))
-        cuaca += tl(update.effective_message, "*Tingkat UV:* `{}`\n").format(datas.get('UVIndexText'))
-        cuaca += tl(update.effective_message, "*Tekanan:* `{}` (`{} mb`)\n").format(datas.get('PressureTendency').get('LocalizedText'), datas.get('Pressure').get('Metric').get('Value'))
-
-        lok = []
-        lok.append(data.get('LocalizedName'))
-        lok.append(data.get('AdministrativeArea').get('LocalizedName'))
-        for x in reversed(range(len(data.get('SupplementalAdminAreas')))):
-            lok.append(data.get('SupplementalAdminAreas')[x].get('LocalizedName'))
-        lok.append(data.get('Country').get('LocalizedName'))
-        teks = tl(update.effective_message, "*Cuaca di {} saat ini*\n").format(data.get('LocalizedName'))
-        teks += "{}\n".format(cuaca)
-        teks += tl(update.effective_message, "*Lokasi:* `{}`\n\n").format(", ".join(lok))
-
-        # try:
-        #     context.bot.send_photo(chat_id, photo=datas.get('Photos')[0].get('LandscapeLink'), caption=teks, parse_mode="markdown", reply_to_message_id=message.message_id, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="More info", url=datas.get('Link'))]]))
-        # except:
-        send_message(update.effective_message, teks, parse_mode="markdown", disable_web_page_preview=True, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="More info", url=datas.get('Link'))]]))
+    reply = f"*Current weather for {cityname}, {country_name} is*:\n\n*Temperature:* `{celsius(curtemp)}°C ({fahr(curtemp)}ºF), feels like {celsius(feels_like)}°C ({fahr(feels_like)}ºF) \n`*Condition:* `{condmain}, {conddet}` {icon}\n*Humidity:* `{humidity}%`\n*Wind:* `{kmph[0]} km/h`\n"
+    del_msg = update.effective_message.reply_text(
+        "{}".format(reply), parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True
+    )
+    time.sleep(30)
+    try:
+        del_msg.delete()
+        update.effective_message.delete()
+    except BadRequest as err:
+        if err.message in ("Message to delete not found", "Message can't be deleted"):
+            return
 
 
-__help__ = "weather_help"
+__help__ = r"""
+Weather module:
+× /weather <city>: Gets weather information of particular place!
+\* To prevent spams weather command and the output will be deleted after 30 seconds
+"""
 
 __mod_name__ = "Weather"
 
-CUACA_HANDLER = DisableAbleCommandHandler(["cuaca", "weather"], accuweather, pass_args=True)
-# ACCUWEATHER_HANDLER = DisableAbleCommandHandler("accuweather", accuweather, pass_args=True)
+WEATHER_HANDLER = DisableAbleCommandHandler("weather", weather, pass_args=True)
 
-
-dispatcher.add_handler(CUACA_HANDLER)
-# dispatcher.add_handler(ACCUWEATHER_HANDLER)
+dispatcher.add_handler(WEATHER_HANDLER)
