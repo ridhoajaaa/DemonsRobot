@@ -35,6 +35,7 @@ from telegram.ext import (
     MessageHandler,
 )
 
+from telethon import Button
 from telethon import __version__ as tlhver
 from telegram import __version__ as telever
 from telegram.ext.dispatcher import run_async, DispatcherHandlerStop, Dispatcher
