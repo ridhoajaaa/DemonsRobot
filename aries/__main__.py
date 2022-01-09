@@ -906,8 +906,9 @@ def main():
                 f"@demonszxx", 
                 "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
                 f" **Library Version :** `{telever}` \n"
-                f"⚪ **Telethon Version :** `{tlhver}` ",
+                f" **Telethon Version :** `{tlhver}` ",
                 parse_mode=ParseMode.MARKDOWN
+                [[Button.url("OWNER", "https://t.me/ddodxy")]]
             )
         except Unauthorized:
             LOGGER.warning(
