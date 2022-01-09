@@ -1,30 +1,24 @@
-from telethon import Button
-
-from aries import telethn as tbot
+import os
+import re
+from platform import python_version as kontol
+from telethon import events, Button
+from telegram import __version__ as telever
+from telethon import __version__ as tlhver
+from pyrogram import __version__ as pyrover
 from aries.events import register
+from aries import telethn as tbot
+
 
 PHOTO = "https://telegra.ph/file/d4e700cab0718eae3f8f6.jpg"
 
-
-@register(pattern=("/alive|/ALIVE"))
+@register(pattern=("/alive"))
 async def awake(event):
-    event.sender.first_name
-    ARIES = "**Alo bang, saya DemonsRobot** \n\n"
-    ARIES += "**ALL SYSTEM WORKING PROPERLY**\n\n"
-    ARIES += " ☬ ⌊ **Python :** __3.9.7__ ⌉\n\n"
-    ARIES += " ☬ ⌊ **Pyrogram :** __1.2.9__ ⌉\n\n"
-    ARIES += " ☬ ⌊ **MongoDB :** __2.5.1__ ⌉\n\n"
-    ARIES += " ☬ ⌊ **Platform :** __linux__ ⌉\n\n"
-    ARIES += " ☬ ⌊ **My Lord** : [d̶d̶o̶](https://t.me/ddodxy) ☠⌉\n\n"
-    ARIES += " ☬ ⌊ **TELETHON : 6.6.6 Latest** ⌉\n\n"
-    ARIES += " |||| || ||| |||| || |||||| ||||| || || ||"
-    BUTTON = [
-        [
-            Button.url("Support", "https://t.me/demonszxx"),
-            Button.url("Owner", "https://t.me/ddodxy"),
-        ]
-    ]
-    await tbot.send_file(event.chat_id, PHOTO, caption=ARIES, buttons=BUTTON)
-
-
-__mod_name__ = "Alive"
+  TEXT = f"**Hi [{event.sender.first_name}](tg://user?id={event.sender.id}), I'm Emiko Robot.** \n\n"
+  TEXT += "⚪ **I'm Working Properly** \n\n"
+  TEXT += f"⚪ **My Master : [𝗬𝗲𝘀𝗶𝗱𝗼. 🇮🇶](https://t.me/ddodxy)** \n\n"
+  TEXT += f"⚪ **Library Version :** `{telever}` \n\n"
+  TEXT += f"⚪ **Telethon Version :** `{tlhver}` \n\n"
+  TEXT += f"⚪ **Pyrogram Version :** `{pyrover}` \n\n"
+  TEXT += "**Thanks For Adding Me Here ❤️**"
+  BUTTON = [[Button.url("Help", "https://t.me/demoonsssss_bot?start=help"), Button.url("Support", "https://t.me/demonszxx")]]
+  await tbot.send_file(event.chat_id, PHOTO, caption=TEXT,  buttons=BUTTON)
