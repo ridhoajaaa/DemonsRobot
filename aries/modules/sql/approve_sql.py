@@ -1,5 +1,6 @@
 import threading
-from sqlalchemy import Column, String, UnicodeText, func, distinct
+
+from sqlalchemy import Column, String
 from sqlalchemy.sql.sqltypes import BigInteger
 
 from aries.modules.sql import BASE, SESSION
@@ -53,9 +54,9 @@ def list_approved(chat_id):
     try:
         return (
             SESSION.query(Approvals)
-            .filter(Approvals.chat_id == str(chat_id))
-            .order_by(Approvals.user_id.asc())
-            .all()
+                .filter(Approvals.chat_id == str(chat_id))
+                .order_by(Approvals.user_id.asc())
+                .all()
         )
     finally:
         SESSION.close()
