@@ -908,8 +908,8 @@ def main():
                 "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
                 f" **Library Version :** `{telever}` \n"
                 f" **Telethon Version :** `{tlhver}` ",
+                [[Button.url("OWNER", "https://t.me/ddodxy")]],
                 parse_mode=ParseMode.MARKDOWN
-                [[Button.url("OWNER", "https://t.me/ddodxy")]]
             )
         except Unauthorized:
             LOGGER.warning(
