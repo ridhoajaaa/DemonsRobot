@@ -908,10 +908,9 @@ def main():
                 f"@demonszxx", 
                 "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
                 f" **Library Version :** `{telever}` \n"
-                f" **Telethon Version :** `{tlhver}` ",
-            BUTTON = [[Button.url("OWNER", "https://t.me/ddodxy")]],
-            parse_mode=ParseMode.MARKDOWN,
-            [[await tbot.send_file(buttons=BUTTON)]])
+                f" **Telethon Version :** `{tlhver}` "
+            parse_mode=ParseMode.MARKDOWN
+            )
         except Unauthorized:
             LOGGER.warning(
                 "Bot isnt able to send message to support_chat, go and check!"
