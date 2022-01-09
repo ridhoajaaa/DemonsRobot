@@ -35,8 +35,6 @@ from telegram.ext import (
     MessageHandler,
 )
 
-from aries import telethn as tbot
-from telethon import Button
 from telethon import __version__ as tlhver
 from telegram import __version__ as telever
 from telegram.ext.dispatcher import run_async, DispatcherHandlerStop, Dispatcher
@@ -906,10 +904,10 @@ def main():
         try:
             dispatcher.bot.sendMessage(
                 f"@demonszxx", 
-                "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n",
-                f" **Library Version :** `{telever}` \n",
+                "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
+                f" **Library Version :** `{telever}` \n"
                 f" **Telethon Version :** `{tlhver}` ",
-            parse_mode=ParseMode.MARKDOWN
+                parse_mode=ParseMode.MARKDOWN
             )
         except Unauthorized:
             LOGGER.warning(
