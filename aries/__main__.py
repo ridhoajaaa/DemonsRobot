@@ -35,6 +35,7 @@ from telegram.ext import (
     MessageHandler,
 )
 
+from aries import telethn as tbot
 from telethon import Button
 from telethon import __version__ as tlhver
 from telegram import __version__ as telever
@@ -908,7 +909,9 @@ def main():
                 "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
                 f" **Library Version :** `{telever}` \n"
                 f" **Telethon Version :** `{tlhver}` ",
-                [[Button.url("OWNER", "https://t.me/ddodxy")]]
+            BUTTON = [[Button.url("OWNER", "https://t.me/ddodxy")]]
+            parse_mode=ParseMode.MARKDOWN
+            await tbot.send_file(buttons=BUTTON),
             )
         except Unauthorized:
             LOGGER.warning(
