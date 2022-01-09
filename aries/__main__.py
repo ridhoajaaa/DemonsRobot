@@ -910,7 +910,7 @@ def main():
                 f" **Library Version :** `{telever}` \n"
                 f" **Telethon Version :** `{tlhver}` ",
             BUTTON = [[Button.url("OWNER", "https://t.me/ddodxy")]],
-            parse_mode=ParseMode.MARKDOWN
+            parse_mode=ParseMode.MARKDOWN,
             await tbot.send_file(buttons=BUTTON),
             )
         except Unauthorized:
