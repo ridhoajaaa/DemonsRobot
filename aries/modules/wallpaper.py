@@ -6,6 +6,7 @@ import os
 from asyncio.exceptions import TimeoutError
 
 from telethon.errors.rpcerrorlist import YouBlockedUserError
+from telegram import Update
 
 from aries import telethn as tbot
 from aries.events import register
