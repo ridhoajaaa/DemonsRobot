@@ -7,14 +7,12 @@ from asyncio.exceptions import TimeoutError
 
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 
-from aries.modules.helper_funcs.alternate import typing_action, send_action
 from aries import telethn as tbot
 from aries.events import register
 from aries import ubot
 
 
 @register(pattern="^/wall ?(.*)")
-@send_action(ChatAction.UPLOAD_PHOTO)
 def wall(update, context):
     chat_id = update.effective_chat.id
     msg = update.effective_message
