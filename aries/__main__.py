@@ -34,6 +34,8 @@ from telegram.ext import (
     Filters,
     MessageHandler,
 )
+from telegram import __version__ as telever
+from telethon import __version__ as tlhver
 from telegram.ext.dispatcher import run_async, DispatcherHandlerStop, Dispatcher
 from telegram.utils.helpers import escape_markdown
 
@@ -899,7 +901,7 @@ def main():
 
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
-            dispatcher.bot.sendMessage(f"@demonszxx", "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡")
+            dispatcher.bot.sendMessage(f"@demonszxx", "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡\nLibrary : ** `{telever}`\nTelethon : ** `{tlhver}`")
         except Unauthorized:
             LOGGER.warning(
                 "Bot isnt able to send message to support_chat, go and check!"
