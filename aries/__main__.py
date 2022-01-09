@@ -909,7 +909,7 @@ def main():
                 "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n",
                 f" **Library Version :** `{telever}` \n",
                 f" **Telethon Version :** `{tlhver}` ",
-            parse_mode=ParseMode.MARKDOWN,
+            parse_mode=ParseMode.MARKDOWN
             )
         except Unauthorized:
             LOGGER.warning(
