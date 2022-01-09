@@ -110,7 +110,7 @@ def ban(update, context):
     if reason:
         reply += f"<b>Reason:</b> {html.escape(reason)}"
     try:
-        chat.kick_member(user_id)
+        chat.ban_member(user_id)
 
         if silent:
             if message.reply_to_message:
