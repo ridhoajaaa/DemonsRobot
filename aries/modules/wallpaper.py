@@ -7,7 +7,9 @@ from asyncio.exceptions import TimeoutError
 
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from telegram import Update
+from telegram.ext import CallbackContext
 
+from aries import SUPPORT_CHAT, WALL_API, dispatcher
 from aries import telethn as tbot
 from aries.events import register
 from aries import ubot
