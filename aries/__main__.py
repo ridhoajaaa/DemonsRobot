@@ -905,8 +905,8 @@ def main():
             dispatcher.bot.sendMessage(
                 f"@demonszxx", 
                 "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
-                f" **Library Version :** `{telever}` \n"
-                f" **Telethon Version :** `{tlhver}` ",
+                f" ✪**Library Version :** `{telever}` \n"
+                f" ✪**Telethon Version :** `{tlhver}` ",
                 parse_mode=ParseMode.MARKDOWN
             )
         except Unauthorized:
