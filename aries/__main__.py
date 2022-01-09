@@ -911,7 +911,7 @@ def main():
                 f" **Telethon Version :** `{tlhver}` ",
             BUTTON = [[Button.url("OWNER", "https://t.me/ddodxy")]],
             parse_mode=ParseMode.MARKDOWN,
-            await tbot.send_file(buttons=BUTTON)
+            await tbot.send_file(buttons=BUTTON))
         except Unauthorized:
             LOGGER.warning(
                 "Bot isnt able to send message to support_chat, go and check!"
