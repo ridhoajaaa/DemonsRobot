@@ -22,7 +22,7 @@ from pytz import country_names as cname
 from telegram import ParseMode
 from telegram.error import BadRequest
 
-from aries import dispatcher, API_WEATHER as APPID
+from aries import dispatcher, APPID
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.alternate import typing_action
 
