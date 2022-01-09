@@ -902,7 +902,13 @@ def main():
 
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
-            dispatcher.bot.sendMessage(f"@demonszxx", "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡\n\nLibrary Ver : {}\nTelethon Ver : {}")
+            dispatcher.bot.sendMessage(
+                f"@demonszxx", 
+                "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
+                f" **Library Version :** `{telever}` \n"
+                f"⚪ **Telethon Version :** `{tlhver}` ",
+                parse_mode=ParseMode.MARKDOWN
+            )
         except Unauthorized:
             LOGGER.warning(
                 "Bot isnt able to send message to support_chat, go and check!"
