@@ -906,10 +906,10 @@ def main():
         try:
             dispatcher.bot.sendMessage(
                 f"@demonszxx", 
-                "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
-                f" **Library Version :** `{telever}` \n"
-                f" **Telethon Version :** `{tlhver}` "
-            parse_mode=ParseMode.MARKDOWN
+                "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n",
+                f" **Library Version :** `{telever}` \n",
+                f" **Telethon Version :** `{tlhver}` ",
+            parse_mode=ParseMode.MARKDOWN,
             )
         except Unauthorized:
             LOGGER.warning(
