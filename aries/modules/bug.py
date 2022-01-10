@@ -52,9 +52,11 @@ async def bug(_, msg: Message):
 
     bug_report = f"""
 **#BUG : ** **[Lord](https://t.me/ddodxy)**
+
 **From User : ** **{mention}**
 **User ID : ** **{user_id}**
 **Group : ** **{chat_username}**
+
 **Bug Report : ** **{bugs}**
 **Event Stamp : ** **{datetimes}**"""
 
