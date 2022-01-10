@@ -39,7 +39,7 @@ def afk(update, _):
     REDIS.set(f"afk_time_{user.id}", start_afk_time)
     fname = user.first_name
     try:
-        message.reply_text("Sampai Jumpa Banh {}, Jangan kangen".format(fname))
+        message.reply_text("Sampai Jumpa Banh  {}!".format(fname))
     except BadRequest:
         pass
 
@@ -63,7 +63,7 @@ def no_longer_afk(update, _):
         firstname = update.effective_user.first_name
         try:
             message.reply_text(
-                "aim kombek beyby {}!\n\nAnda pergi selama: {}".format(
+                "Aim kombek beyby {}!\n\nAnda pergi selama : {}".format(
                     firstname, end_afk_time
                 )
             )
@@ -135,9 +135,9 @@ def check_afk(update, context, user_id: int, fst_name: int, userc_id: int):
         if int(userc_id) == int(user_id):
             return
         if reason == "none":
-            res = "{} is AFK!\nLast seen: {}".format(fst_name, since_afk)
+            res = "{} is AFK!\nTerakhir dilihat : {}".format(fst_name, since_afk)
         else:
-            res = "{} is AFK!\nAlasan: {}\nTerakhir dilihat: {}".format(
+            res = "{} is AFK!\n\nAlasan: {}\nTerakhir dilihat : {}".format(
                 fst_name, reason, since_afk
             )
 
