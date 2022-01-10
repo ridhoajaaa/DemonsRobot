@@ -126,9 +126,8 @@ async def callback_query_next(_, next):
     )
  
 # Previous Button-------------------------------------------------------------------------- 
-@app.on_callback_query(filters.regex("previous"))
-async def callback_query_next(_, query):
-    m = query.message
+async def callback_query_next(_, previous):
+    m = previous.message
     try:
         data = db[query.message.chat.id]
     except:
@@ -180,9 +179,8 @@ async def callback_query_next(_, query):
     )
 
 # Download Button--------------------------------------------------------------------------    
-@app.on_callback_query(filters.regex("dload"))
-async def callback_query_next(_, query):
-    m = query.message
+async def callback_query_next(_, dload):
+    m = dload.message
     data = db[m.chat.id]
     res = data['result']
     curr_page = int(data['curr_page'])
@@ -209,9 +207,8 @@ async def callback_query_next(_, query):
     )
 
 # Download Button 2--------------------------------------------------------------------------    
-@app.on_callback_query(filters.regex(r"^phubdl"))
-async def callback_query_dl(_, query):
-    m = query.message
+async def callback_query_dl(_, phubdl):
+    m = phubdl.message
     capsion = m.caption
     entoty = m.caption_entities
     await m.edit(f"**downloading...** :\n\n{capsion}")
@@ -238,8 +235,7 @@ async def callback_query_dl(_, query):
         os.remove(thomb)
     
 # Delete Button-------------------------------------------------------------------------- 
-@app.on_callback_query(filters.regex("delete"))
-async def callback_query_delete(_, query):
-    await query.message.delete()
+async def callback_query_delete(_, delete):
+    await delete.message.delete()
     
 app.run()
