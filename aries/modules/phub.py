@@ -13,13 +13,6 @@ session = ClientSession()
 arq = ARQ("https://thearq.tech", ARQ_API_KEY, session)
 pornhub = arq.pornhub
 
-app = Client(f"{BOT_NAME}", bot_token=f"{TOKEN}", api_id=6,
-             api_hash="eb06d4abfb49dc3eeb1aeb98ae0f581e")
-print("\n✨ BOT IS READY TO USE ✨\n")
-
-
-db = {}
-
 async def download_url(url: str):
     loop = get_running_loop()
     file = await loop.run_in_executor(None, download, url)
