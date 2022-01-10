@@ -73,9 +73,8 @@ async def sarch(_,message):
     db[message.chat.id] = new_db
     
  # Next Button--------------------------------------------------------------------------
-@app.on_callback_query(filters.regex("next"))
-async def callback_query_next(_, query):
-    m = query.message
+async def callback_query_next(_, next):
+    m = next.message
     try:
         data = db[query.message.chat.id]
     except:
