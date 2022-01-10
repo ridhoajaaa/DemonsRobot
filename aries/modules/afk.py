@@ -39,7 +39,7 @@ def afk(update, _):
     REDIS.set(f"afk_time_{user.id}", start_afk_time)
     fname = user.first_name
     try:
-        message.reply_text("Sampai Jumpa Banh  {}!".format(fname))
+        message.reply_text("Sampai Jumpa Banh 👋 {}!".format(fname))
     except BadRequest:
         pass
 
@@ -155,7 +155,7 @@ When marked as AFK, any mentions will be replied to with a message to say you're
 ❍ brb <reason>: Same as the afk command - but not a command.
 
 An example of how to afk or brb:
-`/afk dinner` or brb dinner.
+`/afk coli` or brb coli.
 """
 
 AFK_HANDLER = DisableAbleCommandHandler(
