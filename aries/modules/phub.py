@@ -12,7 +12,6 @@ from aries import ARQ_API_KEY, TOKEN
 session = ClientSession()
 arq = ARQ("https://thearq.tech", ARQ_API_KEY, session)
 pornhub = arq.pornhub
-phdl = arq.phdl
 
 app = Client(f"{BOT_NAME}", bot_token=f"{TOKEN}", api_id=6,
              api_hash="eb06d4abfb49dc3eeb1aeb98ae0f581e")
