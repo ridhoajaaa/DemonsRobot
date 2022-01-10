@@ -237,5 +237,3 @@ async def callback_query_dl(_, phubdl):
 # Delete Button-------------------------------------------------------------------------- 
 async def callback_query_delete(_, delete):
     await delete.message.delete()
-    
-app.run()
