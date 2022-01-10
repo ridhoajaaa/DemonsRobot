@@ -1,4 +1,10 @@
 import os
+from aries import dispatcher
+from aries.modules.disable import DisableAbleCommandHandler
+from aries.events import register
+
+from telegram.ext import CallbackContext
+
 from aiohttp import ClientSession
 from pyrogram import filters, Client
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMediaPhoto, InputMediaVideo
@@ -24,7 +30,8 @@ async def time_to_seconds(time):
         int(x) * 60 ** i for i, x in enumerate(reversed(stringt.split(":")))
     )
   # Let's Go----------------------------------------------------------------------
-async def sarch(_,message):
+  @register(pattern="^/phub ?(.*)")
+  async def sarch(_,message):
     try:
         if "/" in message.text.split(None,1)[0]:
             await message.reply_text(
@@ -237,3 +244,12 @@ async def callback_query_dl(_, phubdl):
 # Delete Button-------------------------------------------------------------------------- 
 async def callback_query_delete(_, delete):
     await delete.message.delete()
+
+PHUB_HANDLER = DisableAbleCommandHandler("phub", phub, run_async=True)
+dispatcher.add_handler(PHUB_HANDLER)
+
+__mod_name__ = "PHUB"
+
+
+__command_list__ = ["odo", "ipe", "diarydodo", "lawak"]
+__handlers__ = [PHUB_HANDLER]
