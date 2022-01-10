@@ -77,14 +77,12 @@ GROUP_START_IMG = (
 
 PM_START_TEXT = """
 Alo bang, [👋](https://telegra.ph/file/7dc8ddb28d50ed85735f5.jpg) I'm {}.
-Saya bot untuk manage group anda, ya begitulah kira2.
-Maintained by : [d̶d̶o̶x̶ ⸸ ƒ α ᴄ к](https://t.me/ddodxy)
-Founder And Dev Of : [IDZEROID SYNDICATES](https://t.me/idzeroidsupport).
+Saya bot untuk manage group anda.
+Maintained by : [𝗬𝗲𝘀𝗶𝗱𝗼.](https://t.me/ddodxy)
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
 • *Uptime:* `{}`
 • `{}` *Users, across* `{}` *chats.*
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
-Dibuat khusus untuk mengelola grup Anda.
 ✪ Baca "DETAIL" biar ga bingung ✪ 
 """
 
@@ -905,8 +903,8 @@ def main():
             dispatcher.bot.sendMessage(
                 f"@demonszxx",
                 "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
-                f" ✪**Library Version :** `{telever}` \n"
-                f" ✪**Telethon Version :** `{tlhver}` ",
+                f"✪**Library Version :** `{telever}` \n"
+                f"✪**Telethon Version :** `{tlhver}` ",
                 parse_mode=ParseMode.MARKDOWN,
             )
         except Unauthorized:
