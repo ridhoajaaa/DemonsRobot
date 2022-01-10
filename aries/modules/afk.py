@@ -39,7 +39,7 @@ def afk(update, _):
     REDIS.set(f"afk_time_{user.id}", start_afk_time)
     fname = user.first_name
     try:
-        message.reply_text("{} AFK dulu tod2 ku, Jangan kangen".format(fname))
+        message.reply_text("Sampai Jumpa Banh {}, Jangan kangen".format(fname))
     except BadRequest:
         pass
 
@@ -63,7 +63,7 @@ def no_longer_afk(update, _):
         firstname = update.effective_user.first_name
         try:
             message.reply_text(
-                "{} aim kombek beyby!\nAnda pergi selama: {}".format(
+                "aim kombek beyby {}!\n\nAnda pergi selama: {}".format(
                     firstname, end_afk_time
                 )
             )
