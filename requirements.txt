@@ -58,6 +58,7 @@ python-rapidjson==1.5
 ujson
 pretty-errors
 pygithub
+pornhub_api
 tgcrypto
 pyrogram==1.2.20
 humanize
