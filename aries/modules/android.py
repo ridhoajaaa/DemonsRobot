@@ -19,10 +19,9 @@
 import time
 
 import rapidjson as json
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, TimeoutException
 from babel.dates import format_datetime
 from bs4 import BeautifulSoup
-from httpx import TimeoutException
 
 from aries import decorator
 from aries.decorator import register
