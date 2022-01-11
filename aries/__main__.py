@@ -69,7 +69,7 @@ from aries.modules.helper_funcs.misc import paginate_modules
 from aries.modules.helper_funcs.readable_time import get_readable_time
 from aries.modules.sql import users_sql as sql
 
-HELP_MSG = "Click The Button Below To Get Help Menu In Your Private Message."
+HELP_MSG = "Tombol Di Bawah Untuk Mendapatkan Menu Bantuan Dalam Pesan Pribadi Anda."
 HELP_IMG = "https://telegra.ph/file/ac893610cae84f302b2da.jpg"
 GROUP_START_IMG = (
     "CAACAgUAAx0CXGNFKwABBw4MYdnaWB0YmeADjGVWMJLyYD49khQAAhAAA8sM3Drz1F-6TuIknyME"
@@ -106,7 +106,6 @@ buttons = [
 
 
 HELP_STRINGS = f"""
-*Main Commands :* [DemonsRobot](https://telegra.ph/file/e97e6460a9515cd000c19.jpg)
 ✪ /start: Starts me! You've probably already used this.
 ✪ /help: Click this, I'll let you know about myself!
 ✪ /donate: You can support my creater using this command.
@@ -903,8 +902,8 @@ def main():
             dispatcher.bot.sendMessage(
                 f"@demonszxx",
                 "ɪ'ᴀᴍ ᴏɴʟɪɴᴇ ɴᴏᴡ ʙᴇʏʙɪ⚡️\n\n"
-                f"✪**Library Version :** `{telever}` \n"
-                f"✪**Telethon Version :** `{tlhver}` ",
+                f"✪**Library Version :** <b>`{telever}`<b> \n"
+                f"✪**Telethon Version :** <b>`{tlhver}`<b> ",
                 parse_mode=ParseMode.MARKDOWN,
             )
         except Unauthorized:
