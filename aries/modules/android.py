@@ -22,7 +22,7 @@ import rapidjson as json
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from babel.dates import format_datetime
 
-from aries.modules.helper_funcs import decorator
+from aries import decorator
 from aries.modules.helper_funcs.decorator import register
 
 from .utils.android import GetDevice
