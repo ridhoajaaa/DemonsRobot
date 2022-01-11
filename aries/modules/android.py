@@ -19,7 +19,7 @@
 import time
 
 import rapidjson as json
-from aiogram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from babel.dates import format_datetime
 from bs4 import BeautifulSoup
 from httpx import TimeoutException
