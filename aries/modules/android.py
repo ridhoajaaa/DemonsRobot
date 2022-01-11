@@ -1,677 +1,444 @@
-# Copyright (C) 2022 HitaloSama.
-# Copyright (C) 2019 Aiogram.
-#
-# This file is part of Hitsuki (Telegram Bot)
+# ZeldrisRobot
+# Copyright (C) 2017-2019, Paul Larsen
+# Copyright (c) 2021, IDNCoderX Team, <https://github.com/IDN-C-X/ZeldrisRobot>
 #
 # This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU Affero General Public License for more details.
-
+#
 # You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import re
 import time
+from datetime import datetime
 
-import rapidjson as json
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from babel.dates import format_datetime
+from bs4 import BeautifulSoup
+from requests import get
+from telegram import InlineKeyboardButton
+from telegram import InlineKeyboardMarkup
+from telegram import ParseMode
+from telegram.error import BadRequest
+from ujson import loads
 
-from aries.modules.helper_funcs.decorator import register
+from aries import dispatcher
+from aries.modules.disable import DisableAbleCommandHandler
+from aries.modules.helper_funcs.alternate import typing_action
 
-from .utils.android import GetDevice
-from .utils.covert import convert_size
-from .utils.disable import disableable_dec
-from .utils.http import http
-from .utils.language import get_strings_dec
-from .utils.message import get_arg, get_cmd
+GITHUB = "https://github.com"
+DEVICES_DATA = "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
 
-# Commands /evo and /los ported from Haruka Aya
-# Commands /twrp, /samcheck and /samget ported from Samsung Geeks
 
-
-@register(cmds=["los", "lineageos"])
-@disableable_dec("los")
-@get_strings_dec("android")
-async def los(message, strings):
-
-    try:
-        device = get_arg(message)
-    except IndexError:
-        device = ""
-
-    if device == "":
-        text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    fetch = await http.get(f"https://download.lineageos.org/api/v1/{device}/nightly/*")
-    if fetch.status_code == 200 and len(fetch.json()["response"]) != 0:
-        usr = json.loads(fetch.content)
-        response = usr["response"][-1]
-        filename = response["filename"]
-        url = response["url"]
-        buildsize_a = response["size"]
-        buildsize_b = convert_size(int(buildsize_a))
-        version = response["version"]
-        build_time = response["datetime"]
-        romtype = response["romtype"]
-
-        text = (strings["download"]).format(url=url, filename=filename)
-        text += (strings["build_type"]).format(type=romtype)
-        text += (strings["build_size"]).format(size=buildsize_b)
-        text += (strings["version"]).format(version=version)
-        text += (strings["release_time"]).format(date=format_datetime(build_time))
-
-        btn = strings["dl_btn"]
-        keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-        await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
-        return
-    text = strings["err_query"]
-    await message.reply(text)
-
-
-@register(cmds="pe")
-@disableable_dec("pe")
-@get_strings_dec("android")
-async def pixel_experience(message, strings):
-
-    try:
-        args = message.text.split()
-        device = args[1]
-    except IndexError:
-        device = ""
-
-    try:
-        atype = args[2].lower()
-    except IndexError:
-        atype = "twelve"
-
-    if device == "":
-        text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    fetch = await http.get(
-        f"https://download.pixelexperience.org/ota_v5/{device}/{atype}"
-    )
-    if fetch.status_code == 200:
-        response = json.loads(fetch.content)
-        if response["error"]:
-            await message.reply(strings["err_query"])
-            return
-        filename = response["filename"]
-        url = response["url"]
-        buildsize_a = response["size"]
-        buildsize_b = convert_size(int(buildsize_a))
-        version = response["version"]
-        build_time = response["datetime"]
-
-        text = (strings["download"]).format(url=url, filename=filename)
-        text += (strings["build_size"]).format(size=buildsize_b)
-        text += (strings["version"]).format(version=version)
-        text += (strings["release_time"]).format(date=format_datetime(build_time))
-
-        btn = strings["dl_btn"]
-        keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-        await message.reply(text, reply_markup=keyboard)
-        return
-    text = strings["err_query"]
-    await message.reply(text)
-
-
-@register(cmds=["statix", "sxos"])
-@disableable_dec("statix")
-@get_strings_dec("android")
-async def statix(message, strings):
-
-    try:
-        device = get_arg(message)
-    except IndexError:
-        device = ""
-
-    if device == "":
-        text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    fetch = await http.get(f"https://downloads.statixos.com/json/{device}.json")
-    if fetch.status_code == 200 and len(fetch.json()["response"]) != 0:
-        usr = json.loads(fetch.content)
-        response = usr["response"]
-        filename = response[0]["filename"]
-        url = response[0]["url"]
-        buildsize_a = response[0]["size"]
-        buildsize_b = convert_size(int(buildsize_a))
-        version = response[0]["version"]
-        build_time = response[0]["datetime"]
-        romtype = response[0]["romtype"]
-
-        text = (strings["download"]).format(url=url, filename=filename)
-        text += (strings["build_type"]).format(type=romtype)
-        text += (strings["build_size"]).format(size=buildsize_b)
-        text += (strings["version"]).format(version=version)
-        text += (strings["release_time"]).format(date=format_datetime(build_time))
-
-        btn = strings["dl_btn"]
-        keyboard = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-        await message.reply(text, reply_markup=keyboard, disable_web_page_preview=True)
-        return
-    text = strings["err_query"]
-    await message.reply(text)
-
-
-@decorator.register(cmds=["crdroid", "crd"])
-@disableable_dec("crdroid")
-@get_strings_dec("android")
-async def crdroid(message, strings):
-
-    try:
-        device = get_arg(message)
-    except IndexError:
-        device = ""
-
-    if device == "x00t":
-        device = "X00T"
-
-    if device == "x01bd":
-        device = "X01BD"
-
-    if device == "":
-        text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    fetch = await http.get(
-        f"https://raw.githubusercontent.com/crdroidandroid/android_vendor_crDroidOTA/11.0/{device}.json"
-    )
-
-    if fetch.status_code in [500, 504, 505]:
-        await message.reply(strings["err_github"])
-        return
-
-    if fetch.status_code == 200:
-        try:
-            usr = json.loads(fetch.content)
-            response = usr["response"]
-            filename = response[0]["filename"]
-            url = response[0]["download"]
-            version = response[0]["version"]
-            maintainer = response[0]["maintainer"]
-            size_a = response[0]["size"]
-            size_b = convert_size(int(size_a))
-            build_time = response[0]["timestamp"]
-            romtype = response[0]["buildtype"]
-
-            text = (strings["download"]).format(url=url, filename=filename)
-            text += (strings["build_type"]).format(type=romtype)
-            text += (strings["build_size"]).format(size=size_b)
-            text += (strings["version"]).format(version=version)
-            text += (strings["release_time"]).format(date=format_datetime(build_time))
-            text += (strings["maintainer"]).format(name=maintainer)
-
-            btn = strings["dl_btn"]
-            keyboard = InlineKeyboardMarkup().add(
-                InlineKeyboardButton(text=btn, url=url)
-            )
-            await message.reply(
-                text, reply_markup=keyboard, disable_web_page_preview=True
-            )
-            return
-
-        except ValueError:
-            text = strings["err_ota"]
-            await message.reply(text)
-            return
-
-    elif fetch.status_code == 404:
-        text = strings["err_query"]
-        await message.reply(text)
-        return
-
-
-@decorator.register(cmds=["evo", "evox"])
-@disableable_dec("evo")
-@get_strings_dec("android")
-async def evo(message, strings):
-
-    try:
-        device = get_arg(message)
-    except IndexError:
-        device = ""
-
-    if device == "x00t":
-        device = "X00T"
-
-    if device == "x01bd":
-        device = "X01BD"
-
-    if device == "":
-        text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    fetch = await http.get(
-        f"https://raw.githubusercontent.com/Evolution-X-Devices/official_devices/master/builds/{device}.json"
-    )
-
-    if fetch.status_code in [500, 504, 505]:
-        await message.reply(strings["err_github"])
-        return
-
-    if fetch.status_code == 200:
-        try:
-            usr = json.loads(fetch.content)
-            filename = usr["filename"]
-            url = usr["url"]
-            version = usr["version"]
-            maintainer = usr["maintainer"]
-            maintainer_url = usr["telegram_username"]
-            size_a = usr["size"]
-            size_b = convert_size(int(size_a))
-
-            text = (strings["download"]).format(url=url, filename=filename)
-            text += (strings["build_size"]).format(size=size_b)
-            text += (strings["android_version"]).format(version=version)
-            text += (strings["maintainer"]).format(
-                name=f"<a href='{maintainer_url}'>{maintainer}</a>"
-            )
-
-            btn = strings["dl_btn"]
-            keyboard = InlineKeyboardMarkup().add(
-                InlineKeyboardButton(text=btn, url=url)
-            )
-            await message.reply(
-                text, reply_markup=keyboard, disable_web_page_preview=True
-            )
-            return
-
-        except ValueError:
-            text = strings["err_ota"]
-            await message.reply(text)
-            return
-
-    elif fetch.status_code == 404:
-        text = strings["err_query"]
-        await message.reply(text)
-        return
-
-
-@register(cmds="whatis")
-@disableable_dec("whatis")
-@get_strings_dec("android")
-async def whatis(message, strings):
-    device = get_arg(message)
-    if not device:
-        text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    data = await GetDevice(device).get()
-    if data:
-        name = data["name"]
-        device = data["device"]
-        brand = data["brand"]
-    else:
-        text = strings["err_query"]
-        await message.reply(text)
-        return
-
-    text = strings["whatis"].format(device=device, brand=brand, name=name)
-    await message.reply(text)
-
-
-@decorator.register(cmds=["models", "variants"])
-@disableable_dec("models")
-@get_strings_dec("android")
-async def variants(message, strings):
-    device = get_arg(message)
-    if not device:
-        text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    data = await GetDevice(device).get()
-    if data:
-        name = data["name"]
-        device = data["device"]
-    else:
-        text = strings["err_query"]
-        await message.reply(text)
-        return
-
-    data = await http.get(
-        "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
-    )
-    db = json.loads(data.content)
-    device = db[device]
-    text = f"<b>{name}</b> variants:\n\n"
-
-    for i in device:
-        name = i["name"]
-        model = i["model"]
-        text += strings["variants"].format(model=model, name=name)
-
-    await message.reply(text)
-
-
-@register(cmds="magisk")
-@disableable_dec("magisk")
-@get_strings_dec("android")
-async def magisk(message, strings):
+@typing_action
+def magisk(update, _):
     url = "https://raw.githubusercontent.com/topjohnwu/magisk-files/"
-    releases = strings["magisk"]
-    variant = ["master/stable", "master/beta", "master/canary"]
-    for variants in variant:
-        fetch = await http.get(url + variants + ".json")
+    releases = ""
+    for types, branch in {
+        "Stable": ["master/stable", "master"],
+        "Canary": ["master/canary", "canary"],
+    }.items():
+        data = get(url + branch[0] + ".json").json()
+        if types != "Canary":
+            releases += (
+                f"*{types}*: \n"
+                f'• App - [{data["magisk"]["version"]}-{data["magisk"]["versionCode"]}]({data["magisk"]["link"]}) - ['
+                f'Changelog]({data["magisk"]["note"]})\n \n'
+            )
+        else:
+            releases += (
+                f"*{types}*: \n"
+                f'• App - [{data["magisk"]["version"]}-{data["magisk"]["versionCode"]}]({data["magisk"]["link"]}) - ['
+                f'Changelog]({data["magisk"]["note"]})\n'
+                f"\n Now magisk is packed as all in one, "
+                f"refer [this installation](https://topjohnwu.github.io/Magisk/install.html) procedure for more info.\n"
+            )
 
-        if fetch.status_code in [500, 504, 505]:
-            await message.reply(strings["err_github"])
-            return
-
-        data = json.loads(fetch.content)
-        if variants == "master/stable":
-            name = "<b>Stable</b>"
-        elif variants == "master/beta":
-            name = "<b>Beta</b>"
-        elif variants == "master/canary":
-            name = "<b>Canary</b>"
-        releases += f'{name}: <a href="{data["magisk"]["link"]}">{"v" if data["magisk"]["version"][0].isdecimal() else ""}{data["magisk"]["version"]}</a> (<code>{data["magisk"]["versionCode"]}</code>) | '
-        releases += f'<a href="{data["magisk"]["note"]}">Changelog</a>\n'
-
-    await message.reply(releases, disable_web_page_preview=True)
-
-
-@register(cmds="phh")
-@disableable_dec("phh")
-@get_strings_dec("android")
-async def phh(message, strings):
-    fetch = await http.get(
-        "https://api.github.com/repos/phhusson/treble_experimentations/releases/latest"
+    update.message.reply_text(
+        "*Latest Magisk Releases:*\n\n{}".format(releases),
+        parse_mode=ParseMode.MARKDOWN,
+        disable_web_page_preview=True,
     )
 
-    if fetch.status_code in [500, 504, 505]:
-        await message.reply(strings["err_github"])
-        return
 
-    usr = json.loads(fetch.content)
-    text = strings["phh"]
-    text += strings["phh_name"].format(name=usr["name"])
-    text += strings["phh_version"].format(tag_name=usr["tag_name"])
-    text += strings["phh_date"].format(date=usr["published_at"])
-    for i in range(len(usr)):
+@typing_action
+def device(update, context):
+    args = context.args
+    if len(args) == 0:
+        reply = "No codename provided, write a codename for fetching informations."
+        del_msg = update.effective_message.reply_text(
+            "{}".format(reply),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+        time.sleep(5)
         try:
-            name = usr["assets"][i]["name"]
-            url = usr["assets"][i]["browser_download_url"]
-            text += f"<a href='{url}'>{name}</a>\n"
-        except IndexError:
-            continue
+            del_msg.delete()
+            update.effective_message.delete()
+        except BadRequest as err:
+            if err.message in [
+                "Message to delete not found",
+                "Message can't be deleted",
+            ]:
+                return
+    devices = " ".join(args)
+    db = get(DEVICES_DATA).json()
+    newdevice = devices.strip("lte") if devices.startswith("beyond") else devices
+    try:
+        reply = f"Search results for {devices}:\n\n"
+        brand = db[newdevice][0]["brand"]
+        name = db[newdevice][0]["name"]
+        model = db[newdevice][0]["model"]
+        codename = newdevice
+        reply += (
+            f"<b>{brand} {name}</b>\n"
+            f"Model: <code>{model}</code>\n"
+            f"Codename: <code>{codename}</code>\n\n"
+        )
+    except KeyError:
+        reply = f"Couldn't find info about {devices}!\n"
+        del_msg = update.effective_message.reply_text(
+            "{}".format(reply),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+        time.sleep(5)
+        try:
+            del_msg.delete()
+            update.effective_message.delete()
+        except BadRequest as err:
+            if err.message in [
+                "Message to delete not found",
+                "Message can't be deleted",
+            ]:
+                return
+    update.message.reply_text(
+        "{}".format(reply), parse_mode=ParseMode.HTML, disable_web_page_preview=True
+    )
 
-    await message.reply(text, disable_web_page_preview=True)
 
+@typing_action
+def twrp(update, context):
+    args = context.args
+    if len(args) == 0:
+        reply = "No codename provided, write a codename for fetching informations."
+        del_msg = update.effective_message.reply_text(
+            "{}".format(reply),
+            parse_mode=ParseMode.MARKDOWN,
+        )
+        time.sleep(5)
+        try:
+            del_msg.delete()
+            update.effective_message.delete()
+        except BadRequest as err:
+            if err.message in [
+                "Message to delete not found",
+                "Message can't be deleted",
+            ]:
+                return
 
-@register(cmds="twrp")
-@disableable_dec("twrp")
-@get_strings_dec("android")
-async def twrp(message, strings):
-    device = get_arg(message).lower()
-
-    if not device:
-        text = strings["cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    url = await http.get(f"https://eu.dl.twrp.me/{device}/")
+    _device = " ".join(args)
+    url = get(f"https://eu.dl.twrp.me/{_device}/")
     if url.status_code == 404:
-        text = strings["err_twrp"].format(device=device)
-        await message.reply(text)
-        return
-    text = strings["twrp_header"]
-    text += strings["twrp_device"].format(device=device)
-    page = BeautifulSoup(url.content, "lxml")
-    date = page.find("em").text.strip()
-    text += strings["twrp_udpated"].format(date=date)
-    trs = page.find("table").find_all("tr")
-    row = 2 if trs[0].find("a").text.endswith("tar") else 1
-
-    for i in range(row):
-        download = trs[i].find("a")
-        dl_link = f"https://dl.twrp.me{download['href']}"
-        dl_file = download.text
-        size = trs[i].find("span", {"class": "filesize"}).text
-    text += strings["twrp_size"].format(size=size)
-    text += strings["twrp_file"].format(dl_file=dl_file.lower())
-    btn = strings["dl_btn"]
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=dl_link))
-
-    await message.reply(text, reply_markup=button)
-
-
-@decorator.register(cmds=["samcheck", "samget"])
-@disableable_dec("samcheck")
-@get_strings_dec("android")
-async def check(message, strings):
-    try:
-        msg_args = message.text.split()
-        temp = msg_args[1]
-        csc = msg_args[2]
-    except IndexError:
-        text = strings["sam_cmd_example"].format(cmd=get_cmd(message))
-        await message.reply(text)
-        return
-
-    model = "sm-" + temp if not temp.upper().startswith("SM-") else temp
-    fota = await http.get(
-        f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml"
-    )
-    test = await http.get(
-        f"http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.test.xml"
-    )
-    if test.status_code != 200:
-        text = strings["err_sam"].format(model=temp.upper(), csc=csc.upper())
-        await message.reply(text)
-        return
-
-    page1 = BeautifulSoup(fota.content, "lxml")
-    page2 = BeautifulSoup(test.content, "lxml")
-    os1 = page1.find("latest").get("o")
-    os2 = page2.find("latest").get("o")
-    if page1.find("latest").text.strip():
-        pda1, csc1, phone1 = page1.find("latest").text.strip().split("/")
-        text = f"<b>MODEL:</b> <code>{model.upper()}</code>\n<b>CSC:</b> <code>{csc.upper()}</code>\n\n"
-        text += strings["sam_latest"]
-        text += f"• PDA: <code>{pda1}</code>\n• CSC: <code>{csc1}</code>\n"
-        if phone1:
-            text += f"• Phone: <code>{phone1}</code>\n"
-        if os1:
-            text += f"• Android: <code>{os1}</code>\n"
-        text += "\n"
-    else:
-        text = strings["err_sam_pub"].format(model=model.upper(), csc=csc.upper())
-    text += strings["sam_test"]
-    if len(page2.find("latest").text.strip().split("/")) == 3:
-        pda2, csc2, phone2 = page2.find("latest").text.strip().split("/")
-        text += f"• PDA: <code>{pda2}</code>\n• CSC: <code>{csc2}</code>\n"
-        if phone2:
-            text += f"• Phone: <code>{phone2}</code>\n"
-        if os2:
-            text += f"• Android: <code>{os2}</code>\n"
-    else:
-        md5 = page2.find("latest").text.strip()
-        text += f"• Hash: <code>{md5}</code>\n• Android: <code>{os2}</code>\n"
-
-    if get_cmd(message) == "samcheck":
-        await message.reply(text)
-
-    elif get_cmd(message) == "samget":
-        text += strings["sam_down_from"]
-        buttons = InlineKeyboardMarkup()
-        buttons.insert(
-            InlineKeyboardButton(
-                "SamMobile",
-                url="https://www.sammobile.com/samsung/firmware/{}/{}/".format(
-                    model.upper(), csc.upper()
-                ),
-            )
+        reply = f"Couldn't find twrp downloads for {_device}!\n"
+        del_msg = update.effective_message.reply_text(
+            "{}".format(reply),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
         )
-        buttons.insert(
-            InlineKeyboardButton(
-                "SamFw",
-                url="https://samfw.com/firmware/{}/{}/".format(
-                    model.upper(), csc.upper()
-                ),
-            )
-        )
-        buttons.insert(
-            InlineKeyboardButton(
-                "SamFrew",
-                url="https://samfrew.com/model/{}/region/{}/".format(
-                    model.upper(), csc.upper()
-                ),
-            )
-        )
-
-        await message.reply(text, reply_markup=buttons)
-
-
-@decorator.register(cmds=["ofox", "of"])
-@disableable_dec("ofox")
-@get_strings_dec("android")
-async def orangefox(message, strings):
-    API_HOST = "https://api.orangefox.download/v3/"
-    try:
-        args = message.text.split()
-        codename = args[1].lower()
-    except BaseException:
-        codename = ""
-    try:
-        build_type = args[2].lower()
-    except BaseException:
-        build_type = ""
-
-    if build_type == "":
-        build_type = "stable"
-
-    if codename in {"devices", ""}:
-        text = strings["of_available"].format(build_type=build_type)
-        data = await http.get(
-            API_HOST + f"devices/?release_type={build_type}&sort=device_name_asc"
-        )
-        devices = json.loads(data.text)
+        time.sleep(5)
         try:
-            for device in devices["data"]:
-                text += (
-                    f"\n - {device['full_name']} (<code>{device['codename']}</code>)"
-                )
-        except BaseException:
-            await message.reply(
-                strings["of_invalid_type"].format(build_type=build_type)
+            del_msg.delete()
+            update.effective_message.delete()
+        except BadRequest as err:
+            if err.message in [
+                "Message to delete not found",
+                "Message can't be deleted",
+            ]:
+                return
+    else:
+        reply = f"*Latest Official TWRP for {_device}*\n"
+        db = get(DEVICES_DATA).json()
+        newdevice = _device.strip("lte") if _device.startswith("beyond") else _device
+        try:
+            brand = db[newdevice][0]["brand"]
+            name = db[newdevice][0]["name"]
+            reply += f"*{brand} - {name}*\n"
+        except KeyError:
+            pass
+        page = BeautifulSoup(url.content, "lxml")
+        date = page.find("em").text.strip()
+        reply += f"*Updated:* {date}\n"
+        trs = page.find("table").find_all("tr")
+
+        # find latest version
+        base_ver = (0, 0, 0)
+        idx = 0
+        for i, tag in enumerate(trs):
+            dl_path = tag.find("a")["href"]
+            match = re.search(r"([\d.]+)", dl_path)
+            new_ver = tuple(int(x) for x in match.group(1).split("."))
+            if new_ver > base_ver:
+                base_ver = new_ver
+                idx = i
+
+        download = trs[idx].find("a")
+        dl_link = f"https://eu.dl.twrp.me{download['href']}"
+        dl_file = download.text
+        size = trs[idx].find("span", {"class": "filesize"}).text
+        reply += f"[{dl_file}]({dl_link}) - {size}\n"
+
+        update.message.reply_text(
+            "{}".format(reply),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+
+
+# Picked from AstrakoBot; Thanks to them!
+@typing_action
+def orangefox(update, _):
+    message = update.effective_message
+    devices = message.text[len("/orangefox ") :]
+    btn = ""
+
+    if devices:
+        link = get(
+            f"https://api.orangefox.download/v3/releases/?codename={devices}&sort=date_desc&limit=1"
+        )
+
+        if link.status_code == 404:
+            msg = f"OrangeFox recovery is not avaliable for {devices}"
+        else:
+            page = loads(link.content)
+            file_id = page["data"][0]["_id"]
+            link = get(
+                f"https://api.orangefox.download/v3/devices/get?codename={devices}"
             )
-            return
+            page = loads(link.content)
+            oem = page["oem_name"]
+            model = page["model_name"]
+            full_name = page["full_name"]
+            maintainer = page["maintainer"]["username"]
+            link = get(f"https://api.orangefox.download/v3/releases/get?_id={file_id}")
+            page = loads(link.content)
+            dl_file = page["filename"]
+            build_type = page["type"]
+            version = page["version"]
+            changelog = page["changelog"][0]
+            size = str(round(float(page["size"]) / 1024 / 1024, 1)) + "MB"
+            dl_link = page["mirrors"]["DL"]
+            date = datetime.fromtimestamp(page["date"])
+            md5 = page["md5"]
+            msg = f"*Latest OrangeFox Recovery for the {full_name}*\n\n"
+            msg += f"• Manufacturer: `{oem}`\n"
+            msg += f"• Model: `{model}`\n"
+            msg += f"• Codename: `{devices}`\n"
+            msg += f"• Build type: `{build_type}`\n"
+            msg += f"• Maintainer: `{maintainer}`\n"
+            msg += f"• Version: `{version}`\n"
+            msg += f"• Changelog: `{changelog}`\n"
+            msg += f"• Size: `{size}`\n"
+            msg += f"• Date: `{date}`\n"
+            msg += f"• File: `{dl_file}`\n"
+            msg += f"• MD5: `{md5}`\n"
+            btn = [[InlineKeyboardButton(text="Download", url=dl_link)]]
+    else:
+        msg = "Enter the device codename to fetch, like:\n`/orangefox mido`"
 
-        if build_type == "stable":
-            text += "\n\n" + strings["of_stable_ex"]
-        elif build_type == "beta":
-            text += "\n\n" + strings["of_beta_ex"]
-        await message.reply(text)
-        return
-
-    try:
-        data = await http.get(API_HOST + f"devices/get?codename={codename}")
-    except TimeoutException:
-        await message.reply(strings["of_timeout"])
-        return
-
-    if data.status_code == 404:
-        await message.reply(strings["err_query"])
-        return
-
-    device = json.loads(data.text)
-
-    data = await http.get(
-        API_HOST
-        + f"releases/?codename={codename}&type={build_type}&sort=date_desc&limit=1"
+    update.message.reply_text(
+        text=msg,
+        reply_markup=InlineKeyboardMarkup(btn),
+        parse_mode=ParseMode.MARKDOWN,
+        disable_web_page_preview=True,
     )
-    if data.status_code == 404:
-        btn = strings["of_device_page"]
-        url = f"https://orangefox.download/device/{device['codename']}"
-        button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-        await message.reply(
-            "⚠️ "
-            + strings["of_no_releases"].format(
-                build_type=build_type, device=device["full_name"]
-            ),
-            reply_markup=button,
+
+
+# Picked from UserIndoBot; Thanks to them!
+@typing_action
+def los(update, context) -> str:
+    message = update.effective_message
+    args = context.args
+    try:
+        device = args[0]
+    except Exception:
+        device = ""
+
+    if device == "":
+        reply_text = "*Please Type Your Device Codename*\nExample : `/los lavender`"
+        message.reply_text(
+            reply_text,
+            parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
         return
 
-    find_id = json.loads(data.text)
-    for build in find_id["data"]:
-        file_id = build["_id"]
+    fetch = get(f"https://download.lineageos.org/api/v1/{device}/nightly/*")
+    if fetch.status_code == 200 and len(fetch.json()["response"]) != 0:
+        usr = fetch.json()
+        data = len(usr["response"]) - 1  # the latest rom are below
+        response = usr["response"][data]
+        filename = response["filename"]
+        url = response["url"]
+        buildsize_a = response["size"]
+        buildsize_b = sizee(int(buildsize_a))
+        version = response["version"]
 
-    data = await http.get(API_HOST + f"releases/get?_id={file_id}")
-    release = json.loads(data.text)
-    if data.status_code == 404:
-        await message.reply(strings["err_query"])
+        reply_text = f"*Download :* [{filename}]({url})\n"
+        reply_text += f"*Build Size :* `{buildsize_b}`\n"
+        reply_text += f"*Version :* `{version}`\n"
+
+        keyboard = [
+            [InlineKeyboardButton(text="Click Here To Downloads", url=f"{url}")]
+        ]
+        message.reply_text(
+            reply_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
         return
 
-    text = strings["of_header"].format(build_type=build_type)
-    text += (strings["of_device"]).format(
-        fullname=device["full_name"], codename=device["codename"]
-    )
-    text += (strings["of_version"]).format(version=release["version"])
-    text += (strings["of_release_date"]).format(
-        date=time.strftime("%d/%m/%Y", time.localtime(release["date"]))
-    )
+    else:
+        message.reply_text(
+            "`Couldn't find any results matching your query.`",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
 
-    text += (strings["of_maintainer"]).format(name=device["maintainer"]["name"])
-    changelog = release["changelog"]
+
+@typing_action
+def gsi(update, context):
+    message = update.effective_message
+
+    usr = get(
+        "https://api.github.com/repos/phhusson/treble_experimentations/releases/latest"
+    ).json()
+    reply_text = "*Gsi'S Latest release*\n"
+    for i in range(len(usr)):
+        try:
+            name = usr["assets"][i]["name"]
+            url = usr["assets"][i]["browser_download_url"]
+            reply_text += f"[{name}]({url})\n"
+        except IndexError:
+            continue
+    message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
+
+
+@typing_action
+def bootleg(update, context) -> str:
+    message = update.effective_message
+    args = context.args
     try:
-        text += strings["of_changelog"]
-        for entry_num in range(len(changelog)):
-            if entry_num == 10:
-                break
-            text += f"    - {changelog[entry_num]}\n"
-    except BaseException:
-        pass
+        codename = args[0]
+    except Exception:
+        codename = ""
 
-    btn = strings["dl_btn"]
-    mirror = release["mirrors"]["US"]
-    url = mirror if mirror is not None else release["url"]
-    button = InlineKeyboardMarkup().add(InlineKeyboardButton(text=btn, url=url))
-    await message.reply(text, reply_markup=button, disable_web_page_preview=True)
+    if codename == "":
+        message.reply_text(
+            "*Please Type Your Device Codename*\nExample : `/bootleg lavender`",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+        return
 
+    fetch = get("https://bootleggersrom-devices.github.io/api/devices.json")
+    if fetch.status_code == 200:
+        data = fetch.json()
+
+        if codename.lower() == "x00t":
+            device = "X00T"
+        elif codename.lower() == "rmx1971":
+            device = "RMX1971"
+        else:
+            device = codename.lower()
+
+        try:
+            fullname = data[device]["fullname"]
+            filename = data[device]["filename"]
+            buildate = data[device]["buildate"]
+            buildsize = data[device]["buildsize"]
+            buildsize = sizee(int(buildsize))
+            downloadlink = data[device]["download"]
+            if data[device]["mirrorlink"] != "":
+                mirrorlink = data[device]["mirrorlink"]
+            else:
+                mirrorlink = None
+        except KeyError:
+            message.reply_text(
+                "`Couldn't find any results matching your query.`",
+                parse_mode=ParseMode.MARKDOWN,
+                disable_web_page_preview=True,
+            )
+            return
+
+        reply_text = f"*BootlegersROM for {fullname}*\n"
+        reply_text += f"*Download :* [{filename}]({downloadlink})\n"
+        reply_text += f"*Size :* `{buildsize}`\n"
+        reply_text += f"*Build Date :* `{buildate}`\n"
+        if mirrorlink is not None:
+            reply_text += f"[Mirror link]({mirrorlink})"
+
+        keyboard = [
+            [
+                InlineKeyboardButton(
+                    text="Click Here To Downloads", url=f"{downloadlink}"
+                )
+            ]
+        ]
+
+        message.reply_text(
+            reply_text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+        return
+
+    elif fetch.status_code == 404:
+        message.reply_text(
+            "`Couldn't reach api`",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+        return
+
+
+__help__ = """
+Get the latest Magsik releases or TWRP for your device!
+*Android related commands:*
+× /magisk - Gets the latest magisk release for Stable/Beta/Canary.
+× /device <codename> - Gets android device basic info from its codename.
+× /twrp <codename> -  Gets latest twrp for the android device using the codename.
+× /orangefox <codename> -  Gets latest orangefox recovery for the android device using the codename.
+× /los <codename> - Gets Latest los build.
+"""
 
 __mod_name__ = "Android"
 
-__help__ = """
-Module specially made for Android users.
+MAGISK_HANDLER = DisableAbleCommandHandler("magisk", magisk, run_async=True)
+TWRP_HANDLER = DisableAbleCommandHandler("twrp", twrp, pass_args=True, run_async=True)
+DEVICE_HANDLER = DisableAbleCommandHandler(
+    "device", device, pass_args=True, run_async=True
+)
+ORANGEFOX_HANDLER = DisableAbleCommandHandler(
+    "orangefox", orangefox, pass_args=True, run_async=True
+)
+LOS_HANDLER = DisableAbleCommandHandler("los", los, pass_args=True, run_async=True)
+BOOTLEG_HANDLER = DisableAbleCommandHandler(
+    "bootleg", bootleg, pass_args=True, run_async=True
+)
+GSI_HANDLER = DisableAbleCommandHandler("gsi", gsi, pass_args=True, run_async=True)
 
-<b>Device Specific ROM for a device:</b>
-- /evo (device): Get the latest Evolution X ROM for a device.
-- /los (device): Get the latest LineageOS ROM for a device.
-- /statix (device): Get the latest StatixOS ROM for a device.
-- /crdroid (device): Get the latest crDroid ROM for a device.
-- /pe (device) (?android version): Get the latest Pixel Experience ROM for a device.
-
-<b>GSI:</b>
-- /phh: Get the latest Phh AOSP GSIs.
-
-<b>Device firmware:</b>
-- /samcheck (model) (csc): Samsung only - shows the latest firmware info for the given device, taken from samsung servers.
-- /samget (model) (csc): Similar to the <code>/samcheck</code> command but having download buttons.
-
-<b>Misc:</b>
-- /magisk: Get latest Magisk releases.
-- /twrp (codename): Gets latest TWRP for the android device using the codename.
-- /ofox (codename): Gets latest OFRP for the android device using the codename.
-- /ofox devices: Sends the list of devices with stable releases supported by OFRP.
-- /models (codename): Search for Android device models using codename.
-- /whatis (codename): Find out which smartphone is using the codename.
-"""
+dispatcher.add_handler(MAGISK_HANDLER)
+dispatcher.add_handler(TWRP_HANDLER)
+dispatcher.add_handler(DEVICE_HANDLER)
+dispatcher.add_handler(ORANGEFOX_HANDLER)
+dispatcher.add_handler(LOS_HANDLER)
+dispatcher.add_handler(GSI_HANDLER)
+dispatcher.add_handler(BOOTLEG_HANDLER)
