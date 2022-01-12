@@ -93,7 +93,7 @@ if ENV:
     CERT_PATH = os.environ.get("CERT_PATH")
     API_ID = os.environ.get("API_ID", None)
     API_HASH = os.environ.get("API_HASH", None)
-    DB_NAME + os.environ.get("DB_NAME", "robotdemons")
+    DB_NAME = os.environ.get("DB_NAME", "robotdemons")
     DB_URI = os.environ.get("DATABASE_URL")
     connection_db = psycopg2.connect(DB_URI, sslmode="require")
     DB_URI = DB_URI.replace(
