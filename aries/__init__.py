@@ -30,6 +30,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
+getLogger("pyrogram").setLevel(WARNING)
 LOGGER = logging.getLogger(__name__)
 
 # if version < 3.6, stop bot.
@@ -110,6 +111,7 @@ if ENV:
     STRING_SESSION = os.environ.get("STRING_SESSION", None)
     NO_LOAD = os.environ.get("NO_LOAD", "translation").split()
     CUSTOM_CMD = os.environ.get("CUSTOM_CMD", "$?,")
+    PREFIX_HANDLER = os.environ.get("PREFIX_HANDLER", "/?,.").split()
     DEL_CMDS = bool(os.environ.get("DEL_CMDS", False))
     STRICT_GBAN = bool(os.environ.get("STRICT_GBAN", True))
     WORKERS = int(os.environ.get("WORKERS", 8))
@@ -211,6 +213,7 @@ else:
     HEROKU_APP_NAME = Config.HEROKU_APP_NAME
     DEL_CMDS = Config.DEL_CMDS
     CUSTOM_CMD = Config.CUSTOM_CMD
+    PREFIX_HANDLER = Config..PREFIX_HANDLER
     STRICT_GBAN = Config.STRICT_GBAN
     WORKERS = Config.WORKERS
     BAN_STICKER = Config.BAN_STICKER

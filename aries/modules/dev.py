@@ -87,9 +87,9 @@ def gitpull(update: Update, context: CallbackContext):
 
 
 @dev_plus
-def reboot(update: Update, context: CallbackContext):
+def restart(update: Update, context: CallbackContext):
     update.effective_message.reply_text(
-        "Starting a new instance and shutting down this one"
+        "Memulai instance baru dan mematikan yang ini, RESTARTING!!"
     )
 
     os.system(f"kill -9 {os.getpid()} && python3 -m aries")
@@ -200,7 +200,7 @@ def get_chat_by_id(update: Update, context: CallbackContext):
 PIP_INSTALL_HANDLER = CommandHandler("install", pip_install, run_async=True)
 LEAVE_HANDLER = CommandHandler("leave", leave, run_async=True)
 GITPULL_HANDLER = CommandHandler("gitpull", gitpull, run_async=True)
-REBOOT_HANDLER = CommandHandler("reboot", reboot, run_async=True)
+RESTART_HANDLER = CommandHandler("restart", restart, run_async=True)
 GET_CHAT_HANDLER = CommandHandler("getchat", get_chat_by_id, run_async=True)
 LEAVE_CALLBACK = CallbackQueryHandler(
     leave_cb, pattern=r"leavechat_cb_", run_async=True
@@ -208,7 +208,7 @@ LEAVE_CALLBACK = CallbackQueryHandler(
 
 dispatcher.add_handler(LEAVE_HANDLER)
 dispatcher.add_handler(GITPULL_HANDLER)
-dispatcher.add_handler(REBOOT_HANDLER)
+dispatcher.add_handler(RESTART_HANDLER)
 dispatcher.add_handler(PIP_INSTALL_HANDLER)
 dispatcher.add_handler(GET_CHAT_HANDLER)
 dispatcher.add_handler(LEAVE_CALLBACK)
@@ -217,7 +217,7 @@ __mod_name__ = "Dev"
 __handlers__ = [
     LEAVE_HANDLER,
     GITPULL_HANDLER,
-    REBOOT_HANDLER,
+    RESTART_HANDLER,
     PIP_INSTALL_HANDLER,
     GET_CHAT_HANDLER,
     LEAVE_CALLBACK,
