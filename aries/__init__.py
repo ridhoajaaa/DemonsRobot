@@ -93,6 +93,7 @@ if ENV:
     CERT_PATH = os.environ.get("CERT_PATH")
     API_ID = os.environ.get("API_ID", None)
     API_HASH = os.environ.get("API_HASH", None)
+    DB_NAME + os.environ.get("DB_NAME", "robotdemons")
     DB_URI = os.environ.get("DATABASE_URL")
     connection_db = psycopg2.connect(DB_URI, sslmode="require")
     DB_URI = DB_URI.replace(
@@ -112,7 +113,7 @@ if ENV:
     STRING_SESSION = os.environ.get("STRING_SESSION", None)
     NO_LOAD = os.environ.get("NO_LOAD", "translation").split()
     CUSTOM_CMD = os.environ.get("CUSTOM_CMD", "$?,")
-    PREFIX_HANDLER = os.environ.get("PREFIX_HANDLER", "/?,.").split()
+    PREFIX_HANDLER = os.environ.get("PREFIX_HANDLER", "/?,.")
     DEL_CMDS = bool(os.environ.get("DEL_CMDS", False))
     STRICT_GBAN = bool(os.environ.get("STRICT_GBAN", True))
     WORKERS = int(os.environ.get("WORKERS", 8))
@@ -199,6 +200,7 @@ else:
     CERT_PATH = Config.CERT_PATH
     API_ID = Config.API_ID
     API_HASH = Config.API_HASH
+    DB_NAME = Config.DB_NAME
     DB_URI = Config.SQLALCHEMY_DATABASE_URI
     MONGO_DB_URI = Config.MONGO_DB_URI
     ARQ_API = Config.ARQ_API_KEY
