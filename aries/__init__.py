@@ -10,6 +10,7 @@ import spamwatch
 import telegram.ext as tg
 
 from aiohttp import ClientSession
+from logging import INFO, WARNING, FileHandler, StreamHandler, basicConfig, getLogger
 from motor.motor_asyncio import AsyncIOMotorClient as MongoClient
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
