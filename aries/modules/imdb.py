@@ -1,136 +1,97 @@
-import re
+import os
+from pyrogram import Client, filters
+from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant, MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty
+from aries import IMDB_TEMPLATE
+from utils import extract_user, get_file_id, get_poster, last_online
+import time
+from datetime import datetime
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
 
-import bs4
-import requests
-from telethon import types
-from telethon.tl import functions
+@Client.on_message(filters.command(["imdb", 'search']))
+async def imdb_search(client, message):
+    if ' ' in message.text:
+        k = await message.reply('Searching ImDB')
+        r, title = message.text.split(None, 1)
+        movies = await get_poster(title, bulk=True)
+        if not movies:
+            return await message.reply("No results Found")
+        btn = [
+            [
+                InlineKeyboardButton(
+                    text=f"{movie.get('title')} - {movie.get('year')}",
+                    callback_data=f"imdb#{movie.movieID}",
+                )
+            ]
+            for movie in movies
+        ]
+        await k.edit('Here is what i found on IMDb', reply_markup=InlineKeyboardMarkup(btn))
+    else:
+        await message.reply('Give me a movie / series Name')
 
-from aries import telethn
-from aries.events import register
-
-langi = "id"
-
-
-async def is_register_admin(chat, user):
-    if isinstance(chat, (types.InputPeerChannel, types.InputChannel)):
-
-        return isinstance(
-            (
-                await telethn(functions.channels.GetParticipantRequest(chat, user))
-            ).participant,
-            (types.ChannelParticipantAdmin, types.ChannelParticipantCreator),
+@Client.on_callback_query(filters.regex('^imdb'))
+async def imdb_callback(bot: Client, quer_y: CallbackQuery):
+    i, movie = quer_y.data.split('#')
+    imdb = await get_poster(query=movie, id=True)
+    btn = [
+            [
+                InlineKeyboardButton(
+                    text=f"{imdb.get('title')}",
+                    url=imdb['url'],
+                )
+            ]
+        ]
+    message = quer_y.message.reply_to_message or quer_y.message
+    if imdb:
+        caption = IMDB_TEMPLATE.format(
+            query = imdb['title'],
+            title = imdb['title'],
+            votes = imdb['votes'],
+            aka = imdb["aka"],
+            seasons = imdb["seasons"],
+            box_office = imdb['box_office'],
+            localized_title = imdb['localized_title'],
+            kind = imdb['kind'],
+            imdb_id = imdb["imdb_id"],
+            cast = imdb["cast"],
+            runtime = imdb["runtime"],
+            countries = imdb["countries"],
+            certificates = imdb["certificates"],
+            languages = imdb["languages"],
+            director = imdb["director"],
+            writer = imdb["writer"],
+            producer = imdb["producer"],
+            composer = imdb["composer"],
+            cinematographer = imdb["cinematographer"],
+            music_team = imdb["music_team"],
+            distributors = imdb["distributors"],
+            release_date = imdb['release_date'],
+            year = imdb['year'],
+            genres = imdb['genres'],
+            poster = imdb['poster'],
+            plot = imdb['plot'],
+            rating = imdb['rating'],
+            url = imdb['url'],
+            **locals()
         )
-    if isinstance(chat, types.InputPeerChat):
+    else:
+        caption = "No Results"
+    if imdb.get('poster'):
+        try:
+            await quer_y.message.reply_photo(photo=imdb['poster'], caption=caption, reply_markup=InlineKeyboardMarkup(btn))
+        except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
+            pic = imdb.get('poster')
+            poster = pic.replace('.jpg', "._V1_UX360.jpg")
+            await quer_y.message.reply_photo(photo=poster, caption=caption, reply_markup=InlineKeyboardMarkup(btn))
+        except Exception as e:
+            logger.exception(e)
+            await quer_y.message.reply(caption, reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=False)
+        await quer_y.message.delete()
+    else:
+        await quer_y.message.edit(caption, reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=False)
+    await quer_y.answer()
+        
 
-        ui = await tetethn.get_peer_id(user)
-        ps = (
-            await tetethn(functions.messages.GetFullChatRequest(chat.chat_id))
-        ).full_chat.participants.participants
-        return isinstance(
-            next((p for p in ps if p.user_id == ui), None),
-            (types.ChatParticipantAdmin, types.ChatParticipantCreator),
-        )
-    return None
-
-
-@register(pattern="^/imdb (.*)")
-async def imdb(e):
-    if e.is_group:
-        if not (await is_register_admin(e.input_chat, e.message.sender_id)):
-            await event.reply(
-                " You are not admin. You can't use this command.. But you can use in my pm"
-            )
-            return
-    try:
-        movie_name = e.pattern_match.group(1)
-        remove_space = movie_name.split(" ")
-        final_name = "+".join(remove_space)
-        page = requests.get(
-            "https://www.imdb.com/find?ref_=nv_sr_fn&q=" + final_name + "&s=all"
-        )
-        str(page.status_code)
-        soup = bs4.BeautifulSoup(page.content, "lxml")
-        odds = soup.findAll("tr", "odd")
-        mov_title = odds[0].findNext("td").findNext("td").text
-        mov_link = (
-            "http://www.imdb.com/" + odds[0].findNext("td").findNext("td").a["href"]
-        )
-        page1 = requests.get(mov_link)
-        soup = bs4.BeautifulSoup(page1.content, "lxml")
-        if soup.find("div", "poster"):
-            poster = soup.find("div", "poster").img["src"]
-        else:
-            poster = ""
-        if soup.find("div", "title_wrapper"):
-            pg = soup.find("div", "title_wrapper").findNext("div").text
-            mov_details = re.sub(r"\s+", " ", pg)
-        else:
-            mov_details = ""
-        credits = soup.findAll("div", "credit_summary_item")
-        if len(credits) == 1:
-            director = credits[0].a.text
-            writer = "Not available"
-            stars = "Not available"
-        elif len(credits) > 2:
-            director = credits[0].a.text
-            writer = credits[1].a.text
-            actors = []
-            for x in credits[2].findAll("a"):
-                actors.append(x.text)
-            actors.pop()
-            stars = actors[0] + "," + actors[1] + "," + actors[2]
-        else:
-            director = credits[0].a.text
-            writer = "Not available"
-            actors = []
-            for x in credits[1].findAll("a"):
-                actors.append(x.text)
-            actors.pop()
-            stars = actors[0] + "," + actors[1] + "," + actors[2]
-        if soup.find("div", "inline canwrap"):
-            story_line = soup.find("div", "inline canwrap").findAll("p")[0].text
-        else:
-            story_line = "Not available"
-        info = soup.findAll("div", "txt-block")
-        if info:
-            mov_country = []
-            mov_language = []
-            for node in info:
-                a = node.findAll("a")
-                for i in a:
-                    if "country_of_origin" in i["href"]:
-                        mov_country.append(i.text)
-                    elif "primary_language" in i["href"]:
-                        mov_language.append(i.text)
-        if soup.findAll("div", "ratingValue"):
-            for r in soup.findAll("div", "ratingValue"):
-                mov_rating = r.strong["title"]
-        else:
-            mov_rating = "Not available"
-        await e.reply(
-            "<a href=" + poster + ">&#8203;</a>"
-            "<b>Title : </b><code>"
-            + mov_title
-            + "</code>\n<code>"
-            + mov_details
-            + "</code>\n<b>Rating : </b><code>"
-            + mov_rating
-            + "</code>\n<b>Country : </b><code>"
-            + mov_country[0]
-            + "</code>\n<b>Language : </b><code>"
-            + mov_language[0]
-            + "</code>\n<b>Director : </b><code>"
-            + director
-            + "</code>\n<b>Writer : </b><code>"
-            + writer
-            + "</code>\n<b>Stars : </b><code>"
-            + stars
-            + "</code>\n<b>IMDB Url : </b>"
-            + mov_link
-            + "\n<b>Story Line : </b>"
-            + story_line,
-            link_preview=True,
-            parse_mode="HTML",
-        )
-    except IndexError:
-        await e.reply("Please enter a valid movie name !")
+        
