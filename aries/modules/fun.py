@@ -7,7 +7,6 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
 from bs4 import BeautifulSoup as bs
-from telegram.ext.dispatcher import run_async
 from pyjokes import get_joke
 from telethon.errors import ChatSendMediaForbiddenError
 
@@ -15,30 +14,11 @@ import aries.modules.fun_strings as fun_strings
 from aries import dispatcher
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.chat_status import is_user_admin
-from aries.modules.helper_funcs.alternate import typing_action
 from aries.modules.helper_funcs.extraction import extract_user
 from aries.events import register
 
 GIF_ID = "CgACAgQAAx0CSVUvGgAC7KpfWxMrgGyQs-GUUJgt-TSO8cOIDgACaAgAAlZD0VHT3Zynpr5nGxsE"
 
-GN_IMG= "https://telegra.ph/file/5a4dc8f8cc2cdb408df18.jpg"
-
-@run_async
-@typing_action
-def goodnight(update, context):
-    message = update.effective_message
-    first_name = update.effective_user.first_name
-    reply = f"*Hey {escape_markdown(first_name)} \nGood Night! 😴*"
-    message.reply_photo(GN_IMG,reply, parse_mode=ParseMode.MARKDOWN)
-
-GM_IMG= "https://telegra.ph/file/e3b27f1b746344c8fdb28.jpg"
-@run_async
-@typing_action
-def goodmorning(update, context):
-    message = update.effective_message
-    first_name = update.effective_user.first_name
-    reply = f"*Hey {escape_markdown(first_name)} \n Good Morning!☀*"
-    message.reply_photo(GM_IMG,reply, parse_mode=ParseMode.MARKDOWN)
 
 def runs(update: Update, context: CallbackContext):
     temp = random.choice(fun_strings.RUN_STRINGS)
@@ -179,45 +159,6 @@ def roll(update: Update, context: CallbackContext):
     update.message.reply_text(random.choice(range(1, 7)))
 
 
-@run_async
-def gbun(update, context):
-    user = update.effective_user
-    chat = update.effective_chat
-
-    if update.effective_message.chat.type == "private":
-        return
-    if int(user.id) in DRAGONS or int(user.id) in DEMONS:
-        context.bot.sendMessage(chat.id, (random.choice(fun.GBUN)))
-
-
-@run_async
-def gbam(update, context):
-    user = update.effective_user
-    chat = update.effective_chat
-    bot, args = context.bot, context.args
-    message = update.effective_message
-
-    curr_user = html.escape(message.from_user.first_name)
-    user_id = extract_user(message, args)
-
-    if user_id:
-        gbam_user = bot.get_chat(user_id)
-        user1 = curr_user
-        user2 = html.escape(gbam_user.first_name)
-
-    else:
-        user1 = curr_user
-        user2 = bot.first_name
-
-    if update.effective_message.chat.type == "private":
-        return
-    if int(user.id) in DRAGONS or int(user.id) in DEMONS:
-        gbamm = fun.GBAM
-        reason = random.choice(fun.GBAM_REASON)
-        gbam = gbamm.format(user1=user1, user2=user2, chatid=chat.id, reason=reason)
-        context.bot.sendMessage(chat.id, gbam, parse_mode=ParseMode.HTML)
-
-
 def shout(update: Update, context: CallbackContext):
     args = context.args
     text = " ".join(args)
@@ -277,10 +218,15 @@ def decide(update: Update, context: CallbackContext):
 """
 
 
-@run_async
-def decide(update: Update, context: CallbackContext):
-    reply_text = update.effective_message.reply_to_message.reply_text if update.effective_message.reply_to_message else update.effective_message.reply_text
-    reply_text(random.choice(fun.DECIDE))
+@register(pattern="^/decide ?(.*)")
+async def decide(event):
+    hm = await event.reply("`Deciding`")
+    r = requests.get("https://yesno.wtf/api").json()
+    try:
+        await event.reply(r["answer"], file=r["image"])
+        await hm.delete()
+    except ChatSendMediaForbiddenError:
+        await event.reply(r["answer"])
 
 
 def eightball(update: Update, context: CallbackContext):
@@ -387,12 +333,6 @@ def weebify(update: Update, context: CallbackContext):
 
 __help__ = """
  ❍ `/runs`*:* reply a random string from an array of replies
- ❍ `/goodmorning`*:*
- ❍ `/goodnight`*:*
- ❍ `/gbum`*:*
- ❍ `/gbun`*:*
- ❍ `/`*:*
- ❍ `/`*:*
  ❍ `/slap`*:* slap a user, or get slapped if not a reply
  ❍ `/shrug`*:* get shrug XD
  ❍ `/table`*:* get flip/unflip :v
@@ -408,8 +348,6 @@ __help__ = """
  ❍ `/8ball`*:* predicts using 8ball method
 """
 
-GOODMORNING_HANDLER = DisableAbleCommandHandler("goodmorning", goodmorning, run_async=True)
-GOODNIGHT_HANDLER = DisableAbleCommandHandler("goodnight", goodnight, run_async=True)
 SANITIZE_HANDLER = DisableAbleCommandHandler("sanitize", sanitize, run_async=True)
 RUNS_HANDLER = DisableAbleCommandHandler("runs", runs, run_async=True)
 SLAP_HANDLER = DisableAbleCommandHandler("slap", slap, run_async=True)
@@ -424,11 +362,7 @@ EIGHTBALL_HANDLER = DisableAbleCommandHandler("8ball", eightball, run_async=True
 TABLE_HANDLER = DisableAbleCommandHandler("table", table, run_async=True)
 SHOUT_HANDLER = DisableAbleCommandHandler("shout", shout, run_async=True)
 WEEBIFY_HANDLER = DisableAbleCommandHandler("weebify", weebify, run_async=True)
-GBUN_HANDLER = DisableAbleCommandHandler("gbun", gbun, run_async=True)
-GBAM_HANDLER = DisableAbleCommandHandler("gbam", gbam, run_async=True)
 
-dispatcher.add_handler(GOODMORNING_HANDLER)
-dispatcher.add_handler(GOODNIGHT_HANDLER)
 dispatcher.add_handler(WEEBIFY_HANDLER)
 dispatcher.add_handler(SHOUT_HANDLER)
 dispatcher.add_handler(SANITIZE_HANDLER)
@@ -443,8 +377,6 @@ dispatcher.add_handler(RLG_HANDLER)
 dispatcher.add_handler(DECIDE_HANDLER)
 dispatcher.add_handler(EIGHTBALL_HANDLER)
 dispatcher.add_handler(TABLE_HANDLER)
-dispatcher.add_handler(GBAM_HANDLER)
-dispatcher.add_handler(GBUN_HANDLER)
 
 __mod_name__ = "🔘 Fun"
 __command_list__ = [
@@ -464,10 +396,6 @@ __command_list__ = [
     "8ball",
 ]
 __handlers__ = [
-    GOODMORNING_HANDLER,
-    GBAM_HANDLER,
-    GBUN_HANDLER,
-    GOODNIGHT_HANDLER,
     RUNS_HANDLER,
     SLAP_HANDLER,
     PAT_HANDLER,
