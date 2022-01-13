@@ -15,7 +15,7 @@ import aries.modules.fun_strings as fun_strings
 from aries import dispatcher
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.chat_status import is_user_admin
-from UpinRobot.modules.helper_funcs.alternate import typing_action
+from aries.modules.helper_funcs.alternate import typing_action
 from aries.modules.helper_funcs.extraction import extract_user
 from aries.events import register
 
