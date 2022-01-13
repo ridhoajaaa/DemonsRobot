@@ -2,9 +2,9 @@
 # © @ZeusXRobot
 import aiohttp
 from pyrogram import filters
-from aries import pgram as asuna
+from aries import dispatcher, pbot
 
-@asuna.on_message(filters.command('pokedex'))
+@pbot.on_message(filters.command("pokedex"))
 async def PokeDex(_, message):
     if len(message.command) != 2:
         await message.reply_text("/pokedex Pokemon Name")
