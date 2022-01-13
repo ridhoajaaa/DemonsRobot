@@ -237,15 +237,10 @@ def decide(update: Update, context: CallbackContext):
 """
 
 
-@register(pattern="^/decide ?(.*)")
-async def decide(event):
-    hm = await event.reply("`Deciding`")
-    r = requests.get("https://yesno.wtf/api").json()
-    try:
-        await event.reply(r["answer"], file=r["image"])
-        await hm.delete()
-    except ChatSendMediaForbiddenError:
-        await event.reply(r["answer"])
+@run_async
+def decide(update: Update, context: CallbackContext):
+    reply_text = update.effective_message.reply_to_message.reply_text if update.effective_message.reply_to_message else update.effective_message.reply_text
+    reply_text(random.choice(fun.DECIDE))
 
 
 def eightball(update: Update, context: CallbackContext):
@@ -375,7 +370,6 @@ __help__ = """
 
 GOODMORNING_HANDLER = DisableAbleCommandHandler("goodmorning", goodmorning, run_async=True)
 GOODNIGHT_HANDLER = DisableAbleCommandHandler("goodnight", goodnight, run_async=True)
-DECIDE_HANDLER = DisableAbleCommandHandler("decide", decide, run_async=True)
 SANITIZE_HANDLER = DisableAbleCommandHandler("sanitize", sanitize, run_async=True)
 RUNS_HANDLER = DisableAbleCommandHandler("runs", runs, run_async=True)
 SLAP_HANDLER = DisableAbleCommandHandler("slap", slap, run_async=True)
@@ -393,7 +387,6 @@ WEEBIFY_HANDLER = DisableAbleCommandHandler("weebify", weebify, run_async=True)
 
 dispatcher.add_handler(GOODMORNING_HANDLER)
 dispatcher.add_handler(GOODNIGHT_HANDLER)
-dispatcher.add_handler(DECIDE_HANDLER)
 dispatcher.add_handler(WEEBIFY_HANDLER)
 dispatcher.add_handler(SHOUT_HANDLER)
 dispatcher.add_handler(SANITIZE_HANDLER)
@@ -427,6 +420,8 @@ __command_list__ = [
     "8ball",
 ]
 __handlers__ = [
+    GOODMORNING_HANDLER,
+    GOODNIGHT_HANDLER,
     RUNS_HANDLER,
     SLAP_HANDLER,
     PAT_HANDLER,
