@@ -258,7 +258,7 @@ async def inuka(client, message):
     response = response.replace("female", "male")
 
     pro = response
-    if not "en" in lan and not lan == "":
+    if not "id" in lan and not lan == "":
         pro = translator.translate(pro, dest=lan)
         pro = pro.text
     try:
