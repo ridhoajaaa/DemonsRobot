@@ -6,6 +6,7 @@ from io import BytesIO
 from PIL import Image
 from telegram import Update
 from telegram.ext import CallbackContext, run_async
+from telegram.ext.dispatcher import run_async
 
 from aries import dispatcher
 from aries.modules.disable import DisableAbleCommandHandler
