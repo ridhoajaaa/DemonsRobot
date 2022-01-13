@@ -116,8 +116,7 @@ dispatcher.add_handler(GBAM_HANDLER)
 dispatcher.add_handler(GBUN_HANDLER)
 dispatcher.add_handler(DECIDED_HANDLER)
 
-dispatcher.add_handler(TRUTH_HANDLER)
-dispatcher.add_handler(REPO_HANDLER)
+dispatcher.add_handler(REPOO_HANDLER)
 dispatcher.add_handler(DARE_HANDLER)
 
 
