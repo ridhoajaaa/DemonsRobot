@@ -7,6 +7,7 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
 from bs4 import BeautifulSoup as bs
+from telegram.ext.dispatcher import run_async
 from pyjokes import get_joke
 from telethon.errors import ChatSendMediaForbiddenError
 
@@ -19,6 +20,24 @@ from aries.events import register
 
 GIF_ID = "CgACAgQAAx0CSVUvGgAC7KpfWxMrgGyQs-GUUJgt-TSO8cOIDgACaAgAAlZD0VHT3Zynpr5nGxsE"
 
+GN_IMG= "https://telegra.ph/file/5a4dc8f8cc2cdb408df18.jpg"
+
+@run_async
+@typing_action
+def goodnight(update, context):
+    message = update.effective_message
+    first_name = update.effective_user.first_name
+    reply = f"*Hey {escape_markdown(first_name)} \nGood Night! 😴*"
+    message.reply_photo(GN_IMG,reply, parse_mode=ParseMode.MARKDOWN)
+
+GM_IMG= "https://telegra.ph/file/e3b27f1b746344c8fdb28.jpg"
+@run_async
+@typing_action
+def goodmorning(update, context):
+    message = update.effective_message
+    first_name = update.effective_user.first_name
+    reply = f"*Hey {escape_markdown(first_name)} \n Good Morning!☀*"
+    message.reply_photo(GM_IMG,reply, parse_mode=ParseMode.MARKDOWN)
 
 def runs(update: Update, context: CallbackContext):
     temp = random.choice(fun_strings.RUN_STRINGS)
@@ -333,6 +352,12 @@ def weebify(update: Update, context: CallbackContext):
 
 __help__ = """
  ❍ `/runs`*:* reply a random string from an array of replies
+ ❍ `/goodmorning`*:*
+ ❍ `/goodnight`*:*
+ ❍ `/`*:*
+ ❍ `/`*:*
+ ❍ `/`*:*
+ ❍ `/`*:*
  ❍ `/slap`*:* slap a user, or get slapped if not a reply
  ❍ `/shrug`*:* get shrug XD
  ❍ `/table`*:* get flip/unflip :v
@@ -348,6 +373,9 @@ __help__ = """
  ❍ `/8ball`*:* predicts using 8ball method
 """
 
+GOODMORNING_HANDLER = DisableAbleCommandHandler("goodmorning", goodmorning, run_async=True)
+GOODNIGHT_HANDLER = DisableAbleCommandHandler("goodnight", goodnight, run_async=True)
+DECIDE_HANDLER = DisableAbleCommandHandler("decide", decide, run_async=True)
 SANITIZE_HANDLER = DisableAbleCommandHandler("sanitize", sanitize, run_async=True)
 RUNS_HANDLER = DisableAbleCommandHandler("runs", runs, run_async=True)
 SLAP_HANDLER = DisableAbleCommandHandler("slap", slap, run_async=True)
@@ -363,6 +391,9 @@ TABLE_HANDLER = DisableAbleCommandHandler("table", table, run_async=True)
 SHOUT_HANDLER = DisableAbleCommandHandler("shout", shout, run_async=True)
 WEEBIFY_HANDLER = DisableAbleCommandHandler("weebify", weebify, run_async=True)
 
+dispatcher.add_handler(GOODMORNING_HANDLER)
+dispatcher.add_handler(GOODNIGHT_HANDLER)
+dispatcher.add_handler(DECIDE_HANDLER)
 dispatcher.add_handler(WEEBIFY_HANDLER)
 dispatcher.add_handler(SHOUT_HANDLER)
 dispatcher.add_handler(SANITIZE_HANDLER)
