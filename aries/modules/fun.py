@@ -424,7 +424,7 @@ EIGHTBALL_HANDLER = DisableAbleCommandHandler("8ball", eightball, run_async=True
 TABLE_HANDLER = DisableAbleCommandHandler("table", table, run_async=True)
 SHOUT_HANDLER = DisableAbleCommandHandler("shout", shout, run_async=True)
 WEEBIFY_HANDLER = DisableAbleCommandHandler("weebify", weebify, run_async=True)
-GBUN_HANDLER = DisableAbleCommandHandler("gbun", gbun. run_async=True)
+GBUN_HANDLER = DisableAbleCommandHandler("gbun", gbun, run_async=True)
 GBAM_HANDLER = DisableAbleCommandHandler("gbam", gbam, run_async=True)
 
 dispatcher.add_handler(GOODMORNING_HANDLER)
