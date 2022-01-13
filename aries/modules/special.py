@@ -65,6 +65,12 @@ Make me send a message to a specific chat.
 -> /tagall or @all
 /tagall cmd for tag group members for reply message.
 @all [text] for tagall members.
+
+──「 *All Member*: 」──
+-> /wish
+Gatau gunanya apa, fun aja
+-> /pokedex
+Untuk mengetahui statistik pokemon
 """
 
 __mod_name__ = "Special"
