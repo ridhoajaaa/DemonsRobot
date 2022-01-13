@@ -1,13 +1,8 @@
-""" WRITTEN BY @pokurt, https://github.com/pokurt"""
-# credits goes to William, https://github.com/WilliamButcherBot
-
 import sys
 import traceback
 from functools import wraps
-
 from pyrogram.errors.exceptions.forbidden_403 import ChatWriteForbidden
-
-from aries import ERROR_LOG, pbot as app
+from aries import EVENT_LOG, pbot as app
 
 
 def split_limits(text):
@@ -23,8 +18,8 @@ def split_limits(text):
         else:
             result.append(small_msg)
             small_msg = line
-
-    result.append(small_msg)
+    else:
+        result.append(small_msg)
 
     return result
 
@@ -53,7 +48,7 @@ def capture_err(func):
                 ),
             )
             for x in error_feedback:
-                await app.send_message(ERROR_LOG, x)
+                await app.send_message(EVENT_LOGS, x)
             raise err
 
     return capture
