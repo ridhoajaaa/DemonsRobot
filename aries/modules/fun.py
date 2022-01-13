@@ -15,6 +15,7 @@ import aries.modules.fun_strings as fun_strings
 from aries import dispatcher
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.chat_status import is_user_admin
+from UpinRobot.modules.helper_funcs.alternate import typing_action
 from aries.modules.helper_funcs.extraction import extract_user
 from aries.events import register
 
@@ -176,6 +177,45 @@ def pat(update: Update, context: CallbackContext):
 
 def roll(update: Update, context: CallbackContext):
     update.message.reply_text(random.choice(range(1, 7)))
+
+
+@run_async
+def gbun(update, context):
+    user = update.effective_user
+    chat = update.effective_chat
+
+    if update.effective_message.chat.type == "private":
+        return
+    if int(user.id) in DRAGONS or int(user.id) in DEMONS:
+        context.bot.sendMessage(chat.id, (random.choice(fun.GBUN)))
+
+
+@run_async
+def gbam(update, context):
+    user = update.effective_user
+    chat = update.effective_chat
+    bot, args = context.bot, context.args
+    message = update.effective_message
+
+    curr_user = html.escape(message.from_user.first_name)
+    user_id = extract_user(message, args)
+
+    if user_id:
+        gbam_user = bot.get_chat(user_id)
+        user1 = curr_user
+        user2 = html.escape(gbam_user.first_name)
+
+    else:
+        user1 = curr_user
+        user2 = bot.first_name
+
+    if update.effective_message.chat.type == "private":
+        return
+    if int(user.id) in DRAGONS or int(user.id) in DEMONS:
+        gbamm = fun.GBAM
+        reason = random.choice(fun.GBAM_REASON)
+        gbam = gbamm.format(user1=user1, user2=user2, chatid=chat.id, reason=reason)
+        context.bot.sendMessage(chat.id, gbam, parse_mode=ParseMode.HTML)
 
 
 def shout(update: Update, context: CallbackContext):
@@ -349,8 +389,8 @@ __help__ = """
  ❍ `/runs`*:* reply a random string from an array of replies
  ❍ `/goodmorning`*:*
  ❍ `/goodnight`*:*
- ❍ `/`*:*
- ❍ `/`*:*
+ ❍ `/gbum`*:*
+ ❍ `/gbun`*:*
  ❍ `/`*:*
  ❍ `/`*:*
  ❍ `/slap`*:* slap a user, or get slapped if not a reply
@@ -384,6 +424,8 @@ EIGHTBALL_HANDLER = DisableAbleCommandHandler("8ball", eightball, run_async=True
 TABLE_HANDLER = DisableAbleCommandHandler("table", table, run_async=True)
 SHOUT_HANDLER = DisableAbleCommandHandler("shout", shout, run_async=True)
 WEEBIFY_HANDLER = DisableAbleCommandHandler("weebify", weebify, run_async=True)
+GBUN_HANDLER = DisableAbleCommandHandler("gbun", gbun. run_async=True)
+GBAM_HANDLER = DisableAbleCommandHandler("gbam", gbam, run_async=True)
 
 dispatcher.add_handler(GOODMORNING_HANDLER)
 dispatcher.add_handler(GOODNIGHT_HANDLER)
@@ -401,6 +443,8 @@ dispatcher.add_handler(RLG_HANDLER)
 dispatcher.add_handler(DECIDE_HANDLER)
 dispatcher.add_handler(EIGHTBALL_HANDLER)
 dispatcher.add_handler(TABLE_HANDLER)
+dispatcher.add_handler(GBAM_HANDLER)
+dispatcher.add_handler(GBUN_HANDLER)
 
 __mod_name__ = "🔘 Fun"
 __command_list__ = [
@@ -421,6 +465,8 @@ __command_list__ = [
 ]
 __handlers__ = [
     GOODMORNING_HANDLER,
+    GBAM_HANDLER,
+    GBUN_HANDLER,
     GOODNIGHT_HANDLER,
     RUNS_HANDLER,
     SLAP_HANDLER,
