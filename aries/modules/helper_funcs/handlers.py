@@ -7,6 +7,8 @@ from pyrate_limiter import (
 )
 from telegram import Update
 from telegram.ext import CommandHandler, Filters, MessageHandler, RegexHandler
+from telegram.ext import run_async
+from telegram.ext.dispatcher import run_async
 
 import aries.modules.sql.blacklistusers_sql as sql
 from aries import ALLOW_EXCL, DEMONS, DEV_USERS, DRAGONS, TIGERS, WOLVES
@@ -103,6 +105,7 @@ class CustomCommandHandler(CommandHandler):
                     else:
                         return False
 
+    @run_async
     def handle_update(self, update, dispatcher, check_result, context=None):
         if context:
             self.collect_additional_context(context, update, dispatcher, check_result)
