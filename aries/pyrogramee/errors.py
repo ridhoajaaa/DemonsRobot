@@ -2,7 +2,7 @@ import sys
 import traceback
 from functools import wraps
 
-from aries import EVENT_LOG, pbot
+from aries import EVENT_LOGS, pbot
 
 
 def split_limits(text):
