@@ -1,4 +1,5 @@
 future
+base58
 fuzzysearch
 emoji
 lxml
