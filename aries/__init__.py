@@ -87,6 +87,7 @@ if ENV:
     INFOPIC = bool(os.environ.get("INFOPIC", True))
     EVENT_LOGS = os.environ.get("EVENT_LOGS", None)
     ERROR_LOG = os.environ.get("ERROR_LOG", None)
+    ERROR_LOGS = os.environ.get("ERROR_LOGS")
     WEBHOOK = bool(os.environ.get("WEBHOOK", False))
     URL = os.environ.get("URL", "")
     PORT = int(os.environ.get("PORT", 5000))
@@ -199,6 +200,7 @@ else:
 
     EVENT_LOGS = Config.EVENT_LOGS
     ERROR_LOG = Config.ERROR_LOG
+    ERROR_LOGS = Config.ERROR_LOGS
     WEBHOOK = Config.WEBHOOK
     URL = Config.URL
     PORT = Config.PORT
