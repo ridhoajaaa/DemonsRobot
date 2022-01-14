@@ -16,7 +16,7 @@ from aries.modules.disable import DisableAbleCommandHandler, DisableAbleMessageH
 from aries.modules.helper_funcs.alternate import typing_action
 from aries.modules.helper_funcs.extraction import extract_user
 
-GN_IMG= "https://telegra.ph/file/5a4dc8f8cc2cdb408df18.jpg"
+GN_IMG= "https://telegra.ph/file/1ba41195de67f318fed43.jpg"
 
 @run_async
 @typing_action
@@ -26,13 +26,13 @@ def goodnight(update, context):
     reply = f"*Hey {escape_markdown(first_name)} \nGood Night! 😴*"
     message.reply_photo(GN_IMG,reply, parse_mode=ParseMode.MARKDOWN)
 
-GM_IMG= "https://telegra.ph/file/e3b27f1b746344c8fdb28.jpg"
+GM_IMG= "https://telegra.ph/file/45fde647ddc20dc75574b.jpg"
 @run_async
 @typing_action
 def goodmorning(update, context):
     message = update.effective_message
     first_name = update.effective_user.first_name
-    reply = f"*Hey {escape_markdown(first_name)} \n Good Morning!☀*"
+    reply = f"*Hey {escape_markdown(first_name)} \n Ohayo Onii Chan!☀*"
     message.reply_photo(GM_IMG,reply, parse_mode=ParseMode.MARKDOWN)
 
     

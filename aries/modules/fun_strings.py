@@ -1,3 +1,54 @@
+GBUN = (
+    "Beware! This Bot-Admeme Can Gbun You Right Off The Map.",
+    "I Guess You've Forgot Spelling Of GBAN Maybe...?",
+    "Don't Misuse Your Powers...",
+    "Nah, He Looks Innocent...",
+)
+
+
+GBAM = "<b>Beginning Of Global Bam For {user2}</b>  \n \nChat Id : <code>{chatid}</code> \nReason : <i>{reason}</i> \nGBammed By {user1}"
+
+# These words for just for fun don't mind it
+GBAM_REASON = (
+    "a bitch",
+    "gay to gay",
+    "no 1 noob",
+    "fucker",
+    "mother ticker",
+    "One punch a gay",
+    "fuck of topic",
+    "no respect",
+    "chuthiya bhaiya",
+    "mother likely chuthiya",
+    "gay being gay",
+    "using gay pack trying become a gay",
+    "big dick more than sucks a bots",
+    "see rules mother tickers",
+    "idk. wtf he is mom sai",
+    "fucking with gay bots",
+    "Korean gays",
+    "buying a gays",
+    "mater girls",
+)
+
+ABUSE_STRINGS = (
+    "Fuck off",
+    "Stfu go fuck yourself",
+    "Ur mum gey",
+    "Ur dad lesbo",
+    "Bsdk",
+    "Nigga",
+    "Ur granny tranny",
+    "you noob",
+    "Relax your Rear,ders nothing to fear,The Rape train is finally here",
+    "Stfu bc",
+    "Stfu and Gtfo U nub",
+    "GTFO bsdk",
+    "CUnt",
+    " Gay is here",
+    "Ur dad gey bc ",
+)
+
 RUN_STRINGS = (
     "Now you see me, now you don't." "ε=ε=ε=ε=┌(;￣▽￣)┘",
     "Get back here!",
@@ -185,11 +236,22 @@ PAT_TEMPLATES = (
 PAT_GIFS = (
     "CgACAgQAAxkBAALRX19Xs7tBdOH1gQwS_rglVRkTbgVYAAKEAgACmQn9UWlyGa_xy9_aGwQ",
     "CgACAgEAAxkBAALRYF9Xs8EnhsDfDpld3ILoqTbzDmwxAAJFAAOJxjlHECanwn69E5QbBA",
+    "CgACAgQAAxkBAALRX19Xs7tBdOH1gQwS_rglVRkTbgVYAAKEAgACmQn9UWlyGa_xy9_aGwQ",
+    "CgACAgEAAxkBAALRYF9Xs8EnhsDfDpld3ILoqTbzDmwxAAJFAAOJxjlHECanwn69E5QbBA", 
+    "CgACAgQAAxkBAAO5X7olTkYuRTw1AV__6mFehORkP4QAAiMCAAI3KIxSjBqOTuo4xf0eBA", 
+    "CgACAgQAAxkBAAO6X7olTklDbgs9nr5bNbM9xy0uunUAAmACAAL1G4xSKOH5wmDvxy4eBA", 
+    "CgACAgQAAxkBAAIViWDBew94TiaL_c9HyX0xpUY8wFy2AAJKAgACMU80Urc2Hvh_WMDeHwQ",
+    "CgACAgQAAxkBAAO7X7olTq_mAur7bsieTD5QnyQ06rUAAlwCAAINjoRSWyAJKJ9n2moeBA",
 )
 
 PAT_STICKERS = (
     "CAACAgQAAxkBAALRWV9Xs4HH0XaXfhZe-jWaZoXfs-IsAAJYAwACdDgSEHYOt4KvL02oGwQ",
     "CAACAgQAAxkBAALRXF9Xs6XmIeDbnoL1wiDky0TdX-CvAAKKAQAC1TMzC9A3CtiT2rqVGwQ",
+    "CAACAgQAAxkBAALRWV9Xs4HH0XaXfhZe-jWaZoXfs-IsAAJYAwACdDgSEHYOt4KvL02oGwQ",
+    "CAACAgQAAxkBAALRXF9Xs6XmIeDbnoL1wiDky0TdX-CvAAKKAQAC1TMzC9A3CtiT2rqVGwQ", 
+    "CAACAgQAAxkBAAPCX7ol0GGF-58u9AfabFk_16ehVXEAArUAA9UzMwuz7SpKK9TonB4E",
+    "CAACAgQAAxkBAAPDX7ol2ixI5WdJ48h8rQYbc__6KisAAt8AA9UzMwusEnTVQ5yoAh4E", 
+    "CAACAgQAAxkBAAPEX7ol55uzT-EkbHOkA-_94MiMcBgAAvAAA9UzMws7KHpoG8wBjh4E",
 )
 
 PING_STRING = (
