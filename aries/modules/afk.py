@@ -1,20 +1,17 @@
 import time
 
-from telegram import MessageEntity
+from telegram import MessageEntity, ParseMode
 from telegram.error import BadRequest
-from telegram.ext import Filters, MessageHandler
+from telegram.ext import Filters
 
-from aries import dispatcher, REDIS
-from aries.modules.disable import (
-    DisableAbleCommandHandler,
-    DisableAbleMessageHandler,
-)
+from aries import REDIS
 from aries.modules.helper_funcs.readable_time import get_readable_time
+from aries.modules.helper_funcs.decorators import idzcmd, idzmsg
 from aries.modules.redis.afk_redis import (
-    start_afk,
+    afk_reason,
     end_afk,
     is_user_afk,
-    afk_reason,
+    start_afk,
 )
 from aries.modules.users import get_user_id
 
@@ -22,6 +19,8 @@ AFK_GROUP = 7
 AFK_REPLY_GROUP = 8
 
 
+@idzcmd(command="afk", group=AFK_GROUP)
+@idzmsg(Filters.regex("(?i)^brb"), friendly="afk", group=AFK_GROUP)
 def afk(update, _):
     message = update.effective_message
     args = message.text.split(None, 1)
@@ -39,11 +38,12 @@ def afk(update, _):
     REDIS.set(f"afk_time_{user.id}", start_afk_time)
     fname = user.first_name
     try:
-        message.reply_text("Sampai Jumpa Banh 👋 <code>{}</code>!".format(fname))
+        message.reply_text(f"Sampai jumpa banh 👋 <code>{fname}</code>!", parse_mode=ParseMode.HTML)
     except BadRequest:
         pass
 
 
+@idzmsg((Filters.all & Filters.chat_type.groups), friendly='afk', group=AFK_GROUP)
 def no_longer_afk(update, _):
     user = update.effective_user
     message = update.effective_message
@@ -52,9 +52,12 @@ def no_longer_afk(update, _):
 
     if not is_user_afk(user.id):  # Check if user is afk or not
         return
-    end_afk_time = get_readable_time(
-        (time.time() - float(REDIS.get(f"afk_time_{user.id}")))
-    )
+
+    the_heck = REDIS.get(f"afk_time_{user.id}")
+    if not the_heck:
+        return
+
+    end_afk_time = get_readable_time((time.time() - float(the_heck)))
     REDIS.delete(f"afk_time_{user.id}")
     res = end_afk(user.id)
     if res:
@@ -63,14 +66,13 @@ def no_longer_afk(update, _):
         firstname = update.effective_user.first_name
         try:
             message.reply_text(
-                "Aim kombek beyby <code>{firstname}</code>!\n\nAnda pergi selama : <code>{}</code>".format(
-                    firstname, end_afk_time
-                )
+                f"Aim kombek beybi <code>{firstname}</code>!\n\nAnda pergi selama : <code>{end_afk_time}</code>", parse_mode=ParseMode.HTML
             )
-        except BaseException:
-            pass
+        except BadRequest:
+            return
 
 
+@idzmsg((Filters.all & Filters.chat_type.groups & ~Filters.update.edited_message), friendly="afk", group=AFK_REPLY_GROUP)
 def reply_afk(update, context):
     message = update.effective_message
     userc = update.effective_user
@@ -106,10 +108,10 @@ def reply_afk(update, context):
 
                 try:
                     chat = context.bot.get_chat(user_id)
-                except BadRequest:
+                except BadRequest as e:
                     print(
-                        "Error: Could not fetch userid {} for AFK module".format(
-                            user_id
+                        "Error: Could not fetch userid {} for AFK module due to {}".format(
+                            user_id, e
                         )
                     )
                     return
@@ -126,22 +128,22 @@ def reply_afk(update, context):
         check_afk(update, context, user_id, fst_name, userc_id)
 
 
-def check_afk(update, context, user_id: int, fst_name: int, userc_id: int):
+def check_afk(update, _, user_id: int, fst_name: int, userc_id: int):
     if is_user_afk(user_id):
         reason = afk_reason(user_id)
-        since_afk = get_readable_time(
-            (time.time() - float(REDIS.get(f"afk_time_{user_id}")))
-        )
+        pussy = REDIS.get(f"afk_time_{user_id}")
+        if not pussy:
+            return
+
+        since_afk = get_readable_time((time.time() - float(pussy)))
         if int(userc_id) == int(user_id):
             return
         if reason == "none":
-            res = "<code>{}</code> is AFK!\nTerakhir dilihat : <code>{}</code>".format(fst_name, since_afk)
+            res = f"<code>{fst_name}</code> is AFK!\n\nTerakhir dilihat : <code>{since_afk}</code>"
         else:
-            res = "<code>{}</code> is AFK!\n\nAlasan: <code>{}</code>\nTerakhir dilihat : <code>{}</code>".format(
-                fst_name, reason, since_afk
-            )
+            res = f"<code>{fst_name}</code> is AFK!\n\nAlasan: <code>{reason}</code>\nTerakhir dilihat : <code>{since_afk}</code>"
 
-        update.effective_message.reply_text(res)
+        update.effective_message.reply_text(res, parse_mode=ParseMode.HTML)
 
 
 def __gdpr__(user_id):
@@ -151,45 +153,11 @@ def __gdpr__(user_id):
 __help__ = """
 When marked as AFK, any mentions will be replied to with a message to say you're not available!
 
-❍ /afk <reason>: Mark yourself as AFK.
-❍ brb <reason>: Same as the afk command - but not a command.
+❂ /afk <reason>: Mark yourself as AFK.
+❂ brb <reason>: Same as the afk command - but not a command.
 
 An example of how to afk or brb:
-`/afk coli` or brb coli.
+`/afk dinner` or brb dinner.
 """
 
-AFK_HANDLER = DisableAbleCommandHandler(
-    "afk",
-    afk,
-    run_async=True,
-)
-AFK_REGEX_HANDLER = DisableAbleMessageHandler(
-    Filters.regex("(?i)^brb"),
-    afk,
-    friendly="afk",
-    run_async=True,
-)
-NO_AFK_HANDLER = MessageHandler(
-    Filters.all & Filters.chat_type.groups,
-    no_longer_afk,
-    run_async=True,
-)
-AFK_REPLY_HANDLER = MessageHandler(
-    Filters.all & Filters.chat_type.groups & ~Filters.update.edited_message,
-    reply_afk,
-    run_async=True,
-)
-
-dispatcher.add_handler(AFK_HANDLER, AFK_GROUP)
-dispatcher.add_handler(AFK_REGEX_HANDLER, AFK_GROUP)
-dispatcher.add_handler(NO_AFK_HANDLER, AFK_GROUP)
-dispatcher.add_handler(AFK_REPLY_HANDLER, AFK_REPLY_GROUP)
-
 __mod_name__ = "AFK"
-__command_list__ = ["afk"]
-__handlers__ = [
-    (AFK_HANDLER, AFK_GROUP),
-    (AFK_REGEX_HANDLER, AFK_GROUP),
-    (NO_AFK_HANDLER, AFK_GROUP),
-    (AFK_REPLY_HANDLER, AFK_REPLY_GROUP),
-]
