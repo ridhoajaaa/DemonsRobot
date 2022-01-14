@@ -1,9 +1,14 @@
 from pyrogram import filters
 
+from aries import arq
+from aries import pbot as app
+
+ARQ_API_URL = "https://grambuilders.tech"
+
 from aries import BOT_USERNAME, arq, pgram
 
 
-@pgram.on_message(filters.command("arq"))
+@app.on_message(filters.command("arq"))
 async def arq_stats(_, message):
     data = await arq.stats()
     if not data.ok:
