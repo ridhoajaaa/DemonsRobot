@@ -607,9 +607,6 @@ UNBAN_BUTTON_HANDLER = CallbackQueryHandler(
 KICKME_HANDLER = DisableAbleCommandHandler(
     ["kickme", "punchme"], punchme, filters=Filters.chat_type.groups, run_async=True
 )
-SNIPE_HANDLER = CommandHandler(
-    "snipe", snipe, pass_args=True, filters=CustomFilters.sudo_filter, run_async=True
-)
 BANME_HANDLER = CommandHandler("banme", banme, run_async=True)
 
 dispatcher.add_handler(BAN_HANDLER)
@@ -619,7 +616,6 @@ dispatcher.add_handler(UNBAN_HANDLER)
 dispatcher.add_handler(ROAR_HANDLER)
 dispatcher.add_handler(KICKME_HANDLER)
 dispatcher.add_handler(UNBAN_BUTTON_HANDLER)
-dispatcher.add_handler(SNIPE_HANDLER)
 dispatcher.add_handler(BANME_HANDLER)
 
 __handlers__ = [
@@ -630,6 +626,5 @@ __handlers__ = [
     ROAR_HANDLER,
     KICKME_HANDLER,
     UNBAN_BUTTON_HANDLER,
-    SNIPE_HANDLER,
     BANME_HANDLER,
 ]
