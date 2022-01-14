@@ -185,7 +185,7 @@ def set_antipinchannel(update: Update, context: CallbackContext):
     )
 
 
-@idzimsg(
+@idzmsg(
     Filters.is_automatic_forward | Filters.status_update.pinned_message, group=113
 )
 def eliminate_linked_channel_msg(update: Update, _: CallbackContext):
