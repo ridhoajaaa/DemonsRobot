@@ -11,7 +11,7 @@ from telegram import ParseMode, Update, InlineKeyboardButton, InlineKeyboardMark
 from telegram.ext import CallbackContext
 
 from aries import eor
-from ries import pgram as app
+from aries import pgram as app
 from aries.modules.helper_funcs.alternate import typing_action
 from aries.modules.helper_funcs.decorators import idzcmd
 from aries.modules.helper_funcs.misc import upload_text
