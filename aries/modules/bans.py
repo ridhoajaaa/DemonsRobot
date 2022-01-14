@@ -27,7 +27,8 @@ from telegram import (
     InlineKeyboardMarkup,
     ParseMode,
     TelegramError,
-    Update,)
+    Update,
+)
 
 from aries import dispatcher, LOGGER
 from aries.modules.disable import DisableAbleCommandHandler
@@ -96,14 +97,26 @@ def ban(update, context):
         silent = False
 
     log = (
-        f"<b>{html.escape(chat.title)}:</b>\n"
-        f"#{'S' if silent else ''}BANNED\n"
-        f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
-        f"<b>User:</b> {mention_html(member.user.id, member.user.first_name)}"
+        "<b>{}:</b>"
+        "\n#{}BANNED"
+        "\n<b>Admin:</b> {}"
+        "\n<b>User:</b> {} (<code>{}</code>)".format(
+            html.escape(chat.title),
+            "S" if silent else "",
+            mention_html(user.id, user.first_name),
+            mention_html(member.user.id, member.user.first_name),
+            member.user.id,
+        )
     )
     if reason:
         log += "\n<b>Reason:</b> {}".format(reason)
 
+    reply = (
+            f"Yep! Banned {mention_html(member.user.id, html.escape(member.user.first_name))} from {chat.title}\n"
+            f"By {mention_html(user.id, html.escape(user.first_name))}"
+        )
+    if reason:
+        reply += f"<b>Reason:</b> {html.escape(reason)}"
     try:
         chat.ban_member(user_id)
 
@@ -113,14 +126,7 @@ def ban(update, context):
             message.delete()
             return log
 
-    # context.bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
-    reply = (
-            f"Yep! Banned {mention_html(member.user.id, html.escape(member.user.first_name))} from {chat.title}\n"
-            f"By {mention_html(user.id, html.escape(user.first_name))}"
-        )
-        if reason:
-            reply += f"\nReason: {html.escape(reason)}"
-
+        # bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
         bot.sendMessage(
             chat.id,
             reply,
