@@ -2,6 +2,7 @@ from time import perf_counter
 from functools import wraps
 from cachetools import TTLCache
 from threading import RLock
+from pyrogram import filters
 from aries import (
     DEL_CMDS,
     DEV_USERS,
