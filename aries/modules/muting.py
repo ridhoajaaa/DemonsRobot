@@ -5,6 +5,17 @@ from telegram import Bot, Chat, ChatPermissions, ParseMode, Update
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import mention_html
+from telegram import (
+    Bot,
+    CallbackQuery,
+    Chat,
+    ChatPermissions,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    ParseMode,
+    Update,
+    User,
+)
 
 from aries import LOGGER, TIGERS, dispatcher
 from aries.modules.helper_funcs.chat_status import (
@@ -78,17 +89,39 @@ def mute(update: Update, context: CallbackContext) -> str:
     if member.can_send_messages is None or member.can_send_messages:
         chat_permissions = ChatPermissions(can_send_messages=False)
         bot.restrict_chat_member(chat.id, user_id, chat_permissions)
+        msg = (
+            f"Yep! Muted {mention_html(member.user.id, member.user.first_name)} for talking in {chat.title}\n"
+            f"by {mention_html(user.id, html.escape(user.first_name))}"
+        )
+        if reason:
+            msg += f"\nReason: {html.escape(reason)}"
+
+        keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="⚠️ Unmute",
+                        callback_data="unmute_({})".format(member.user.id),
+                    ),
+                    InlineKeyboardButton(text="❌ Delete", callback_data="close2"),
+                ]
+            ]
+        )
         bot.sendMessage(
             chat.id,
-            f"Muted <b>{html.escape(member.user.first_name)}</b> with no expiration date!",
+            msg,
+            reply_markup=keyboard,
             parse_mode=ParseMode.HTML,
         )
         return log
-
-    else:
-        message.reply_text("This user is already muted!")
+    message.reply_text("This user is already muted!")
 
     return ""
+
+
+close_keyboard = InlineKeyboardMarkup(
+    [[InlineKeyboardButton("❌ Delete", callback_data="close2")]]
+)
 
 
 @connection_status
