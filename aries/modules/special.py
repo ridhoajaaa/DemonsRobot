@@ -75,6 +75,8 @@ Untuk mengetahui statistik pokemon
 Fake generating
 -> /picgen
 Pict generating
+-> /covid
+Untuk mengetahui stats covid dunia
 """
 
 __mod_name__ = "Special"

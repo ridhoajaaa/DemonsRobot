@@ -5,8 +5,6 @@ from aries import pbot as app
 
 ARQ_API_URL = "https://grambuilders.tech"
 
-from aries import BOT_USERNAME, arq, pgram
-
 
 @app.on_message(filters.command("arq"))
 async def arq_stats(_, message):
@@ -23,22 +21,20 @@ async def arq_stats(_, message):
     platform = data.platform
     python_version = data.python
     users = data.users
+    bot = data.bot
     statistics = f"""
-**System Statistics**
-**Uptime:** `{uptime}`
-**Requests Since Uptime:** `{requests}`
-**CPU:** `{cpu}`
-**Memory:**
-    **Total Used:** `{server_mem}`
-    **API:** `{api_mem}`
-**Disk:** `{disk}`
-**Platform:** `{platform}`
-**Python:** `{python_version}`
-
-**ARQ Statistics:**
-**Users:** `{users}`
-
-**@{BOT_USERNAME} Some Modules Running On ARQ**
+📡 **Uptime:** `{uptime}`
+🔘 **Requests Since Uptime:** `{requests}`
+🔘 **CPU:** `{cpu}`
+🔘 **Memory:**
+    ⇝ **Total Used:** `{server_mem}`
+    ⇝ **API:** `{api_mem}`
+🔘 **Disk:** `{disk}`
+🔘 **Platform:** `{platform}`
+🔘 **Python:** `{python_version}`
+🔘 **Users:** `{users}`
+🔘 **Bot:** {bot}
+🔘 **Address:** {ARQ_API_URL}
 **Powered By:** __@ddodxy__🔥
 """
     await message.reply_text(statistics, disable_web_page_preview=True)
