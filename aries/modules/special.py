@@ -71,6 +71,10 @@ Make me send a message to a specific chat.
 Gatau gunanya apa, fun aja
 -> /pokedex
 Untuk mengetahui statistik pokemon
+-> /fakegen
+Fake generating
+-> /picgen
+Pict generating
 """
 
 __mod_name__ = "Special"

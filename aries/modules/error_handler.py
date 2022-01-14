@@ -3,13 +3,19 @@ import io
 import random
 import sys
 import traceback
+
 import pretty_errors
 import requests
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import CallbackContext, CommandHandler
-from aries import dispatcher, DEV_USERS
+from telegram import(
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    ParseMode,
+    Update,
+)
+from telegram.ext import CallbackContext
 
-MESSAGE_DUMP = "-1001545036829"
+from aries import DEV_USERS, ERROR_LOGS, dispatcher
+from aries.modules.helper_funcs.decorators import idzcmd
 
 pretty_errors.mono()
 
@@ -79,42 +85,48 @@ def error_callback(update: Update, context: CallbackContext):
             update.effective_message.text if update.effective_message else "No message",
             tb,
         )
-        key = requests.post(
-            "https://www.toptal.com/developers/hastebin/documents",
-            data=pretty_message.encode("UTF-8"),
-        ).json()
+        extension = "txt"
+        url = "https://spaceb.in/api/v1/documents/"
+        try:
+            response = requests.post(
+                url, data={"content": pretty_message, "extension": extension}
+            )
+        except Exception as e:
+            return {"error": str(e)}
+        response = response.json()
         e = html.escape(f"{context.error}")
-        if not key.get("key"):
+        if not response:
             with open("error.txt", "w+") as f:
                 f.write(pretty_message)
             context.bot.send_document(
-                MESSAGE_DUMP,
+                ERROR_LOGS,
                 open("error.txt", "rb"),
-                caption=f"#{context.error.identifier}\n<b>Your enemy's make an error for you, demon king:"
+                caption=f"#{context.error.identifier}\n<b>Darling, i have an Error :"
                 f"</b>\n<code>{e}</code>",
                 parse_mode="html",
             )
             return
-        key = key.get("key")
-        url = f"https://www.toptal.com/developers/hastebin/{key}"
+
+        url = f"https://spaceb.in/{response['payload']['id']}"
         context.bot.send_message(
-            MESSAGE_DUMP,
-            text=f"#{context.error.identifier}\n<b>Your enemy's make an error for you, demon king:"
+            ERROR_LOGS,
+            text=f"#{context.error.identifier}\n<b>Darling, i have an Error :"
             f"</b>\n<code>{e}</code>",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Cursed Errors", url=url)]],
+                [[InlineKeyboardButton("See The Error Darling!", url=url)]],
             ),
-            parse_mode="html",
+            parse_mode=ParseMode.HTML,
         )
 
 
+@idzcmd(command="errors")
 def list_errors(update: Update, context: CallbackContext):
     if update.effective_user.id not in DEV_USERS:
         return
     e = dict(sorted(errors.items(), key=lambda item: item[1], reverse=True))
     msg = "<b>Errors List:</b>\n"
     for x, value in e.items():
-        msg += f"• <code>{x}:</code> <b>{value}</b> #{x.identifier}\n"
+        msg += f"× <code>{x}:</code> <b>{value}</b> #{x.identifier}\n"
     msg += f"{len(errors)} have occurred since startup."
     if len(msg) > 4096:
         with open("errors_msg.txt", "w+") as f:
@@ -130,4 +142,3 @@ def list_errors(update: Update, context: CallbackContext):
 
 
 dispatcher.add_error_handler(error_callback)
-dispatcher.add_handler(CommandHandler("errors", list_errors))

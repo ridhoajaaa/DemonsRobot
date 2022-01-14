@@ -7,6 +7,8 @@ from pyrogram.errors.exceptions.bad_request_400 import (
     WebpageMediaEmpty,
 )
 from aries import IMDB_TEMPLATE
+from aries.events import register
+from aries import telethn as tbot
 import time
 from datetime import datetime
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
@@ -16,7 +18,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
 
-@Client.on_message(filters.command(["imdb", "search"]))
+@register(pattern="^/imdb (.*)")
 async def imdb_search(client, message):
     if " " in message.text:
         k = await message.reply("Searching ImDB")
