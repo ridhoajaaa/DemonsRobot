@@ -7,4 +7,4 @@ Powerful Abilities
 Developer [d̶d̶o̶x̶y̶](https://t.me/ddodxy)
 Support Group [Support](https://t.me/demonszxx)
 """
-__mod_name__ = "🔘 About"
+__mod_name__ = "About"

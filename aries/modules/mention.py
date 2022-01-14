@@ -89,4 +89,4 @@ I can tag all members in group with a message.
 🔘 *NOTE:* Tagger only works on groups which have less than 100 members.
 """
 
-__mod_name__ = "🔘 Mention"
+__mod_name__ = "Mention"

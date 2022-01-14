@@ -19,7 +19,7 @@ async def fetch(url):
 
 
 async def ai_Aries(url):
-    ai_name = "Aries.mp3"
+    ai_name = "Demons.mp3"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             if resp.status == 200:
@@ -47,7 +47,7 @@ async def Aries(_, message):
     except Exception as e:
         await m.edit(str(e))
         return
-    await m.edit("Made By @IdzXartez...")
+    await m.edit("Made By @ddodxy...")
     AriesVoice = await ai_Aries(VoiceAi)
     await m.edit("Appling...")
     await message.reply_audio(audio=AriesVoice, title=chatbot, performer=name)

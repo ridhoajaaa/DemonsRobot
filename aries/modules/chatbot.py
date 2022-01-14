@@ -356,4 +356,4 @@ you can use this .
 ❍  /ai : Open menu button for enable|disable ai 
 """
 
-__mod_name__ = "🔘 A.I"
+__mod_name__ = "A.I"

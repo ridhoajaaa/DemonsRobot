@@ -7,29 +7,9 @@ __help__ = """
 ❍ If userbot joined enjoy music, If not add manually to your group and retry.
 
 🔘 Commands.
-⇝ Assistant.
-Note :
-- Only for Sudo Users
-
-!block [ Reply to a User Message] 
-- Blocks the User from Assistant Account.
-
-!unblock [ Reply to a User Message] 
-- Unblocks the User from Assistant Account.
-
-!approve [ Reply to a User Message] 
-- Approves the User for DM.
-
-!disapprove [ Reply to a User Message] 
-- Disapproves the User for DM.
-
-!pfp [ Reply to a Photo] 
-- Changes Assistant account PFP.
-
-!bio [Bio text] 
-- Changes Bio of Assistant Account.
 
 ⇝ Auth User
+
 Note :
 -Auth users can skip, pause, stop, resume Voice Chats even without Admin Rights.
 
@@ -57,7 +37,9 @@ Only for Sudo Users.
 /whitelistchat [CHAT_ID] 
 - Whitelist any blacklisted chat from using Music Bot
 
+
 ⇝ Join/Leave
+
 Note:
 Only for Sudo Users
 
@@ -69,6 +51,7 @@ Only for Sudo Users
 
 /leavebot [Chat Username or Chat ID]
 - Bot will leave the particular chat.
+
 
 ⇝ Playlist
 
@@ -83,6 +66,7 @@ Only for Sudo Users
 
 /delgroupplaylist
 - Delete any saved music in your group's playlist [Requires Admin Rights.]
+
 
 ⇝ Server
 
@@ -110,16 +94,19 @@ Only for Sudo Users
 /restart 
 - Restart Bot [All downloads, cache, raw files will be cleared too].
 
+
 ⇝ Speedtest
 
 /speedtest 
 - Check Server Latency and Speed.
+
 
 ⇝ Stats
 
 /stats
 - Check the Stats of Bot.
 - Gets the stat of MongoDb , Assistant, System etc
+
 
 ⇝ SudoUsers
 
@@ -145,6 +132,7 @@ Only for Sudo Users.
 /clean
 - Clean Temp Files and Logs.
 
+
 ⇝ Theme
 
 /settheme
@@ -152,6 +140,7 @@ Only for Sudo Users.
 
 /theme
 - Check Theme for your chat.
+
 
 ⇝ Video/Stream
 
@@ -162,6 +151,7 @@ For Sudo User:-
 
 /set_video_limit [Number of Chats]
 - Set a maximum Number of Chats allowed for Video Calls at a time.
+
 
 ⇝ Voice Chat
 
@@ -189,5 +179,32 @@ Only for Sudo Users
 
 /activevideo
 - Check active video calls on bot.
+
+
+⇝ Assistant.
+
+Note :
+- Only for Sudo Users
+
+!block [ Reply to a User Message] 
+- Blocks the User from Assistant Account.
+
+!unblock [ Reply to a User Message] 
+- Unblocks the User from Assistant Account.
+
+!approve [ Reply to a User Message] 
+- Approves the User for DM.
+
+!disapprove [ Reply to a User Message] 
+- Disapproves the User for DM.
+
+!pfp [ Reply to a Photo] 
+- Changes Assistant account PFP.
+
+!bio [Bio text] 
+- Changes Bio of Assistant Account.
+
+
+𝕣𝕖𝕒𝕕  𝕗𝕣𝕠𝕞  𝕥𝕠𝕡  𝕓𝕖𝕓𝕪  𝕒𝕟𝕛𝕘 ❤️.
 """
-__mod_name__ = "🔘 Music Player"
+__mod_name__ = "Music Player"

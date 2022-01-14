@@ -19,7 +19,7 @@ Use this module to translate stuff!
 ❍ `/langs`: get a list of supported languages for translation.
 """
 
-__mod_name__ = "🔘 Translator"
+__mod_name__ = "Translator"
 
 
 trans = Translator()

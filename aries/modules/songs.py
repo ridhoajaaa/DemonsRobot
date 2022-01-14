@@ -68,7 +68,7 @@ def song(client, message):
         )
         m.delete()
     except Exception as e:
-        m.edit("An error Occured! \nReport at @IDZEROIDSUPPORT")
+        m.edit("An error Occured! \nReport at @demonszxx")
         print(e)
 
     try:

@@ -567,7 +567,7 @@ Locking bots will stop non-admins from adding bots to the chat.
  ⇝ Unlocking permission *pin* will allow members (non-admins) to pinned a message in a group
 """
 
-__mod_name__ = " 🔘 Locks"
+__mod_name__ = "Locks"
 
 LOCKTYPES_HANDLER = DisableAbleCommandHandler("locktypes", locktypes, run_async=True)
 LOCK_HANDLER = CommandHandler(

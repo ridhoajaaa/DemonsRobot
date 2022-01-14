@@ -75,4 +75,4 @@ __help__ = """
   ❍ /dare : for random dare.
 """
 
-__mod_name__ = "🔘 Game"
+__mod_name__ = "Game"

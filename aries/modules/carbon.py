@@ -26,4 +26,4 @@ __help__ = """
 Usage: Beautify your code using carbon.now.sh
 """
 
-__mod_name__ = "🔘 Carbon"
+__mod_name__ = "Carbon"

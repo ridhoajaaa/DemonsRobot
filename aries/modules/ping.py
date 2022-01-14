@@ -15,7 +15,7 @@ sites_list = {
     "Kayo": "https://animekayo.com",
     "Jikan": "https://api.jikan.moe/v3",
     "AI Server": "https://kuki-yukicloud.up.railway.app/",
-    "IDZ Server": "https://liones-api.herokuapp.com/",
+    "ODO Server": "https://liones-api.herokuapp.com/",
 }
 
 
