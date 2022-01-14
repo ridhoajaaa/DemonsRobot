@@ -8,6 +8,7 @@ from telethon import events
 from aries.pyrogramee.telethonbasics import is_admin
 from aries import telethn as tbot
 
+
 @tbot.on(events.NewMessage(pattern="/fakegen$"))
 async def hi(event):
     if event.fwd_from:
