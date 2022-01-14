@@ -27,7 +27,7 @@ from telegram import (
     InlineKeyboardMarkup,
     ParseMode,
     TelegramError,
-    Update,
+    Update,)
 
 from aries import dispatcher, LOGGER
 from aries.modules.disable import DisableAbleCommandHandler
