@@ -47,11 +47,10 @@ async def whatanime(e):
         js0 = resp0.get("result")
         if not js0:
             await cut.edit("`No results found.`")
-            match = match[0]
+            return
         js0 = js0[0]
         text = f'<b>{html.escape(js0["anilist"]["title"]["romaji"])}'
         if js0["anilist"]["title"]["native"]:
-            anilist_id = match["anilist"]["id"]:
             text += f' ({html.escape(js0["anilist"]["title"]["native"])})'
         text += "</b>\n"
         if js0["episode"]:
@@ -66,6 +65,16 @@ async def whatanime(e):
         dt1 = pendulum.from_timestamp(js0["to"])
         ctext = (
             f"{html.escape(dt0.to_time_string())} - {html.escape(dt1.to_time_string())}"
+            keyboard = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "More Info",
+                            url="https://nhentai.to/",
+                        )
+                    ]
+                ]
+            )
         )
         async with session.get(js0["video"]) as raw_resp1:
             file = memory_file("preview.mp4", await raw_resp1.read())
@@ -73,16 +82,6 @@ async def whatanime(e):
             await e.reply(ctext, file=file, parse_mode="html")
         except FilePartsInvalidError:
             await e.reply("`Cannot send preview.`")
-            keyboard = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            "More Info",
-                            url="https://anilist.co/anime/{}".format(anilist_id),
-                        )
-                    ]
-                ]
-            )
 
 
 def memory_file(name=None, contents=None, *, _bytes=True):
