@@ -268,9 +268,7 @@ def start(update: Update, context: CallbackContext):
                         InlineKeyboardButton(
                             text="Support", url=f"https://telegram.dog/demonszxx"
                         ),
-                        InlineKeyboardButton(
-                            text="Updates", url="https://nhentai.to/"
-                        ),
+                        InlineKeyboardButton(text="Updates", url="https://nhentai.to/"),
                     ],
                 ]
             ),
@@ -631,9 +629,7 @@ def get_help(update, context):
                         InlineKeyboardButton(
                             text="Support", url=f"https://telegram.dog/demonsxzz"
                         ),
-                        InlineKeyboardButton(
-                            text="Updates", url="https://nhentai.to/"
-                        ),
+                        InlineKeyboardButton(text="Updates", url="https://nhentai.to/"),
                     ],
                     [
                         InlineKeyboardButton(
@@ -964,7 +960,9 @@ def main():
             client.run_until_disconnected()
 
     else:
-        LOGGER.info(f"{dispatcher.bot.first_name} started, Using long polling. | BOT: [@{dispatcher.bot.username}]")
+        LOGGER.info(
+            f"{dispatcher.bot.first_name} started, Using long polling. | BOT: [@{dispatcher.bot.username}]"
+        )
         updater.start_polling(
             timeout=15,
             read_latency=4,

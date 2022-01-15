@@ -112,9 +112,9 @@ def ban(update, context):
         log += "\n<b>Reason:</b> {}".format(reason)
 
     reply = (
-            f"Yep! Banned {mention_html(member.user.id, html.escape(member.user.first_name))} from {chat.title}\n"
-            f"By {mention_html(user.id, html.escape(user.first_name))}"
-        )
+        f"Yep! Banned {mention_html(member.user.id, html.escape(member.user.first_name))} from {chat.title}\n"
+        f"By {mention_html(user.id, html.escape(user.first_name))}"
+    )
     if reason:
         reply += f"<b>Reason:</b> {html.escape(reason)}"
     try:
