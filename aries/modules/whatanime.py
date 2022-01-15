@@ -7,11 +7,13 @@ import time
 from datetime import timedelta
 from decimal import Decimal
 
+from numpy import append
+
 import aiohttp
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from aries import pgram
+from aries import pgram as app
 
 session = aiohttp.ClientSession()
 progress_callback_data = {}
@@ -45,7 +47,7 @@ def calculate_eta(current, total, start_time):
     return ", ".join(thing)
 
 
-@pgram.on_message(filters.command("whatanime", prefixes=(["!", "/"])))
+@app.on_message(filters.command("whatanime", prefixes=(["!", "/"])))
 async def whatanime(c: Client, m: Message):
     media = m.photo or m.animation or m.video or m.document
     if not media:
