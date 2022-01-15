@@ -14,6 +14,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from aries import pgram as app
+from aries.events import register as kaneki
 
 session = aiohttp.ClientSession()
 progress_callback_data = {}
@@ -47,7 +48,7 @@ def calculate_eta(current, total, start_time):
     return ", ".join(thing)
 
 
-@app.on_message(filters.command("whatanime", prefixes=(["!", "/"])))
+@kaneki(pattern="^/whatanime(.*)")
 async def whatanime(c: Client, m: Message):
     media = m.photo or m.animation or m.video or m.document
     if not media:
