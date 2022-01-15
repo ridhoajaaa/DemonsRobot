@@ -1,4 +1,3 @@
-import datetime
 import glob
 import io
 import os
@@ -8,6 +7,7 @@ import urllib.request
 
 import bs4
 import requests
+from datetime import datetime
 from bing_image_downloader import downloader
 from bs4 import BeautifulSoup
 from PIL import Image
