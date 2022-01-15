@@ -202,6 +202,7 @@ def build_keyboard_alternate(buttons):
 def is_module_loaded(name):
     return name not in NO_LOAD
 
+
 def upload_text(data: str) -> typing.Optional[str]:
     passphrase = Random.get_random_bytes(32)
     salt = Random.get_random_bytes(8)

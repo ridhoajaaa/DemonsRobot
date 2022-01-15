@@ -59,4 +59,3 @@ async def paste_func(_, message):
         except Exception:
             pass
     return await m.edit(link)
-
