@@ -87,19 +87,17 @@ def get_readable_time(seconds: int) -> str:
 
 
 PM_START_TEXT = f"""
-Alo bang, [👋] I'm {}.
-Powerfull Management Bot And I Will Help In Managing Your Group.
+Hai there,👋 My name is [{dispatcher.bot.first_name}](https://telegra.ph/file/7dc8ddb28d50ed85735f5.jpg)
 Maintained by : [𝗬𝗲𝘀𝗶𝗱𝗼.](https://t.me/ddodxy)
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
-• *Uptime:* `{}`
-• `{}` *Users, across* `{}` *chats.*
+A powerful group management bot to help you manage your group!
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
-✪ Click the /help button below to learn more how to use me. ✪ 
+Click the /help button below to learn more how to use me.
 """
 
 buttons = [
     [
-        InlineKeyboardButton(text="Get Help", callback_data="help_back"),
+        InlineKeyboardButton(text="Help", callback_data="help_back"),
         InlineKeyboardButton(text="Support", url="https://t.me/demonszxx")
     ],
     [
