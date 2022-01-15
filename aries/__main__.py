@@ -255,7 +255,7 @@ def start(update: Update, context: CallbackContext):
                 parse_mode=ParseMode.MARKDOWN,
                 timeout=60,
             )
-     else:
+        else:
         message.reply_animation(
             GROUP_START_IMG,
             caption="<code> Demons Online \nAktif sejak</code>: <code>{}</code>".format(
