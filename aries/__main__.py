@@ -76,14 +76,15 @@ GROUP_START_IMG = (
 )
 
 PM_START_TEXT = """
-Alo bang, [👋](https://telegra.ph/file/7dc8ddb28d50ed85735f5.jpg) I'm {}.
-Saya bot untuk manage group anda.
+(https://telegra.ph/file/7dc8ddb28d50ed85735f5.jpg)
+Alo bang, [👋] I'm {}.
+Powerfull Management Bot And Help In Managing Your Group.
 Maintained by : [𝗬𝗲𝘀𝗶𝗱𝗼.](https://t.me/ddodxy)
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
 • *Uptime:* `{}`
 • `{}` *Users, across* `{}` *chats.*
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
-✪ Baca "DETAIL" biar ga bingung ✪ 
+✪ Baca DETAIL Atau Ketik /help ✪ 
 """
 
 buttons = [
