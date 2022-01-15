@@ -8,27 +8,16 @@
 
 
 
-<p align="center">
-<a href="https://www.codefactor.io/repository/github/idzero23/SaintAries"><img src="https://www.codefactor.io/repository/github/idzero23/SaintAries/badge?s=c88caeeb0a1618f6af41e411a83bcd38832cd6ea" alt="CodeFactor" /></a> <a href="https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=idzero23/SaintAries&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/33e2dc1ed2c54ff18a80ba9f35e54b12"/></a>
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square">
+!Python Version](https://img.shields.io/badge/python-3.8-green?style=for-the-badge&logo=appveyor)
+![Issues](https://img.shields.io/github/issues/Dank-del/EnterpriseALRobot?style=for-the-badge&logo=appveyor)
+![Forks](https://img.shields.io/github/forks/Dank-del/EnterpriseALRobot?style=for-the-badge&logo=appveyor)
+![Stars](https://img.shields.io/github/stars/Dank-del/EnterpriseALRobot?style=for-the-badge&logo=appveyor)
+![LICENSE](https://img.shields.io/github/license/Dank-del/EnterpriseALRobot?style=for-the-badge&logo=appveyor)
+![Contributors](https://img.shields.io/github/contributors/Dank-del/EnterpriseALRobot?style=for-the-badge&logo=appveyor)
+![Repository Size](https://img.shields.io/github/repo-size/Dank-del/EnterpriseALRobot?style=for-the-badge&logo=appveyor)</br>
 
-</p>
 
-<p align="center">
-    <a href="https://python.org">
-        <img src="http://forthebadge.com/images/badges/made-with-python.svg" alt="made-with-python">
-    </a>
-    <a href="https://GitHub.com/idzero23">
-        <img src="http://ForTheBadge.com/images/badges/built-with-love.svg" alt="built-with-love">
-    </a> <br>
-    <img src="https://img.shields.io/github/license/idzero23/saintaries?style=for-the-badge&logo=appveyor" alt="LICENSE">
-    <img src="https://img.shields.io/github/contributors/idzero23/saintaries?style=for-the-badge&logo=appveyor" alt="Contributors">
-    <img src="https://img.shields.io/github/repo-size/idzero23/saintaries?style=for-the-badge&logo=appveyor" alt="Repository Size"> <br>
-    <img src="https://img.shields.io/badge/python-3.9-green?style=for-the-badge&logo=appveyor" alt="Python Version">
-    <img src="https://img.shields.io/github/issues/idzero23/saintaries?style=for-the-badge&logo=appveyor" alt="Issues">
-    <img src="https://img.shields.io/github/forks/idzero23/saintaries?style=for-the-badge&logo=appveyor" alt="Forks">
-    <img src="https://img.shields.io/github/stars/idzero23/saintaries?style=for-the-badge&logo=appveyor" alt="Stars">
-</p>
+[![Join Support!](https://img.shields.io/badge/Support%20Chat-Demons-red)](https://t.me/demonszxx)
 
 
 
