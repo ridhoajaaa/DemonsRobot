@@ -12,7 +12,7 @@ from telegram import __version__ as peler
 from telethon import __version__ as tlhver
 from telegram import __version__ as telever
 from platform import python_version as memek
-from  import (
+from aries import (
     ALLOW_EXCL,
     CERT_PATH,
     DONATION_LINK,
