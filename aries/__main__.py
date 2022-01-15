@@ -71,6 +71,9 @@ from aries.modules.sql import users_sql as sql
 
 HELP_MSG = "Tombol Di Bawah Untuk Mendapatkan Menu Bantuan Dalam Pesan Pribadi Anda."
 HELP_IMG = "https://telegra.ph/file/ac893610cae84f302b2da.jpg"
+GROUP_START_IMG = (
+    "CAACAgUAAx0CXGNFKwABB2vuYeJV4mvj5q4dVoiiSoeWKUlMBQcAAlEAA8sM3DrNp9j83PxDhSME"
+)
 
 
 PM_START_TEXT = """
@@ -252,9 +255,10 @@ def start(update: Update, context: CallbackContext):
                 parse_mode=ParseMode.MARKDOWN,
                 timeout=60,
             )
-    else:
-        update.effective_message.reply_text(
-        caption="<code> Demons Online \nAktif sejak</code>: <code>{}</code>".format(
+     else:
+        message.reply_animation(
+            GROUP_START_IMG,
+            caption="<code> Demons Online \nAktif sejak</code>: <code>{}</code>".format(
                 uptime
             ),
             parse_mode=ParseMode.HTML,
