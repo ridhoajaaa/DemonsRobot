@@ -47,8 +47,6 @@ async def whatanime(e):
         js0 = resp0.get("result")
         if not js0:
             await cut.edit("`No results found.`")
-            return
-         else:
             match = match[0]
         js0 = js0[0]
         text = f'<b>{html.escape(js0["anilist"]["title"]["romaji"])}'
