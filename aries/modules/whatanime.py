@@ -64,7 +64,7 @@ async def whatanime(e):
         dt0 = pendulum.from_timestamp(js0["from"])
         dt1 = pendulum.from_timestamp(js0["to"])
         ctext = (
-            f"{html.escape(dt0.to_time_string())} - {html.escape(dt1.to_time_string())}"
+            f"{html.escape(dt0.to_time_string())} - {html.escape(dt1.to_time_string())}",
             keyboard = InlineKeyboardMarkup(
                 [
                     [
