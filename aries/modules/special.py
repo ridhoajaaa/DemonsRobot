@@ -77,6 +77,8 @@ Fake generating
 Pict generating
 -> /covid
 Untuk mengetahui stats covid dunia
+-> /crypto
+Untuk mengetahui update tentang crypto
 """
 
 __mod_name__ = "Special"
