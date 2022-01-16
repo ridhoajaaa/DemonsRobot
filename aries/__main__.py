@@ -80,10 +80,10 @@ PM_START_TEXT = """
 Alo bang, [👋] I'm {}.
 Powerfull Management Bot And I Will Help In Managing Your Group.
 Maintained by : [𝗬𝗲𝘀𝗶𝗱𝗼.](https://t.me/ddodxy)
-➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖➖➖➖
 • *Uptime:* `{}`
 • `{}` *Users, across* `{}` *chats.*
-➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖➖➖➖
 ✪ Click the /help button below to learn more how to use me. ✪ 
 """
 
@@ -385,7 +385,7 @@ def aries_about_callback(update, context):
     if query.data == "aboutmanu_":
         query.message.edit_text(
             text=f"*👋Hi again!  The name's {dispatcher.bot.first_name}  \n\nA powerful group management bot built to help you manage your group easily.* "
-            f"\n\n 🔥 Join [demonsz](https://t.me/demonszxx) To Keep Yourself Updated About {dispatcher.bot.first_name} 🔥"
+            f"\n\n 🔥 Join [Demonsz](https://t.me/demonszxx) To Keep Yourself Updated About {dispatcher.bot.first_name} 🔥"
             f"\n\n I have the normal GROUP MANAGING functions like flood control, a warning system etc but I mainly have the advanced and handy Antispam system and the SIBYL banning system which safegaurds and helps your group from spammers."
             f"\n\n ⚡️ 》 I can restrict users."
             f"\n\n ⚡️ 》 I can greet users with customizable welcome messages and even set a group's rules."
@@ -458,9 +458,9 @@ def aries_about_callback(update, context):
         )
     elif query.data == "aboutmanu_credit":
         query.message.edit_text(
-            text=f"*Aries Is the redisigned version of Daisy and Saitama And Othrer for the best performance.*"
-            f"\n\nAries source code was rewritten by @IdzXartez and All Of Conrtibutor For Help Aries"
-            f"\n\nIf Any Question About aries, \nLet Us Know At @Idzeroidsupport.",
+            text=f"*DemonsRobot Is the redisigned version of Daisy and Saitama And Othrer for the best performance.*"
+            f"\n\nDemons source code was rewritten by @ddodxy and All Of Conrtibutor For Help Aries"
+            f"\n\nIf Any Question About aries, \nLet Us Know At @demonszxx.",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
@@ -515,11 +515,8 @@ def aries_about_callback(update, context):
         query.message.edit_text(
             text=f"<b> ｢ Terms and Conditions 」</b>\n"
             f"\n<i>To Use This Bot, You Need To Read Terms and Conditions Carefully.</i>\n"
-            f"\n✪ We always respect your privacy \n  We never log into bot's api and spying on you \n  We use a encripted database \n  Bot will automatically stops if someone logged in with api."
-            f"\n✪ Always try to keep credits, so \n  This hardwork is done by @ddodxy spending many sleepless nights.. So, Respect it."
             f"\n✪ Some modules in this bot is owned by different authors, So, \n  All credits goes to them \n  Also for <b>Paul Larson for Marie</b>."
             f"\n✪ If you need to ask anything about \n  this bot, Go @demonszxx."
-            f"\n✪ If you asking nonsense in Support \n  Chat, you will get warned/banned."
             f"\n✪ All api's we used owned by originnal authors \n  Some api's we use Free version \n  Please don't overuse AI Chat."
             f"\n\nFor any kind of help, related to this bot, Join @demonszxx."
             f"\n\n<i>Terms & Conditions will be changed anytime</i>\n",
@@ -567,8 +564,6 @@ def aries_about_callback(update, context):
             f"\n2. **/pause for paused music."
             f"\n3. **/resume for resume music."
             f"\n4. **/stop or /end for end music playing."
-            f"\n5. **/music (name song) for download song."
-            f"\n6. **/video (name video) for download video."
             f"\n7. **/lyrics for searching lyrics.\n\n"
             f"\n📌 **Also you can download music or video with push button menu.**\n"
             f"\n⚡ __Powered by Demons A.I__\n",
