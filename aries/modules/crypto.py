@@ -7,8 +7,6 @@ from aries.core.sections import section
 from aries.utils.http import get
 
 
-
-
 @pbot.on_message(filters.command("crypto"))
 @capture_err
 async def crypto(_, message):
@@ -44,5 +42,6 @@ async def crypto(_, message):
         body,
     )
     await m.edit(text, reply_markup=btn)
+
 
 __mod_name__ = "Crypto"
