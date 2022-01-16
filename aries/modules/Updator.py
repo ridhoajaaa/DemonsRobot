@@ -46,7 +46,7 @@ async def updateme_requirements():
         return repr(e)
 
 
-@register(pattern="^/update(?: |$)(.*)")
+@register(pattern="^/improve(?: |$)(.*)")
 async def upstream(ups):
     global UPSTREAM_REPO_URL
     check = ups.message.sender_id
