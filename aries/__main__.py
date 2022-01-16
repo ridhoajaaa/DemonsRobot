@@ -80,10 +80,10 @@ PM_START_TEXT = """
 Alo bang, [👋] I'm {}.
 Powerfull Management Bot And I Will Help In Managing Your Group.
 Maintained by : [𝗬𝗲𝘀𝗶𝗱𝗼.](https://t.me/ddodxy)
-➖➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 • *Uptime:* `{}`
 • `{}` *Users, across* `{}` *chats.*
-➖➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 ✪ Click the /help button below to learn more how to use me. ✪ 
 """
 
