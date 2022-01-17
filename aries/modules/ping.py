@@ -2,7 +2,9 @@ import time
 from typing import List
 
 import requests
-from telegram import ParseMode, Update
+from pyrogram import filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import ParseMode, Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
 from aries import StartTime, dispatcher
@@ -14,8 +16,8 @@ sites_list = {
     "Kaizoku": "https://animekaizoku.com",
     "Kayo": "https://animekayo.com",
     "Jikan": "https://api.jikan.moe/v3",
-    "AI Server": "https://kuki-yukicloud.up.railway.app/",
-    "ODO Server": "https://liones-api.herokuapp.com/",
+    "Kuki Chatbot": "https://kuki-yukicloud.up.railway.app/",
+    "liones API": "https://liones-api.herokuapp.com/",
 }
 
 
@@ -78,24 +80,32 @@ def ping(update: Update, context: CallbackContext):
     uptime = get_readable_time((time.time() - StartTime))
 
     message.edit_text(
-        "PONG!!\n" "<b>Time Taken:</b> <code>{}</code>\n",
-        "<b>Service uptime:</b> <code>{}</code>\n".format(telegram_ping, uptime),
-        "<b>Powered By:</b> <i>@ddodxy⚡️</i>",
+        "PONG!! ✨\n"
+        "<b>Time Taken:</b> <code>{}</code>\n"
+        "<b>Service uptime:</b> <code>{}</code>".format(telegram_ping, uptime),
         parse_mode=ParseMode.HTML,
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "OWN", url="https://t.me/ddodxy"
+                    )
+                ]
+            ]
+        ),
     )
 
-
+    
 @sudo_plus
 def pingall(update: Update, context: CallbackContext):
-    to_ping = ["Kaizoku", "Kayo", "Telegram", "Jikan", "AI Server", "ODO Server"]
+    to_ping = ["Kaizoku", "Kayo", "Telegram", "Jikan", "Kuki Chatbot", "liones API"]
     pinged_list = ping_func(to_ping)
     pinged_list.insert(2, "")
     uptime = get_readable_time((time.time() - StartTime))
 
-    reply_msg = "⏱Ping results are:\n"
+    reply_msg = "⏱ Ping results are:\n"
     reply_msg += "\n".join(pinged_list)
     reply_msg += "\n<b>Service uptime:</b> <code>{}</code>".format(uptime)
-    reply_msg += "\n<b>Powered by:</b> <i>@ddodxy⚡️</i>"
 
     update.effective_message.reply_text(
         reply_msg,
