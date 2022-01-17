@@ -10,6 +10,7 @@ from telegram.utils.helpers import mention_html
 
 import aries.modules.sql.global_bans_sql as sql
 from aries import (
+    PREFIX_HANDLER,
     DEMONS,
     DEV_USERS,
     DRAGONS,
