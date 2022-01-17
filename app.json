@@ -35,8 +35,28 @@
          "value": "redis://<username>:<password><endpoint>",
          "required": true
       },
+      "VIRUS_API_KEY": {
+         "description": "get from virustotal.com",
+         "value": "",
+         "required": true
+      },
       "MONGO_DB_URI": {
          "description": "Required for database connections",
+         "value": "",
+         "required": true
+      },
+      "DB_URI": {
+         "description": "postgres sql",
+         "value": "",
+         "required": true
+      },
+      "ERROR_LOG": {
+         "description": "Logs channel or chat for see errors",
+         "value": "",
+         "required": true
+      },
+      "ERROR_LOGS": {
+         "description": "Logs channel or chat for see errors",
          "value": "",
          "required": true
       },
