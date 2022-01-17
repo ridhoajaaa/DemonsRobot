@@ -79,6 +79,8 @@ Pict generating
 Untuk mengetahui stats covid dunia
 -> /crypto
 Untuk mengetahui update tentang crypto
+-> /scanit
+for scan antivirus max siza 3MB
 """
 
 __mod_name__ = "Special"
