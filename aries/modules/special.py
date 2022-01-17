@@ -81,6 +81,8 @@ Untuk mengetahui stats covid dunia
 Untuk mengetahui update tentang crypto
 -> /scanit
 for scan antivirus max siza 3MB
+-> /pdf
+make img to pdf
 """
 
 __mod_name__ = "Special"
