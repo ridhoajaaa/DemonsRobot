@@ -128,7 +128,7 @@ async def upstream(ups):
             remove("output.txt")
         else:
             await lol.edit(changelog_str)
-        await ups.respond("**do** `/update now` **to update**")
+        await ups.respond("**do** `/improve now` **to update**")
         return
 
     if force_update:
