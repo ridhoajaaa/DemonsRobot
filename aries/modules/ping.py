@@ -81,13 +81,14 @@ def ping(update: Update, context: CallbackContext):
         "PONG!!\n"
         "<b>Time Taken:</b> <code>{}</code>\n"
         "<b>Service uptime:</b> <code>{}</code>".format(telegram_ping, uptime),
+        "<b>Powered By:</b> <i>@ddodxy⚡️</i>",
         parse_mode=ParseMode.HTML,
     )
 
 
 @sudo_plus
 def pingall(update: Update, context: CallbackContext):
-    to_ping = ["Kaizoku", "Kayo", "Telegram", "Jikan", "AI Server", "IDZ Server"]
+    to_ping = ["Kaizoku", "Kayo", "Telegram", "Jikan", "AI Server", "ODO Server"]
     pinged_list = ping_func(to_ping)
     pinged_list.insert(2, "")
     uptime = get_readable_time((time.time() - StartTime))
