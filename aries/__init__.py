@@ -320,6 +320,7 @@ pbot = Client(
     workers=min(32, os.cpu_count() + 4),
 )
 apps = []
+apps = [pgram]
 apps.append(pbot)
 
 
