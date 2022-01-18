@@ -18,14 +18,14 @@ antiarabic_disabled: "Turned off AntiArabic! Messages containing arabic text won
 antiarabic_setting: "This chat's current setting is: `{}`"
 
 
-
-
-
 from typing import List
 
 from aries import dispatcher
-from aries.modules.helper_funcs.chat_status import (can_delete, user_admin,
-                                                      user_not_admin)
+from aries.modules.helper_funcs.chat_status import (
+    can_delete,
+    user_admin,
+    user_not_admin,
+)
 from aries.modules.helper_funcs.extraction import extract_text
 from aries.modules.sql import antiarabic_sql as sql
 from telegram import Bot, ParseMode, Update
@@ -50,9 +50,10 @@ def antiarabic_setting(bot: Bot, update: Update, args: List[str]):
                 sql.set_chat_setting(chat.id, False)
                 msg.reply_text(tld(chat.id, "antiarabic_disabled"))
         else:
-            msg.reply_text(tld(chat.id, "antiarabic_setting").format(
-                sql.chat_antiarabic(chat.id)),
-                parse_mode=ParseMode.MARKDOWN)
+            msg.reply_text(
+                tld(chat.id, "antiarabic_setting").format(sql.chat_antiarabic(chat.id)),
+                parse_mode=ParseMode.MARKDOWN,
+            )
 
 
 @user_not_admin
@@ -77,11 +78,15 @@ def antiarabic(bot: Bot, update: Update):
 
     if chat.type != chat.PRIVATE:
         for c in to_match:
-            if ('\u0600' <= c <= '\u06FF' or '\u0750' <= c <= '\u077F'
-                    or '\u08A0' <= c <= '\u08FF' or '\uFB50' <= c <= '\uFDFF'
-                    or '\uFE70' <= c <= '\uFEFF'
-                    or '\U00010E60' <= c <= '\U00010E7F'
-                    or '\U0001EE00' <= c <= '\U0001EEFF'):
+            if (
+                "\u0600" <= c <= "\u06FF"
+                or "\u0750" <= c <= "\u077F"
+                or "\u08A0" <= c <= "\u08FF"
+                or "\uFB50" <= c <= "\uFDFF"
+                or "\uFE70" <= c <= "\uFEFF"
+                or "\U00010E60" <= c <= "\U00010E7F"
+                or "\U0001EE00" <= c <= "\U0001EEFF"
+            ):
                 if can_delete(chat, bot.id):
                     update.effective_message.delete()
                     return ""
@@ -93,10 +98,11 @@ def __migrate__(old_chat_id, new_chat_id):
 
 __mod_name__ = "antiarabic"
 
-SETTING_HANDLER = CommandHandler("antiarabic", antiarabic_setting,
-                                 pass_args=True)
+SETTING_HANDLER = CommandHandler("antiarabic", antiarabic_setting, pass_args=True)
 ANTI_ARABIC = MessageHandler(
-    (Filters.text | Filters.command | Filters.sticker | Filters.photo) & Filters.group, antiarabic)
+    (Filters.text | Filters.command | Filters.sticker | Filters.photo) & Filters.group,
+    antiarabic,
+)
 
 dispatcher.add_handler(SETTING_HANDLER)
 dispatcher.add_handler(ANTI_ARABIC, group=ANTIARABIC_GROUPS)
