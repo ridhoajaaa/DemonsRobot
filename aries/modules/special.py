@@ -83,6 +83,8 @@ Untuk mengetahui update tentang crypto
 for scan antivirus max siza 3MB
 -> /pdf
 make img to pdf
+-> /antiarabic on/off
+delete non admin sent which arabic text
 """
 
 __mod_name__ = "Special"
