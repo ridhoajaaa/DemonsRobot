@@ -85,17 +85,11 @@ def ping(update: Update, context: CallbackContext):
         "<b>Service uptime:</b> <code>{}</code>".format(telegram_ping, uptime),
         parse_mode=ParseMode.HTML,
         reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "OWN", url="https://t.me/ddodxy"
-                    )
-                ]
-            ]
+            [[InlineKeyboardButton("OWN", url="https://t.me/ddodxy")]]
         ),
     )
 
-    
+
 @sudo_plus
 def pingall(update: Update, context: CallbackContext):
     to_ping = ["Kaizoku", "Kayo", "Telegram", "Jikan", "Kuki Chatbot", "liones API"]
