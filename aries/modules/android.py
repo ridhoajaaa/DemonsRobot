@@ -1,40 +1,30 @@
-# ZeldrisRobot
-# Copyright (C) 2017-2019, Paul Larsen
-# Copyright (c) 2021, IDNCoderX Team, <https://github.com/IDN-C-X/ZeldrisRobot>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+from distutils import command
 import re
 import time
 from datetime import datetime
 
 from bs4 import BeautifulSoup
+from hurry.filesize import size as sizee
 from requests import get
-from telegram import InlineKeyboardButton
-from telegram import InlineKeyboardMarkup
-from telegram import ParseMode
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Bot, Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
 from telegram.error import BadRequest
 from ujson import loads
+from yaml import load, Loader
 
 from aries import dispatcher
+from aries.modules.sql.clear_cmd_sql import get_clearcmd
+from aries.modules.github import getphh
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.alternate import typing_action
+from aries.modules.helper_funcs.misc import delete
+from aries.modules.helper_funcs.decorators import idzcmd
 
 GITHUB = "https://github.com"
 DEVICES_DATA = "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
 
 
+@idzcmd(command="magisk", can_disable=True)
 @typing_action
 def magisk(update, _):
     url = "https://raw.githubusercontent.com/topjohnwu/magisk-files/"
@@ -47,13 +37,13 @@ def magisk(update, _):
         if types != "Canary":
             releases += (
                 f"*{types}*: \n"
-                f'• App - [{data["magisk"]["version"]}-{data["magisk"]["versionCode"]}]({data["magisk"]["link"]}) - ['
+                f'× App - [{data["magisk"]["version"]}-{data["magisk"]["versionCode"]}]({data["magisk"]["link"]}) - ['
                 f'Changelog]({data["magisk"]["note"]})\n \n'
             )
         else:
             releases += (
                 f"*{types}*: \n"
-                f'• App - [{data["magisk"]["version"]}-{data["magisk"]["versionCode"]}]({data["magisk"]["link"]}) - ['
+                f'× App - [{data["magisk"]["version"]}-{data["magisk"]["versionCode"]}]({data["magisk"]["link"]}) - ['
                 f'Changelog]({data["magisk"]["note"]})\n'
                 f"\n Now magisk is packed as all in one, "
                 f"refer [this installation](https://topjohnwu.github.io/Magisk/install.html) procedure for more info.\n"
@@ -66,6 +56,7 @@ def magisk(update, _):
     )
 
 
+@idzcmd(command="device", can_disable=True)
 @typing_action
 def device(update, context):
     args = context.args
@@ -122,6 +113,7 @@ def device(update, context):
     )
 
 
+@idzcmd(command="twrp", can_disable=True)
 @typing_action
 def twrp(update, context):
     args = context.args
@@ -201,6 +193,7 @@ def twrp(update, context):
 
 
 # Picked from AstrakoBot; Thanks to them!
+@idzcmd(command="orangefox", can_disable=True)
 @typing_action
 def orangefox(update, _):
     message = update.effective_message
@@ -236,17 +229,17 @@ def orangefox(update, _):
             date = datetime.fromtimestamp(page["date"])
             md5 = page["md5"]
             msg = f"*Latest OrangeFox Recovery for the {full_name}*\n\n"
-            msg += f"• Manufacturer: `{oem}`\n"
-            msg += f"• Model: `{model}`\n"
-            msg += f"• Codename: `{devices}`\n"
-            msg += f"• Build type: `{build_type}`\n"
-            msg += f"• Maintainer: `{maintainer}`\n"
-            msg += f"• Version: `{version}`\n"
-            msg += f"• Changelog: `{changelog}`\n"
-            msg += f"• Size: `{size}`\n"
-            msg += f"• Date: `{date}`\n"
-            msg += f"• File: `{dl_file}`\n"
-            msg += f"• MD5: `{md5}`\n"
+            msg += f"× Manufacturer: `{oem}`\n"
+            msg += f"× Model: `{model}`\n"
+            msg += f"× Codename: `{devices}`\n"
+            msg += f"× Build type: `{build_type}`\n"
+            msg += f"× Maintainer: `{maintainer}`\n"
+            msg += f"× Version: `{version}`\n"
+            msg += f"× Changelog: `{changelog}`\n"
+            msg += f"× Size: `{size}`\n"
+            msg += f"× Date: `{date}`\n"
+            msg += f"× File: `{dl_file}`\n"
+            msg += f"× MD5: `{md5}`\n"
             btn = [[InlineKeyboardButton(text="Download", url=dl_link)]]
     else:
         msg = "Enter the device codename to fetch, like:\n`/orangefox mido`"
@@ -260,6 +253,7 @@ def orangefox(update, _):
 
 
 # Picked from UserIndoBot; Thanks to them!
+@idzcmd(command="los", can_disable=True)
 @typing_action
 def los(update, context) -> str:
     message = update.effective_message
@@ -303,15 +297,14 @@ def los(update, context) -> str:
             disable_web_page_preview=True,
         )
         return
-
-    else:
-        message.reply_text(
-            "`Couldn't find any results matching your query.`",
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-        )
+    message.reply_text(
+        "`Couldn't find any results matching your query.`",
+        parse_mode=ParseMode.MARKDOWN,
+        disable_web_page_preview=True,
+    )
 
 
+@idzcmd(command="gsi", can_disable=True)
 @typing_action
 def gsi(update, context):
     message = update.effective_message
@@ -330,6 +323,7 @@ def gsi(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
 
 
+@idzcmd(command="bootleg", can_disable=True)
 @typing_action
 def bootleg(update, context) -> str:
     message = update.effective_message
@@ -400,13 +394,184 @@ def bootleg(update, context) -> str:
         )
         return
 
-    elif fetch.status_code == 404:
+    if fetch.status_code == 404:
         message.reply_text(
             "`Couldn't reach api`",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
         return
+
+
+@idzcmd(command='checkfw', can_disable=True)
+def checkfw(update: Update, context: CallbackContext):
+    args = context.args
+    message = update.effective_message
+    chat = update.effective_chat
+    
+    if len(args) == 2:
+        temp, csc = args
+        model = f'sm-' + temp if not temp.upper().startswith('SM-') else temp
+        fota = get(
+            f'http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml'
+        )
+
+        if fota.status_code != 200:
+            msg = f"Couldn't check for {temp.upper()} and {csc.upper()}, please refine your search or try again later!"
+
+        else:
+            page = BeautifulSoup(fota.content, 'lxml')
+            os = page.find("latest").get("o")
+
+            if page.find("latest").text.strip():
+                msg = f'*Latest released firmware for {model.upper()} and {csc.upper()} is:*\n'
+                pda, csc, phone = page.find("latest").text.strip().split('/')
+                msg += f'• PDA: `{pda}`\n• CSC: `{csc}`\n'
+                if phone:
+                    msg += f'• Phone: `{phone}`\n'
+                if os:
+                    msg += f'• Android: `{os}`\n'
+                msg += ''
+            else:
+                msg = f'*No public release found for {model.upper()} and {csc.upper()}.*\n\n'
+
+    else:
+        msg = 'Give me something to fetch, like:\n`/checkfw SM-N975F DBT`'
+
+    delmsg = message.reply_text(
+        text = msg,
+        parse_mode = ParseMode.MARKDOWN,
+        disable_web_page_preview = True,
+    )
+
+    cleartime = get_clearcmd(chat.id, "checkfw")
+
+    if cleartime:
+        context.dispatcher.run_async(delete, delmsg, cleartime.time)
+
+
+@idzcmd(command='getfw', can_disable=True)
+def getfw(update: Update, context: CallbackContext):
+    args = context.args
+    message = update.effective_message
+    chat = update.effective_chat
+    btn = ""
+    
+    if len(args) == 2:
+        temp, csc = args
+        model = f'sm-' + temp if not temp.upper().startswith('SM-') else temp
+        fota = get(
+            f'http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml'
+        )
+
+        if fota.status_code != 200:
+            msg = f"Couldn't check for {temp.upper()} and {csc.upper()}, please refine your search or try again later!"
+
+        else:
+            url1 = f'https://samfrew.com/model/{model.upper()}/region/{csc.upper()}/'
+            url2 = f'https://www.sammobile.com/samsung/firmware/{model.upper()}/{csc.upper()}/'
+            url3 = f'https://sfirmware.com/samsung-{model.lower()}/#tab=firmwares'
+            url4 = f'https://samfw.com/firmware/{model.upper()}/{csc.upper()}/'
+            fota = get(
+                f'http://fota-cloud-dn.ospserver.net/firmware/{csc.upper()}/{model.upper()}/version.xml'
+            )
+            page = BeautifulSoup(fota.content, 'lxml')
+            os = page.find("latest").get("o")
+            msg = ""
+            if page.find("latest").text.strip():
+                pda, csc2, phone = page.find("latest").text.strip().split('/')
+                msg += f'*Latest firmware for {model.upper()} and {csc.upper()} is:*\n'
+                msg += f'• PDA: `{pda}`\n• CSC: `{csc2}`\n'
+                if phone:
+                    msg += f'• Phone: `{phone}`\n'
+                if os:
+                    msg += f'• Android: `{os}`\n'
+            msg += '\n'
+            msg += f'*Downloads for {model.upper()} and {csc.upper()}*\n'
+            btn = [[InlineKeyboardButton(text=f"samfrew.com", url = url1)]]
+            btn += [[InlineKeyboardButton(text=f"sammobile.com", url = url2)]]
+            btn += [[InlineKeyboardButton(text=f"sfirmware.com", url = url3)]]
+            btn += [[InlineKeyboardButton(text=f"samfw.com", url = url4)]]
+    else:
+        msg = 'Give me something to fetch, like:\n`/getfw SM-N975F DBT`'
+
+    delmsg = message.reply_text(
+        text = msg,
+        reply_markup = InlineKeyboardMarkup(btn),
+        parse_mode = ParseMode.MARKDOWN,
+        disable_web_page_preview = True,
+    )
+
+    cleartime = get_clearcmd(chat.id, "getfw")
+
+    if cleartime:
+        context.dispatcher.run_async(delete, delmsg, cleartime.time)
+
+
+@idzcmd(command='phh', can_disable=True)
+def phh(update: Update, context: CallbackContext):
+    args = context.args
+    message = update.effective_message
+    chat = update.effective_chat
+    index = int(args[0]) if len(args) > 0 and args[0].isdigit() else 0
+    text = getphh(index)
+
+    delmsg = message.reply_text(
+        text,
+        parse_mode = ParseMode.HTML,
+        disable_web_page_preview = True,
+    )
+
+    cleartime = get_clearcmd(chat.id, "phh")
+
+    if cleartime:
+        context.dispatcher.run_async(delete, delmsg, cleartime.time)
+
+
+@idzcmd(command='miui', can_disable=True)
+def miui(update: Update, context: CallbackContext):
+    message = update.effective_message
+    chat = update.effective_chat
+    device = message.text[len("/miui ") :]
+    markup = []
+
+    if device:
+        link = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/data/latest.yml"
+        yaml_data = load(get(link).content, Loader=Loader)
+        data = [i for i in yaml_data if device in i['codename']]
+
+        if not data:
+            msg = f"Miui is not avaliable for {device}"
+        else:
+            for fw in data:
+                av = fw['android']
+                branch = fw['branch']
+                method = fw['method']
+                link = fw['link']
+                fname = fw['name']
+                version = fw['version']
+                size = fw['size']
+                btn = fname + ' | ' + branch + ' | ' + method + ' | ' + version + ' | ' + av + ' | ' + size
+                markup.append([InlineKeyboardButton(text = btn, url = link)])
+
+            device = fname.split(" ")
+            device.pop()
+            device = " ".join(device)
+            msg = f"The latest firmwares for the *{device}* are:"
+    else:
+        msg = 'Give me something to fetch, like:\n`/miui whyred`'
+
+    delmsg = message.reply_text(
+        text = msg,
+        reply_markup = InlineKeyboardMarkup(markup),
+        parse_mode = ParseMode.MARKDOWN,
+        disable_web_page_preview = True,
+    )
+
+    cleartime = get_clearcmd(chat.id, "miui")
+
+    if cleartime:
+        context.dispatcher.run_async(delete, delmsg, cleartime.time)
 
 
 __help__ = """
@@ -417,28 +582,10 @@ Get the latest Magsik releases or TWRP for your device!
 × /twrp <codename> -  Gets latest twrp for the android device using the codename.
 × /orangefox <codename> -  Gets latest orangefox recovery for the android device using the codename.
 × /los <codename> - Gets Latest los build.
+× /miui <devicecodename>- Fetches latest firmware info for a given device codename
+× /phh : Get lastest phh builds from github
+× /checkfw <model> <csc> - Samsung only - Shows the latest firmware info for the given device, taken from samsung servers
+× /getfw <model> <csc> - Samsung only - gets firmware download links from samfrew, sammobile and sfirmwares for the given device
 """
 
 __mod_name__ = "Android"
-
-MAGISK_HANDLER = DisableAbleCommandHandler("magisk", magisk, run_async=True)
-TWRP_HANDLER = DisableAbleCommandHandler("twrp", twrp, pass_args=True, run_async=True)
-DEVICE_HANDLER = DisableAbleCommandHandler(
-    "device", device, pass_args=True, run_async=True
-)
-ORANGEFOX_HANDLER = DisableAbleCommandHandler(
-    "orangefox", orangefox, pass_args=True, run_async=True
-)
-LOS_HANDLER = DisableAbleCommandHandler("los", los, pass_args=True, run_async=True)
-BOOTLEG_HANDLER = DisableAbleCommandHandler(
-    "bootleg", bootleg, pass_args=True, run_async=True
-)
-GSI_HANDLER = DisableAbleCommandHandler("gsi", gsi, pass_args=True, run_async=True)
-
-dispatcher.add_handler(MAGISK_HANDLER)
-dispatcher.add_handler(TWRP_HANDLER)
-dispatcher.add_handler(DEVICE_HANDLER)
-dispatcher.add_handler(ORANGEFOX_HANDLER)
-dispatcher.add_handler(LOS_HANDLER)
-dispatcher.add_handler(GSI_HANDLER)
-dispatcher.add_handler(BOOTLEG_HANDLER)
