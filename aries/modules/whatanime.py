@@ -1,17 +1,33 @@
 import asyncio
+import jason
 import datetime
 import html
 import os
 import tempfile
 import time
+import textwrap
+import re
+from io import BytesIO, StringIO
 from datetime import timedelta
 from decimal import Decimal
 
 import aiohttp
+import bs4
+import pendulum
+import requests
+from telethon.errors.rpcerrorlist import FilePartsInvalidError
+from telethon.tl.types import (
+    DocumentAttributeAnimated,
+    DocumentAttributeFilename,
+    MessageMediaDocument,
+)
+from telethon.utils import is_image, is_video
+
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from aries import pgram
+from aries.events import register as tomori
+from aries.modules.disable import DisableAbleCommandHandler
 
 session = aiohttp.ClientSession()
 progress_callback_data = {}
@@ -45,7 +61,7 @@ def calculate_eta(current, total, start_time):
     return ", ".join(thing)
 
 
-@pgram.on_message(filters.command("whatanime", prefixes=(["!", "/"])))
+@tomori(pattern="^/whatanime(.*)")
 async def whatanime(c: Client, m: Message):
     media = m.photo or m.animation or m.video or m.document
     if not media:
@@ -179,3 +195,10 @@ async def progress_callback(current, total, reply):
                 prevtext,
                 start_time,
             )
+
+WHATANIME_HANDLER = DisableAbleCommandHandler("whatanime", whatanime)
+
+
+dispatcher.add_handler(WHATANIME_HANDLER)
+
+            
