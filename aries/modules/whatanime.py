@@ -215,3 +215,22 @@ async def progress_callback(current, total, reply):
                 prevtext,
                 start_time,
             )
+
+def memory_file(name=None, contents=None, *, _bytes=True):
+    if isinstance(contents, str) and _bytes:
+        contents = contents.encode()
+    file = BytesIO() if _bytes else StringIO()
+    if name:
+        file.name = name
+    if contents:
+        file.write(contents)
+        file.seek(0)
+    return file
+
+
+def is_gif(file):
+    # ngl this should be fixed, telethon.utils.is_gif but working
+    # lazy to go to github and make an issue kek
+    if not is_video(file):
+        return False
+    return DocumentAttributeAnimated() in getattr(file, "document", file).attributes
