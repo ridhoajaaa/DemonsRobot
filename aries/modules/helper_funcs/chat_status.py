@@ -13,6 +13,7 @@ from aries import (
     dispatcher,
 )
 
+from pyrogram import filters
 from telegram import Chat, ChatMember, ParseMode, Update
 from telegram.ext import CallbackContext
 
