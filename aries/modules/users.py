@@ -164,7 +164,7 @@ def __migrate__(old_chat_id, new_chat_id):
 
 BROADCAST_HANDLER = CommandHandler(
     ["gcast", "broadcastusers", "broadcastgroups"],
-    broadcast,
+    gcast,
     run_async=True,
 )
 USER_HANDLER = MessageHandler(
