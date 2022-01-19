@@ -26,6 +26,7 @@ from telethon.utils import is_image, is_video
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
+from aries import dispatcher
 from aries.events import register as tomori
 from aries.modules.disable import DisableAbleCommandHandler
 
