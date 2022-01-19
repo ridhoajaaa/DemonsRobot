@@ -9,6 +9,7 @@ multicolorcaptcha
 gtts
 imdbpy
 pyYAML>=5.1.2
+hurry-filesize
 beautifulsoup4
 gitpython
 telethon
