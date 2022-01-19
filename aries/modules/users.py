@@ -44,7 +44,7 @@ def get_user_id(username):
 
 
 @dev_plus
-def broadcast(update: Update, context: CallbackContext):
+def gcast(update: Update, context: CallbackContext):
     to_send = update.effective_message.text.split(None, 1)
 
     if len(to_send) >= 2:
@@ -163,7 +163,7 @@ def __migrate__(old_chat_id, new_chat_id):
 
 
 BROADCAST_HANDLER = CommandHandler(
-    ["broadcastall", "broadcastusers", "broadcastgroups"],
+    ["gcast", "broadcastusers", "broadcastgroups"],
     broadcast,
     run_async=True,
 )
