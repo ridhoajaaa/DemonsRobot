@@ -126,6 +126,7 @@ async def whatanime(c: Client, m: Message):
                 syn = ", ".join(synonyms)
                 text += f"\n<b>Related:</b> {syn}"
 
+
 async def whatanime(e):
     media = e.media
     if not media:
@@ -215,6 +216,7 @@ async def progress_callback(current, total, reply):
                 prevtext,
                 start_time,
             )
+
 
 def memory_file(name=None, contents=None, *, _bytes=True):
     if isinstance(contents, str) and _bytes:
