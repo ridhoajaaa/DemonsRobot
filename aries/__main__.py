@@ -78,7 +78,7 @@ GROUP_START_IMG = (
 
 PM_START_TEXT = """
 Alo bang, [👋] I'm {}.
-Powerfull Management Bot And I Will Help In Managing Your Group.
+Powerfull Management Bot To Help In Managing Your Group.
 Maintained by : [𝗬𝗲𝘀𝗶𝗱𝗼.](https://t.me/ddodxy)
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
 • *Uptime:* `{}`
@@ -101,7 +101,7 @@ buttons = [
     [
         InlineKeyboardButton(text=" ｢ Support 」", url="http://t.me/demonszxx"),
         InlineKeyboardButton(text=" [❌] ", callback_data="close"),
-        InlineKeyboardButton(text=" ｢ Update 」", url="http://t.me/idzeroid"),
+        InlineKeyboardButton(text=" ｢ Update 」", url="http://t.me/ppppppppppppppppqq"),
     ],
 ]
 
