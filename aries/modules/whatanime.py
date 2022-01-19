@@ -8,7 +8,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 import aiohttp
-from telegram import Client, filters
+from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from aries import pgram
