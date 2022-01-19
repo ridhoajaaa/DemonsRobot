@@ -70,7 +70,7 @@ pornhub_api
 tgcrypto
 pyrogram==1.3.5
 humanize
-#PyDictionary==2.0.1
+PyDictionary==2.0.1
 youtube_search_python
 lyrics_extractor
 asyncio
