@@ -30,6 +30,7 @@ from aries.modules.helper_funcs.extraction import extract_text
 from aries.modules.sql import antiarabic_sql as sql
 from telegram import Bot, ParseMode, Update
 from telegram.ext import CommandHandler, Filters, MessageHandler
+from telegram.ext.dispatcher import run_async, CallbackContext
 
 ANTIARABIC_GROUPS = 12
 
