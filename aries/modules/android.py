@@ -17,7 +17,6 @@ from aries.modules.sql.clear_cmd_sql import get_clearcmd
 from aries.modules.github import getphh
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.alternate import typing_action
-from aries.modules.helper_funcs.misc import delete
 from aries.modules.helper_funcs.decorators import idzcmd
 
 GITHUB = "https://github.com"
