@@ -196,10 +196,3 @@ async def progress_callback(current, total, reply):
                 prevtext,
                 start_time,
             )
-
-WHATANIME_HANDLER = DisableAbleCommandHandler("whatanime", whatanime)
-
-
-dispatcher.add_handler(WHATANIME_HANDLER)
-
-            
