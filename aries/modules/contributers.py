@@ -39,9 +39,7 @@ async def give_repo(c, m):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton(
-                        "Repo", url="https://xnxx.com"
-                    ),
+                    InlineKeyboardButton("Repo", url="https://xnxx.com"),
                 ],
                 [
                     InlineKeyboardButton("Support", url="https://t.me/demonszxx"),
