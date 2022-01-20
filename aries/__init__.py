@@ -312,6 +312,7 @@ pgram = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
+)
 arq = ARQ(ARQ_API_URL, ARQ_API_KEY, aiohttpsession)
 mongo_client = MongoClient(MONGO_DB_URI)
 db = mongo_client.aries
