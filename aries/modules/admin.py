@@ -1,4 +1,6 @@
 import html
+import os
+from html import escape
 from typing import Optional, List
 
 from telegram import ParseMode, Update, InlineKeyboardButton, InlineKeyboardMarkup, Message, Chat, Bot, User
@@ -7,8 +9,15 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler, Filters
 from telegram.ext.dispatcher import run_async
 from telegram.utils.helpers import escape_markdown, mention_html
+from telethon import *
+from telethon import events
+from telethon.tl import *
+from telethon.tl import functions, types
+from pyrogram import Client, filters
+from pyrogram.types import Message
 
-from aries import DRAGONS, dispatcher
+from aries import DRAGONS, dispatcher, telethn as bot, pgram
+from aries.modules.connection import connected
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.chat_status import (
     bot_admin,
@@ -28,7 +37,7 @@ from aries.modules.helper_funcs.extraction import (
     extract_user_and_text,
 )
 from aries.modules.log_channel import loggable
-from aries.modules.helper_funcs.alternate import send_message
+from aries.modules.helper_funcs.alternate import send_message, typing_action
 
 
 @bot_admin
@@ -767,24 +776,74 @@ def invite(update: Update, context: CallbackContext):
         )
 
 
-@connection_status
-@run_async
-def adminlist(bot: Bot, update: Update):
-    administrators = update.effective_chat.get_administrators()
-    text = "Admins in *{}*:".format(update.effective_chat.title or "this chat")
-    for admin in administrators:
-        user = admin.user
-        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
-        if user.username:
-            name = escape_markdown("@" + user.username)
-        text += "\n - {}".format(name)
+@pgram.on_message(filters.command(["staff", "admins", "adminlist"]) & filters.group)
+def staff(client: Client, message: Message):
+    creator = []
+    co_founder = []
+    admin = []
+    admin_check = pgram.get_chat_members(message.chat.id, filter="administrators")
+    for x in admin_check:
+        # Ini buat nyari co-founder
+        if x.status == "administrator" and x.can_promote_members and x.title:
+            title = escape(x.title)
+            co_founder.append(
+                f" <b>├</b> <a href='tg://user?id={x.user.id}'>{x.user.first_name}</a> »<i> {title}</i>"
+            )
+        elif x.status == "administrator" and x.can_promote_members and not x.title:
+            co_founder.append(
+                f" <b>├</b> <a href='tg://user?id={x.user.id}'>{x.user.first_name}</a>"
+            )
+        # ini buat nyari admin
+        elif x.status == "administrator" and not x.can_promote_members and x.title:
+            title = escape(x.title)
+            admin.append(
+                f" <b>├</b> <a href='tg://user?id={x.user.id}'>{x.user.first_name}</a> »<i> {title}</i>"
+            )
+        elif x.status == "administrator" and not x.can_promote_members and not x.title:
+            admin.append(
+                f" <b>├</b> <a href='tg://user?id={x.user.id}'>{x.user.first_name}</a>"
+            )
+        # ini buat nyari creator
+        elif x.status == "creator" and x.title:
+            title = escape(x.title)
+            creator.append(
+                f" <b>└</b> <a href='tg://user?id={x.user.id}'>{x.user.first_name}</a> »<i> {title}</i>"
+            )
+        elif x.status == "creator" and not x.title:
+            creator.append(
+                f" <b>└</b> <a href='tg://user?id={x.user.id}'>{x.user.first_name}</a>"
+            )
 
-    update.effective_message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
-    
-    
-def __chat_settings__(chat_id, user_id):
-    return "You are *admin*: `{}`".format(
-        dispatcher.bot.get_chat_member(chat_id, user_id).status in ("administrator", "creator"))
+    if len(co_founder) == 0 and len(admin) == 0:
+        result = f"<b>Staff {message.chat.title}</b>\n\n👑 <b>Founder</b>\n" + "\n".join(creator)
+    elif len(co_founder) == 0 and len(admin) > 0:
+        res_admin = admin[-1].replace("├", "└")
+        admin.pop(-1)
+        admin.append(res_admin)
+        result = f"<b>Staff {message.chat.title}</b>\n\n👑 <b>Founder</b>\n" + "\n".join(
+            creator
+        ) + "\n\n" "👮‍♂ <b>Admin</b>\n" + "\n".join(admin)
+    elif len(co_founder) > 0 and len(admin) == 0:
+        resco_founder = co_founder[-1].replace("├", "└")
+        co_founder.pop(-1)
+        co_founder.append(resco_founder)
+        result = f"<b>Staff {message.chat.title}</b>\n\n👑 <b>Founder</b>\n" + "\n".join(
+            creator
+        ) + "\n\n" "🔱 <b>Co-Founder</b>\n" + "\n".join(co_founder)
+    else:
+        resco_founder = co_founder[-1].replace("├", "└")
+        res_admin = admin[-1].replace("├", "└")
+        co_founder.pop(-1)
+        admin.pop(-1)
+        co_founder.append(resco_founder)
+        admin.append(res_admin)
+        result = (
+                f"<b>Staff {message.chat.title}</b>\n\n👑 <b>Founder</b>\n" + "\n".join(creator) + "\n\n"
+                                                                    "🔱 <b>Co-Founder</b>\n" + "\n".join(
+            co_founder) + "\n\n"
+                          "👮‍♂ <b>Admin</b>\n" + "\n".join(admin)
+        )
+    pgram.send_message(message.chat.id, result)
 
 
 @bot_admin
@@ -847,40 +906,46 @@ def button(update: Update, context: CallbackContext) -> str:
 
 
 __help__ = """
-🔘 *User Commands*:
-  ❍ `/admins`*:* list of admins in the chat
-  ❍ `/pinned`*:* to get the current pinned message.
-
-🔘 *The Following Commands are Admins only:*
-  ❍ `/pin`*:* silently pins the message replied to - add `'loud'` or `'notify'` to give notifs to users
-  ❍ `/unpin`*:* unpins the currently pinned message
-  ❍ `/invitelink`*:* gets invitelink
-  ❍ `/promote`*:* promotes the user replied to
-  ❍ `/fullpromote`*:* promotes the user replied to with full rights
-  ❍ `/demote`*:* demotes the user replied to
-  ❍ `/title <title here>`*:* sets a custom title for an admin that the bot promoted
-  ❍ `/admincache`*:* force refresh the admins list
-  ❍ `/del`*:* deletes the message you replied to
-  ❍ `/purge`*:* deletes all messages between this and the replied to message.
-  ❍ `/purge <integer X>`*:* deletes the replied message, and X messages following it if replied to a message.
-  ❍ `/setgtitle <text>`*:* set group title
-  ❍ `/setgpic`*:* reply to an image to set as group photo
-  ❍ `/setdesc`*:* Set group description
-  ❍ `/setsticker`*:* Set group sticker
-  ❍ `/antiservice`*:* For Enable/Disable Telegram Service Message.
-🔘 *Log Channel*:
-  ❍ `/logchannel`*:* get log channel info
-  ❍ `/setlog`*:* set the log channel.
-  ❍ `/unsetlog`*:* unset the log channel.
-⚠ *Setting the log channel is done by*:
- ✔ adding the bot to the desired channel (as an admin!)
- ✔ sending `/setlog` in the channel
- ✔ forwarding the `/setlog` to the group
- 
-🔘 *Rules*:
-  ❍ `/rules`*:* get the rules for this chat.
-  ❍ `/setrules <your rules here>`*:* set the rules for this chat.
-  ❍ `/clearrules`*:* clear the rules for this chat.
+*User Commands*:
+❂ `/admins`*:* list of admins in the chat
+❂ `/pinned`*:* to get the current pinned message.
+❂ `/rules`*:* get the rules for this chat.
+*Promote & Demote Commands are Admins only*:
+❂ `/promote (user) (?admin's title)`*:* Promotes the user to admin.
+❂ `/demote (user)`*:* Demotes the user from admin.
+❂ `/fullpromote`*:* Promote a member with max rights
+*Cleaner & Purge Commands are Admins only*:
+❂ `/del`*:* deletes the message you replied to
+❂ `/purge`*:* deletes all messages between this and the replied to message.
+❂ `/purge <integer X>`*:* deletes the replied message, and X messages following it if replied to a message.
+❂ `/zombies`*:* counts the number of deleted account in your group
+❂ `/kickthefools`*:* Kick inactive members from group (one week)
+*Pin & Unpin Commands are Admins only*:
+❂ `/pin`*:* silently pins the message replied to - add 'loud' or 'notify' to give notifs to users.
+❂ `/unpin`*:* unpins the currently pinned message - add 'all' to unpin all pinned messages.
+❂ `/permapin`*:* Pin a custom message through the bot. This message can contain markdown, buttons, and all the other cool features.
+❂ `/unpinall`*:* Unpins all pinned messages.
+❂ `/antichannelpin <yes/no/on/off>`*:* Don't let telegram auto-pin linked channels. If no arguments are given, shows current setting.
+❂ `/cleanlinked <yes/no/on/off>`*:* Delete messages sent by the linked channel.
+*Log Channel are Admins only*:
+❂ `/logchannel`*:* get log channel info
+❂ `/setlog`*:* set the log channel.
+❂ `/unsetlog`*:* unset the log channel.
+*Setting the log channel is done by*:
+× Adding the bot to the desired channel (as an admin!) 
+× Sending `/setlog` in the channel
+× Forwarding the `/setlog` to the group
+*Rules*:
+❂ `/setrules <your rules here>`*:* set the rules for this chat.
+❂ `/clearrules`*:* clear the rules for this chat.
+*The Others Commands are Admins only*:
+❂ `/invitelink`*:* gets invitelink
+❂ `/title <title here>`*:* sets a custom title for an admin that the bot promoted
+❂ `/admincache`*:* force refresh the admins list
+❂ `/setgtitle <text>`*:* set group title
+❂ `/setgpic`*:* reply to an image to set as group photo
+❂ `/setdesc`*:* Set group description
+❂ `/setsticker`*:* Set group sticker
 """
 
 SET_DESC_HANDLER = CommandHandler(
@@ -899,7 +964,7 @@ SETCHAT_TITLE_HANDLER = CommandHandler(
     "setgtitle", setchat_title, filters=Filters.chat_type.groups, run_async=True
 )
 
-ADMINLIST_HANDLER = DisableAbleCommandHandler("adminlist", adminlist, run_async=True)
+ADMINLIST_HANDLER = DisableAbleCommandHandler("admins", adminlist, run_async=True)
 
 PIN_HANDLER = CommandHandler(
     "pin", pin, filters=Filters.chat_type.groups, run_async=True
