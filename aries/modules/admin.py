@@ -796,7 +796,7 @@ def invite(update, context):
         )
 
 
-@pbot.on_message(filters.command(["staff", "admins", "adminlist"]) & filters.group)
+@pgram.on_message(filters.command(["staff", "admins", "adminlist"]) & filters.group)
 def staff(client: Client, message: Message):
     creator = []
     co_founder = []
