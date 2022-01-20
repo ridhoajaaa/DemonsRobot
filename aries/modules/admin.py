@@ -14,7 +14,7 @@ from telethon.tl import functions, types
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from aries import dispatcher, telethn as bot, pgram
+from aries import dispatcher, telethn, pbot
 from aries.modules.connection import connected
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.alternate import typing_action
