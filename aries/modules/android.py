@@ -18,6 +18,7 @@ from aries.modules.github import getphh
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.alternate import typing_action
 from aries.modules.helper_funcs.decorators import idzcmd
+from aries.modules.helper_funcs.misc import delete
 
 GITHUB = "https://github.com"
 DEVICES_DATA = "https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json"
