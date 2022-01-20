@@ -113,6 +113,8 @@ img2pdf==0.4.3
 hiredis==2.0.0
 selenium==4.1.0
 cowpy
+cchardet
+aiodns
 glitch_this==1.0.2
 uvloop==0.16.0
 youtube_search
