@@ -899,7 +899,7 @@ SETCHAT_TITLE_HANDLER = CommandHandler(
     "setgtitle", setchat_title, filters=Filters.chat_type.groups, run_async=True
 )
 
-ADMINLIST_HANDLER = DisableAbleCommandHandler("admins", adminlist, run_async=True)
+ADMINLIST_HANDLER = DisableAbleCommandHandler("adminlist", adminlist, run_async=True)
 
 PIN_HANDLER = CommandHandler(
     "pin", pin, filters=Filters.chat_type.groups, run_async=True
