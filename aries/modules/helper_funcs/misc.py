@@ -215,11 +215,11 @@ def is_module_loaded(name):
 
 
 def delete(delmsg, timer):
-     sleep(timer)
-     try:
-         delmsg.delete()
-     except:
-         return
+    sleep(timer)
+    try:
+        delmsg.delete()
+    except:
+        return
 
 
 def upload_text(data: str) -> typing.Optional[str]:
