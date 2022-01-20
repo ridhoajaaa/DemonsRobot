@@ -3,6 +3,7 @@ import base64
 import json
 import typing
 import zlib
+from asyncio import sleep
 from math import ceil
 from typing import Dict, List
 from urllib.parse import urljoin, urlparse, urlunparse
@@ -211,6 +212,14 @@ def build_keyboard_alternate(buttons):
 
 def is_module_loaded(name):
     return name not in NO_LOAD
+
+
+def delete(delmsg, timer):
+     sleep(timer)
+     try:
+         delmsg.delete()
+     except:
+         return
 
 
 def upload_text(data: str) -> typing.Optional[str]:
