@@ -19,7 +19,7 @@ requests
 httpx
 img2pdf
 python-telegram-bot==13.10.0
-SQLAlchemy==1.4.28
+SQLAlchemy==1.4.30
 youtube_dl
 python-dotenv==0.19.2
 psycopg2-binary
