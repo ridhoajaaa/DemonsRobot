@@ -8,7 +8,7 @@ from telegram.update import Update
 from telegram.ext.filters import Filters
 from telegram.ext.callbackcontext import CallbackContext
 
-from aries import DB_URL, OWNER_ID, DEV_USERS, dispatcher, LOGGER, BACKUP_PASS
+from aries import DB_URI, OWNER_ID, DEV_USERS, dispatcher, LOGGER, BACKUP_PASS
 from aries.modules.helper_funcs.decorators import idzcmd
 
 
