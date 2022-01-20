@@ -796,7 +796,7 @@ def invite(update, context):
         )
 
 
-@pgram.on_message(filters.command(["staff", "admins", "adminlist"]) & filters.group)
+@idzcmd(filters.command(["staff", "admins", "adminlist"]) & filters.group)
 def staff(client: Client, message: Message):
     creator = []
     co_founder = []
