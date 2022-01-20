@@ -14,7 +14,7 @@ from telethon.tl import functions, types
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from aries import dispatcher, telethn, pbot
+from aries import dispatcher, pbot, telethn as bot, pgram
 from aries.modules.connection import connected
 from aries.modules.disable import DisableAbleCommandHandler
 from aries.modules.helper_funcs.alternate import typing_action
@@ -796,7 +796,7 @@ def invite(update, context):
         )
 
 
-@idzcmd(filters.command(["staff", "admins", "adminlist"]) & filters.group)
+@pbot.on_message(filters.command(["staff", "admins", "adminlist"]) & filters.group)
 def staff(client: Client, message: Message):
     creator = []
     co_founder = []
