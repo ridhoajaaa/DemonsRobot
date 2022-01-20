@@ -1,9 +1,12 @@
 import html
+from typing import Optional, List
 
-from telegram import ParseMode, Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import ParseMode, Update, InlineKeyboardButton, InlineKeyboardMarkup, Message, Chat, Bot, User
+from telegram import ParseMode
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CommandHandler, Filters, run_async
-from telegram.utils.helpers import mention_html
+from telegram.ext import CallbackContext, CommandHandler, Filters
+from telegram.ext.dispatcher import run_async
+from telegram.utils.helpers import escape_markdown, mention_html
 
 from aries import DRAGONS, dispatcher
 from aries.modules.disable import DisableAbleCommandHandler
@@ -765,115 +768,23 @@ def invite(update: Update, context: CallbackContext):
 
 
 @connection_status
-def adminlist(update, context):
-    chat = update.effective_chat  # type: Optional[Chat] -> unused variable
-    user = update.effective_user  # type: Optional[User]
-    args = context.args  # -> unused variable
-    bot = context.bot
-
-    if update.effective_message.chat.type == "private":
-        send_message(update.effective_message, "This command only works in Groups.")
-        return
-
-    chat = update.effective_chat
-    chat_id = update.effective_chat.id
-    chat_name = update.effective_message.chat.title  # -> unused variable
-
-    try:
-        msg = update.effective_message.reply_text(
-            "Fetching group admins...",
-            parse_mode=ParseMode.HTML,
-        )
-    except BadRequest:
-        msg = update.effective_message.reply_text(
-            "Fetching group admins...",
-            quote=False,
-            parse_mode=ParseMode.HTML,
-        )
-
-    administrators = bot.getChatAdministrators(chat_id)
-    text = "Admins in <b>{}</b>:".format(html.escape(update.effective_chat.title))
-
+@run_async
+def adminlist(bot: Bot, update: Update):
+    administrators = update.effective_chat.get_administrators()
+    text = "Admins in *{}*:".format(update.effective_chat.title or "this chat")
     for admin in administrators:
         user = admin.user
-        status = admin.status
-        custom_title = admin.custom_title
+        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+        if user.username:
+            name = escape_markdown("@" + user.username)
+        text += "\n - {}".format(name)
 
-        if user.first_name == "":
-            name = "☠ Deleted Account"
-        else:
-            name = "{}".format(
-                mention_html(
-                    user.id,
-                    html.escape(user.first_name + " " + (user.last_name or "")),
-                ),
-            )
-
-        if user.is_bot:
-            administrators.remove(admin)
-            continue
-
-        # if user.username:
-        #    name = escape_markdown("@" + user.username)
-        if status == "creator":
-            text += "\n 👑 Creator:"
-            text += "\n<code> ❍ </code>{}\n".format(name)
-
-            if custom_title:
-                text += f"<code> ┗━ {html.escape(custom_title)}</code>\n"
-
-    text += "\n🔱 Admins:"
-
-    custom_admin_list = {}
-    normal_admin_list = []
-
-    for admin in administrators:
-        user = admin.user
-        status = admin.status
-        custom_title = admin.custom_title
-
-        if user.first_name == "":
-            name = "☠ Deleted Account"
-        else:
-            name = "{}".format(
-                mention_html(
-                    user.id,
-                    html.escape(user.first_name + " " + (user.last_name or "")),
-                ),
-            )
-        # if user.username:
-        #    name = escape_markdown("@" + user.username)
-        if status == "administrator":
-            if custom_title:
-                try:
-                    custom_admin_list[custom_title].append(name)
-                except KeyError:
-                    custom_admin_list.update({custom_title: [name]})
-            else:
-                normal_admin_list.append(name)
-
-    for admin in normal_admin_list:
-        text += "\n<code> ❍ </code>{}".format(admin)
-
-    for admin_group in custom_admin_list.copy():
-        if len(custom_admin_list[admin_group]) == 1:
-            text += "\n<code> ❍ </code>{} | <code>{}</code>".format(
-                custom_admin_list[admin_group][0],
-                html.escape(admin_group),
-            )
-            custom_admin_list.pop(admin_group)
-
-    text += "\n"
-    for admin_group, value in custom_admin_list.items():
-        text += "\n🚨 <code>{}</code>".format(admin_group)
-        for admin in value:
-            text += "\n<code> ❍ </code>{}".format(admin)
-        text += "\n"
-
-    try:
-        msg.edit_text(text, parse_mode=ParseMode.HTML)
-    except BadRequest:  # if original message is deleted
-        return
+    update.effective_message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
+    
+    
+def __chat_settings__(chat_id, user_id):
+    return "You are *admin*: `{}`".format(
+        dispatcher.bot.get_chat_member(chat_id, user_id).status in ("administrator", "creator"))
 
 
 @bot_admin
