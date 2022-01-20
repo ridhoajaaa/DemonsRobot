@@ -11,10 +11,6 @@ from aries.events import register
 from aries import telethn as tbot
 
 
-REM_BG_API_KEY = "REM_BG_API_KEY"
-UNSCREEN_API = "UNSCREEN_API"
-
-
 async def is_register_admin(chat, user):
     if isinstance(chat, (types.InputPeerChannel, types.InputChannel)):
         return isinstance(
