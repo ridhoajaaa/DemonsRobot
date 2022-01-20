@@ -9,6 +9,7 @@ import aries.modules.sql.github_sql as sql
 
 from aries import pgram, OWNER_ID, DEV_USERS, DEMONS, dispatcher
 from aries.utils.errors import capture_err
+from aries.modules.sql.clear_cmd_sql import get_clearcmd
 from aries.modules.helper_funcs.filters import CustomFilters
 from aries.modules.helper_funcs.chat_status import user_admin
 from aries.modules.helper_funcs.misc import delete
