@@ -306,6 +306,7 @@ updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 dispatcher = updater.dispatcher
 aiohttpsession = ClientSession()
+session_name = TOKEN.split(":")[0]
 pgram = Client(
     session_name,
     api_id=API_ID,
