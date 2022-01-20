@@ -116,6 +116,8 @@ if ENV:
     TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TEMP_DOWNLOAD_DIRECTORY", "./")
     OPENWEATHERMAP_ID = os.environ.get("OPENWEATHERMAP_ID", None)
     VIRUS_API_KEY = os.environ.get("VIRUS_API_KEY", None)
+    REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
+    UNSCREEN_API = os.environ.get("REM_BG_API_KEY", None)
     STRING_SESSION = os.environ.get("STRING_SESSION", None)
     NO_LOAD = os.environ.get("NO_LOAD", "translation").split()
     CUSTOM_CMD = os.environ.get("CUSTOM_CMD", "$?,")
@@ -221,6 +223,8 @@ else:
     TEMP_DOWNLOAD_DIRECTORY = Config.TEMP_DOWNLOAD_DIRECTORY
     OPENWEATHERMAP_ID = Config.OPENWEATHERMAP_ID
     VIRUS_API_KEY = Config.VIRUS_API_KEY
+    REM_BG_API_KEY = Config.REM_BG_API_KEY
+    UNSCREEN_API = Config.UNSCREEN_API
     NO_LOAD = Config.NO_LOAD
     BOT_USERNAME = Config.BOT_USERNAME
     HEROKU_API_KEY = Config.HEROKU_API_KEY
