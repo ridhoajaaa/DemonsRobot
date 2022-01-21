@@ -261,22 +261,18 @@ def user_admin_no_reply(func):
     def is_not_admin_no_reply(
         update: Update, context: CallbackContext, *args, **kwargs
     ):
-        # bot = context.bot
+        context.bot
         user = update.effective_user
-        # chat = update.effective_chat
-        query = update.callback_query
+        update.effective_chat
 
-        if user:
-            if is_user_admin(update, user.id):
-                return func(update, context, *args, **kwargs)
-            else:
-                query.answer("this is not for you")
-        elif not user:
-            query.answer("this is not for you")
+        if user and is_user_admin(update, user.id):
+            return func(update, context, *args, **kwargs)
+        if not user:
+            pass
         elif DEL_CMDS and " " not in update.effective_message.text:
             try:
                 update.effective_message.delete()
-            except TelegramError:
+            except:
                 pass
 
     return is_not_admin_no_reply
