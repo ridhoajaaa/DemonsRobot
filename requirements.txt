@@ -19,6 +19,7 @@ requests
 httpx
 img2pdf
 python-telegram-bot==13.10.0
+git+https://github.com/python-telegram-bot/ptbcontrib.git
 SQLAlchemy==1.4.30
 youtube_dl
 python-dotenv==0.19.2
