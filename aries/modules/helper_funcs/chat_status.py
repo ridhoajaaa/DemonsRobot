@@ -235,13 +235,13 @@ def whitelist_plus(func):
 def user_admin(func):
     @wraps(func)
     def is_admin(update: Update, context: CallbackContext, *args, **kwargs):
-        bot = context.bot
+        context.bot
         user = update.effective_user
-        chat = update.effective_chat
+        update.effective_chat
 
-        if user and is_user_admin(chat, user.id):
+        if user and is_user_admin(update, user.id):
             return func(update, context, *args, **kwargs)
-        elif not user:
+        if not user:
             pass
         elif DEL_CMDS and " " not in update.effective_message.text:
             try:
@@ -250,7 +250,7 @@ def user_admin(func):
                 pass
         else:
             update.effective_message.reply_text(
-                "Who dis non-admin telling me what to do? You want a punch?",
+                "Who dis non-admin telling me what to do?"
             )
 
     return is_admin
