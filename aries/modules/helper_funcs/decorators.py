@@ -5,7 +5,7 @@ from telegram.ext import (
     CallbackQueryHandler,
     InlineQueryHandler,
 )
-from telegram.ext.filters import BaseFilter
+from telegram.ext.filters import MessageFilter
 from aries import dispatcher as d, LOGGER
 from typing import Optional, Union, List
 
@@ -14,16 +14,17 @@ class AriesTelegramHandler:
     def __init__(self, d):
         self._dispatcher = d
 
+        
     def command(
         self,
         command: str,
-        filters: Optional[BaseFilter] = None,
+        filters: Optional[MessageFilter] = None,
         admin_ok: bool = False,
         pass_args: bool = False,
         pass_chat_data: bool = False,
         run_async: bool = True,
         can_disable: bool = True,
-        group: Optional[Union[int]] = 40,
+        group: Optional[Union[int, str]] = 40,
     ):
         def _command(func):
             try:
