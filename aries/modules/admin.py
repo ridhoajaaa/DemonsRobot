@@ -34,6 +34,7 @@ from aries.modules.helper_funcs.extraction import (
     extract_user_and_text,
 )
 from aries.modules.log_channel import loggable
+from aries.modules.helper_funcs.alternate import send_message
 
 
 async def is_register_admin(chat, user):
