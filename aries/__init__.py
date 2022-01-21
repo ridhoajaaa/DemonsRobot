@@ -10,6 +10,7 @@ import spamwatch
 import telegram.ext as tg
 
 from aiohttp import ClientSession
+from ptbcontrib.postgres_persistence import PostgresPersistence
 from logging import INFO, WARNING, FileHandler, StreamHandler, basicConfig, getLogger
 from motor.motor_asyncio import AsyncIOMotorClient as MongoClient
 from pyrogram import Client, errors
@@ -144,6 +145,7 @@ if ENV:
     )
     BOT_ID = int(os.environ.get("BOT_ID", "1914584978"))
     ARQ_API_URL = "https://thearq.tech"
+    BOT_API_URL = os.environ.get("BOT_API_URL", "https://api.telegram.org/bot")
     ARQ_API_KEY = os.environ.get("ARQ_API_KEY", "ZBYMIN-TVRHON-OGTFXW-PUCAGK-ARQ")
     SAINT = 1192108540
     bot_start_time = time.time()
@@ -242,6 +244,7 @@ else:
     BACKUP_PASS = Config.BACKUP_PASS
     TIME_API_KEY = Config.TIME_API_KEY
     WALL_API = Config.WALL_API
+    BOT_API_URL = Config.BOT_API_URL
     SUPPORT_CHAT = Config.SUPPORT_CHAT
     SPAMWATCH_SUPPORT_CHAT = Config.SPAMWATCH_SUPPORT_CHAT
     SPAMWATCH_API = Config.SPAMWATCH_API
@@ -302,7 +305,14 @@ from aries.modules.sql import SESSION
 
 telegraph = Telegraph()
 telegraph.create_account(short_name="Aries")
-updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
+updater = tg.Updater(
+    token=TOKEN,
+    base_url=BOT_API_URL,
+    workers=min(32, os.cpu_count() + 4),
+    request_kwargs={"read_timeout": 10, "connect_timeout": 10},
+    use_context=True,
+    persistence=PostgresPersistence(session=SESSION),
+)
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 dispatcher = updater.dispatcher
 aiohttpsession = ClientSession()
