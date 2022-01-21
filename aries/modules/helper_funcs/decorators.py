@@ -14,7 +14,6 @@ class AriesTelegramHandler:
     def __init__(self, d):
         self._dispatcher = d
 
-        
     def command(
         self,
         command: str,

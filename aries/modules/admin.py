@@ -511,7 +511,9 @@ def refresh_admin(update, _):
     except KeyError:
         pass
 
-    update.effective_message.reply_text("Admins Cache Refreshed✅!\n\nBot Di Perbarui Ulang!✅")
+    update.effective_message.reply_text(
+        "Admins Cache Refreshed✅!\n\nBot Di Perbarui Ulang!✅"
+    )
 
 
 @connection_status
@@ -836,7 +838,9 @@ def staff(client: Client, message: Message):
             )
 
     if len(co_founder) == 0 and len(admin) == 0:
-        result = f"<b>Staff {message.chat.title}</b>\n\n👑 <b>Founder</b>\n" + "\n".join(creator)
+        result = f"<b>Staff {message.chat.title}</b>\n\n👑 <b>Founder</b>\n" + "\n".join(
+            creator
+        )
     elif len(co_founder) == 0 and len(admin) > 0:
         res_admin = admin[-1].replace("├", "└")
         admin.pop(-1)
@@ -859,10 +863,11 @@ def staff(client: Client, message: Message):
         co_founder.append(resco_founder)
         admin.append(res_admin)
         result = (
-                f"<b>Staff {message.chat.title}</b>\n\n👑 <b>Founder</b>\n" + "\n".join(creator) + "\n\n"
-                                                                    "🔱 <b>Co-Founder</b>\n" + "\n".join(
-            co_founder) + "\n\n"
-                          "👮‍♂ <b>Admin</b>\n" + "\n".join(admin)
+            f"<b>Staff {message.chat.title}</b>\n\n👑 <b>Founder</b>\n"
+            + "\n".join(creator)
+            + "\n\n"
+            "🔱 <b>Co-Founder</b>\n" + "\n".join(co_founder) + "\n\n"
+            "👮‍♂ <b>Admin</b>\n" + "\n".join(admin)
         )
     pgram.send_message(message.chat.id, result)
 
