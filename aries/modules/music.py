@@ -200,7 +200,7 @@ async def deezer(client, message: Message):
 
 def time_to_seconds(time):
     stringt = str(time)
-    return sum(int(x) * 60 ** i for i, x in enumerate(reversed(stringt.split(":"))))
+    return sum(int(x) * 60**i for i, x in enumerate(reversed(stringt.split(":"))))
 
 
 # Lel, Didn't Get Time To Make New One So Used Plugin Made br @mrconfused and @sandy1709 dont edit credits
