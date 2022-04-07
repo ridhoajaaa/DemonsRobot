@@ -110,7 +110,7 @@ launchpadlib==1.10.16
 requests_html==0.10.0
 pydub==0.25.1
 google-api-python-client
-img2pdf==0.4.3
+img2pdf==0.4.4
 hiredis==2.0.0
 selenium==4.1.0
 cowpy
