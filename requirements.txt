@@ -52,7 +52,7 @@ google_trans_new
 jikanpy
 speedtest-cli
 coffeehouse==2.2.6
-regex==2022.1.18
+regex==2022.8.17
 bleach
 wikipedia
 markdown2
