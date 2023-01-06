@@ -76,7 +76,7 @@ PyDictionary==2.0.1
 youtube_search_python
 lyrics_extractor
 asyncio
-cloudscraper==1.2.58
+cloudscraper==1.2.67
 dateparser==1.1.0
 pymongo
 dnspython
